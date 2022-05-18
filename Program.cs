@@ -22,10 +22,11 @@ namespace tog_bingo
             // Import spreadsheet and look to the first Worksheet
             using var workbook = new XLWorkbook(Settings.path);
             var workSheet = workbook.Worksheet(1);
+            
             // Starting row for While loop.
             short currentRow = 1;
             //  While the current rows cell is not empty
-            while (!workSheet.Cell(1, currentRow).IsEmpty())
+            while (!workSheet.Cell(currentRow, 1).IsEmpty())
             {
                 var nameData = workSheet.Cell(currentRow, 1).GetString();// Parrse column 1 for Name.
                 var guessData = StringFormat(workSheet.Cell(currentRow, 2).GetString());//Parse Column 2 for Guess.
@@ -98,6 +99,11 @@ namespace tog_bingo
             {
                 writer.WriteLine($"{player.Name} {player.Score}");
             }
+            
+            Console.Clear();
+            Console.WriteLine($"Finished calulating {players.Count} Bingo guesses.\nYou can press any key to exit...");
+            Console.ReadKey();
+
         }
 
         // Formats string inputs by removing spaces, new lines, and makes all charachters uppercase.
