@@ -47,7 +47,7 @@ namespace tog_bingo
                     for (int currentElement = currentElementHolder; currentElement < columnElement; currentElement++)
                     {
                         // Checks if the sqaure being worked on lines up with the bonus sqaure of that row.
-                        if ((currentElement + Settings.bonusColumns) == columnElement)
+                        if ((currentElement + Settings.bonusColumns) >= columnElement)
                             // Checks if the sqaure was skipped by checking if the skip charachter was used.
                             if (guessChars[currentElement] == Settings.bonusSkipChar)
                             {
