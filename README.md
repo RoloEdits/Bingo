@@ -15,10 +15,13 @@
   </a>
 </p>
 
+Can find downloads [here](https://github.com/RoloEdits/tog-bingo/releases)
+
+I made this app for Tower of God Wiki/Reddit Discord, but there is no reason this couldn't be used by other communities.
 
 # Usage
 
-I tried to make the app as simple to interface with as can be. After having downloaded the App, simply put it in a directory of your choice. I have imagined it would go into a folder, and then along with it, another folder to hold the Chapter Spreadsheets, but they dont have to be in the same place for the App to work.
+I tried to make the app as simple to interface with as can be. After having downloaded the App, simply put it in a directory of your choice. I have imagined it would go into a folder, and then along with it, another folder to hold the Chapter Spreadsheets, but they dont have to be in the same place for the App to work. 
 
 Example:
 ```
@@ -52,6 +55,7 @@ If you are using OneCommander, there is an option on the bottom of the right-cli
 On Linux you can simply just copy the file as if to copy the file,  and when you paste inside a text field, it will paste the path to the file.
 
 ### Running App
+Note: **The Spreadsheet Must Not be Opened By Another Program When Using App**
 
 On Windows you can simply open it like any other program.
 
