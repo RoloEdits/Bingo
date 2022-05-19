@@ -5,9 +5,9 @@ namespace tog_bingo
     internal class Program
     {
         static void Main(string[] args)
-        {   
+        {
             // ASCII Title Art
-            Console.WriteLine(asciiTitle(""));
+            Console.WriteLine(AsciiTitle(""));
             Console.WriteLine("\n\n\n\n");
             // Prompt User for which settings to load
             Console.WriteLine("Load Default Settings: 1\nEnter Custom Settings: 2\n\n\n\n");
@@ -21,6 +21,17 @@ namespace tog_bingo
             char[] keyChars = StringFormat(Settings.key).ToCharArray();
             // Make players list of type Player.
             var players = new List<Player>();
+
+            if (keyChars.Length < (Settings.columns * Settings.rows))
+            {
+                Console.Clear();
+                Console.WriteLine(AsciiTitle(""));
+                Console.WriteLine("\n\n\n\n");
+                Console.WriteLine($"Error Occured: You input an answer for only {keyChars.Length} total sqaures, must have enough for {Settings.columns * Settings.rows} total sqaures.");
+                Console.Write("Press any key to exit...");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
 
             // Import spreadsheet and look to the first Worksheet
             using var workbook = new XLWorkbook(Settings.path);
@@ -42,70 +53,85 @@ namespace tog_bingo
                 int score = 0; // Starting score
                 short sqaureValue = Settings.baseSquareValue; // Resets the value for next player loop.
 
-                // Loops through rows.
-                for (short rowCounter = 0; rowCounter < Settings.rows; rowCounter++)
+                if (guessChars.Length >= (Settings.columns * Settings.rows))
                 {
-                    // currentElement is the progress of what sqaure is being worked on. This value is not relative to the row, but is in the context of all elements.
-                    // columnElement is the current rows final column sqaure, setting up each row loop to end on that rows final sqaure, fucntionally blocking out each rows length.
-                    for (int currentElement = currentElementHolder; currentElement < columnElement; currentElement++)
+                    // Loops through rows.
+                    for (short rowCounter = 0; rowCounter < Settings.rows; rowCounter++)
                     {
-                        // Checks if the sqaure being worked on lines up with the bonus sqaures of that row.
-                        if ((currentElement + Settings.bonusColumns) >= columnElement)
-                            // Checks if the sqaure was skipped by checking if the skip charachter was used.
-                            if (guessChars[currentElement] == Settings.bonusSkipChar)
-                            {
-                                score += 0; // If skipped, add 0 to score.
-                            }
-                            // Checks if the guess matches.
+                        // currentElement is the progress of what sqaure is being worked on. This value is not relative to the row, but is in the context of all elements.
+                        // columnElement is the current rows final column sqaure, setting up each row loop to end on that rows final sqaure, fucntionally blocking out each rows length.
+                        for (int currentElement = currentElementHolder; currentElement < columnElement; currentElement++)
+                        {
+                            // Checks if the sqaure being worked on lines up with the bonus sqaures of that row.
+                            if ((currentElement + Settings.bonusColumns) >= columnElement)
+                                // Checks if the sqaure was skipped by checking if the skip charachter was used.
+                                if (guessChars[currentElement] == Settings.bonusSkipChar)
+                                {
+                                    score += 0; // If skipped, add 0 to score.
+                                }
+                                // Checks if the guess matches.
+                                else if (guessChars[currentElement] == keyChars[currentElement])
+                                {
+                                    // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
+                                    score += (sqaureValue * Settings.bonusMultiplier);
+                                }
+                                else
+                                {
+                                    // If it doesnt match then it will subtract by the calculated amount.
+                                    score -= (sqaureValue * Settings.bonusMultiplier);
+                                }
+                            // Checks if the current guess matches with the key for that sqaure.
                             else if (guessChars[currentElement] == keyChars[currentElement])
                             {
-                                // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
-                                score += (sqaureValue * Settings.bonusMultiplier);
+                                // If matches adds current row value to score.
+                                score += sqaureValue;
                             }
                             else
                             {
-                                // If it doesnt match then it will subtract by the calculated amount.
-                                score -= (sqaureValue * Settings.bonusMultiplier);
+                                // If it doesn't match, it will subract the rows' value from score. 
+                                score -= sqaureValue;
                             }
-                        // Checks if the current guess matches with the key for that sqaure.
-                        else if (guessChars[currentElement] == keyChars[currentElement])
-                        {
-                            // If matches adds current row value to score.
-                            score += sqaureValue;
-                        }
-                        else
-                        {
-                            // If it doesn't match, it will subract the rows' value from score. 
-                            score -= sqaureValue;
-                        }
 
-                        // This is to keep track of the current absolute element position and not have it reset to 0 in the next loop.
-                        currentElementHolder = currentElement + 1;
+                            // This is to keep track of the current absolute element position and not have it reset to 0 in the next loop.
+                            currentElementHolder = currentElement + 1;
 
+                        }
+                        // Sets new base sqaure value for the next row.
+                        sqaureValue += Settings.rowValueOffset;
+                        // Calculates the next rows final column in terms of absolute position.
+                        columnElement += Settings.columns;
                     }
-                    // Sets new base sqaure value for the next row.
-                    sqaureValue += Settings.rowValueOffset;
-                    // Calculates the next rows final column in terms of absolute position.
-                    columnElement += Settings.columns;
+
+
+                    players.Add(new Player(nameData, guessData, score));//Add Current Player to List.
+                    players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));//Sort List so highest Score is on top.
+
+                    currentRow++;// Goes to next row in spreadsheet.
+
+                    // After all players have been added, writes each out to file.
+                    using TextWriter writer = new StreamWriter(Settings.fileName);
+                    foreach (var player in players)
+                    {
+                        writer.WriteLine($"{player.Name} {player.Score}");
+                    }
                 }
-
-
-                players.Add(new Player(nameData, guessData, score));//Add Current Player to List.
-                players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));//Sort List so highest Score is on top.
-
-                currentRow++;// Goes to next row in spreadsheet.
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine(AsciiTitle(""));
+                    Console.WriteLine("\n\n\n\n");
+                    Console.WriteLine($"Error Occured: On Row {currentRow} '{nameData}' has guessed for only {guessChars.Length} sqaures, needs to be for {Settings.columns * Settings.rows} sqaures.");
+                    Console.Write("Press any key to exit...");
+                    Console.ReadKey();
+                    Environment.Exit(0);
+                }
             }
-            // After all players have been added, writes each out to file.
-            using TextWriter writer = new StreamWriter(Settings.fileName);
-            foreach (var player in players)
-            {
-                writer.WriteLine($"{player.Name} {player.Score}");
-            }
-            //Clears Console and writes to inform user of how many guesses have been checked and calulated.
-          //  Console.Clear();
-          //  Console.WriteLine($"Finished Checking Guesses, and Calculated Scores For {players.Count} Participants.\nYou can press any key to exit...");
-         //   Console.ReadKey();// Pressing ends program and closes application.
-
+            Console.Clear();
+            Console.WriteLine(AsciiTitle(""));
+            Console.WriteLine("\n\n\n\n");
+            Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses.");
+            Console.Write("Press any key to exit...");
+            Console.ReadKey();
         }
 
         // Formats string inputs by removing spaces, new lines,, returns, and makes all characters uppercase.
@@ -114,9 +140,9 @@ namespace tog_bingo
             return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
         }
 
-        static string asciiTitle(string art)
+        static string AsciiTitle(string _art)
         {
-            return art = @"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
+            return @"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
    /\  \     /\  \     /\__\     /\  \     /\  \          /\  \     /\  \          /\  \     /\  \     /\  \  
    \:\  \   /::\  \   /:/\__\   /::\  \   /::\  \        /::\  \   /::\  \        /::\  \   /::\  \   /::\  \ 
    /::\__\ /:/\:\__\ /:/:/\__\ /::\:\__\ /::\:\__\      /:/\:\__\ /::\:\__\      /:/\:\__\ /:/\:\__\ /:/\:\__\
@@ -147,7 +173,7 @@ namespace tog_bingo
                 Settings.baseSquareValue = 10;
 
                 // ASCII Title Art
-                Console.WriteLine(asciiTitle(""));
+                Console.WriteLine(AsciiTitle(""));
                 Console.WriteLine("\n\n\n\n");
                 Console.WriteLine("Default Settings Loaded...\n");
                 // Ask user for absolute file path.
@@ -163,7 +189,7 @@ namespace tog_bingo
             else if (selection == "2")
             {
                 // ASCII Title Art
-                Console.WriteLine(asciiTitle(""));
+                Console.WriteLine(AsciiTitle(""));
                 Console.WriteLine("\n\n\n\n");
                 // Ask user for absolute file path.
                 Console.Write("Please Enter File Path: ");
