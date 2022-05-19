@@ -5,9 +5,12 @@ namespace tog_bingo
     internal class Program
     {
         static void Main(string[] args)
-        {
+        {   
+            // ASCII Title Art
+            Console.WriteLine(asciiTitle(""));
+            Console.WriteLine("\n\n\n\n");
             // Prompt User for which settings to load
-            Console.WriteLine("Load Default Settings: 1\nEnter Custom Settings: 2\n\n");
+            Console.WriteLine("Load Default Settings: 1\nEnter Custom Settings: 2\n\n\n\n");
             Console.Write("Enter Option: ");
             // Pass answer to function
             string Options = StringFormat(Console.ReadLine());
@@ -99,9 +102,9 @@ namespace tog_bingo
                 writer.WriteLine($"{player.Name} {player.Score}");
             }
             //Clears Console and writes to inform user of how many guesses have been checked and calulated.
-            Console.Clear();
-            Console.WriteLine($"Finished Checking Guesses, and Calculated Scores For {players.Count} Participants.\nYou can press any key to exit...");
-            Console.ReadKey();// Pressing ends program and closes application.
+          //  Console.Clear();
+          //  Console.WriteLine($"Finished Checking Guesses, and Calculated Scores For {players.Count} Participants.\nYou can press any key to exit...");
+         //   Console.ReadKey();// Pressing ends program and closes application.
 
         }
 
@@ -109,6 +112,24 @@ namespace tog_bingo
         static string StringFormat(string formatedString)
         {
             return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
+        }
+
+        static string asciiTitle(string art)
+        {
+            return art = @"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
+   /\  \     /\  \     /\__\     /\  \     /\  \          /\  \     /\  \          /\  \     /\  \     /\  \  
+   \:\  \   /::\  \   /:/\__\   /::\  \   /::\  \        /::\  \   /::\  \        /::\  \   /::\  \   /::\  \ 
+   /::\__\ /:/\:\__\ /:/:/\__\ /::\:\__\ /::\:\__\      /:/\:\__\ /::\:\__\      /:/\:\__\ /:/\:\__\ /:/\:\__\
+  /:/\/__/ \:\/:/  / \::/:/  / \:\:\/  / \;:::/  /      \:\/:/  / \/\:\/__/      \:\:\/__/ \:\/:/  / \:\/:/  /
+  \/__/     \::/  /   \::/  /   \:\/  /   |:\/__/        \::/  /     \/__/        \::/  /   \::/  /   \::/  / 
+             \/__/     \/__/     \/__/     \|__|          \/__/                    \/__/     \/__/     \/__/  
+                                  ___       ___       ___       ___       ___                                 
+                                 /\  \     /\  \     /\__\     /\  \     /\  \                                
+                                /::\  \   _\:\  \   /:| _|_   /::\  \   /::\  \                               
+                               /::\:\__\ /\/::\__\ /::|/\__\ /:/\:\__\ /:/\:\__\                              
+                               \:\::/  / \::/\/__/ \/|::/  / \:\:\/__/ \:\/:/  /                              
+                                \::/  /   \:\__\     |:/  /   \::/  /   \::/  /                               
+                                 \/__/     \/__/     \/__/     \/__/     \/__/";
         }
 
         // Checks how user wants to handle settings.
@@ -122,11 +143,13 @@ namespace tog_bingo
                 Settings.bonusColumns = 1;
                 Settings.rowValueOffset = 20;
                 Settings.bonusMultiplier = 2;
-                Settings.bonusSkipChar = '.'; // Which single character will be recognized as player having skipped the optional sqaures.
+                Settings.bonusSkipChar = 'P'; // Which single character will be recognized as player having skipped the optional sqaures.
                 Settings.baseSquareValue = 10;
 
-                Console.WriteLine("Default Settings Loaded");
-
+                // ASCII Title Art
+                Console.WriteLine(asciiTitle(""));
+                Console.WriteLine("\n\n\n\n");
+                Console.WriteLine("Default Settings Loaded...\n");
                 // Ask user for absolute file path.
                 Console.Write("Please Enter File Path: ");
                 Settings.path = Console.ReadLine();
@@ -139,6 +162,9 @@ namespace tog_bingo
             // Asks user to input custom values.
             else if (selection == "2")
             {
+                // ASCII Title Art
+                Console.WriteLine(asciiTitle(""));
+                Console.WriteLine("\n\n\n\n");
                 // Ask user for absolute file path.
                 Console.Write("Please Enter File Path: ");
                 Settings.path = Console.ReadLine();
@@ -160,12 +186,12 @@ namespace tog_bingo
                 Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row(Default: 20): ");
                 Settings.rowValueOffset = Int16.Parse(StringFormat(Console.ReadLine()));
                 // How much the bonus squares are compared to that rows base sqaure value. If a rows sqaure value is 10, a 2 multiplier will mean that rows bonus sqaures are worth 20.
-                Console.Write("Please Enter Multiplier For Optional Column/s(Default: 2): ");
+                Console.Write("Please Enter Score Multiplier For Optional Column/s(Default: 2): ");
                 Settings.bonusMultiplier = Int16.Parse(StringFormat(Console.ReadLine()));
                 // Which single character will be recognized as player having skipped the optional sqaures.
-                Settings.bonusSkipChar = '.';
+                Settings.bonusSkipChar = 'P';
                 // This sets the value for the normal sqaures in the very first row.
-                Console.Write("Please Enter The Starting Rows Bingo Sqaure Value(Default: 10): ");
+                Console.Write("Please Enter The Starting Rows' Sqaure Value(Default: 10): ");
                 Settings.baseSquareValue = Int16.Parse(StringFormat(Console.ReadLine()));
             }
         }
