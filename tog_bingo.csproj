@@ -5,11 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>zahard_eyes_icon_64x64.ico</ApplicationIcon>
+    <ApplicationIcon>tog-bingo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="zahard_eyes_icon_64x64.ico" />
+    <Content Include="tog-bingo.ico" />
   </ItemGroup>
 
   <ItemGroup>
