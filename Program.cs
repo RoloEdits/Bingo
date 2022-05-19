@@ -6,22 +6,23 @@ namespace tog_bingo
     {
         static void Main(string[] args)
         {
-            // ASCII Title Art
+            // ASCII Title Art.
             Console.WriteLine(AsciiTitle(""));
             Console.WriteLine("\n\n\n\n");
-            // Prompt User for which settings to load
+            // Prompt User for which settings to load.
             Console.WriteLine("Load Default Settings: 1\nEnter Custom Settings: 2\n\n\n\n");
             Console.Write("Enter Option: ");
-            // Pass answer to function
+            // Pass answer to function.
             string Options = StringFormat(Console.ReadLine());
             Console.Clear();
             SettingLoad(Options);
 
-            // Convert key to character array
+            // Convert key to character array.
             char[] keyChars = StringFormat(Settings.key).ToCharArray();
             // Make players list of type Player.
             var players = new List<Player>();
 
+            // Checks if the key is large enough to answer for the bingo.
             if (keyChars.Length < (Settings.columns * Settings.rows))
             {
                 Console.Clear();
@@ -33,7 +34,7 @@ namespace tog_bingo
                 Environment.Exit(0);
             }
 
-            // Import spreadsheet and look to the first Worksheet
+            // Import spreadsheet and look to the first Worksheet.
             using var workbook = new XLWorkbook(Settings.path);
             var workSheet = workbook.Worksheet(1);
 
@@ -42,17 +43,25 @@ namespace tog_bingo
             //  While the current rows cell is not empty
             while (!workSheet.Cell(currentRow, 1).IsEmpty())
             {
-                var nameData = workSheet.Cell(currentRow, 1).GetString();// Parse Column 1 for Name.
-                var guessData = StringFormat(workSheet.Cell(currentRow, 2).GetString());//Parse Column 2 for Guess.
+                // Parse Column 1 for Name.
+                var nameData = workSheet.Cell(currentRow, 1).GetString();
+                //Parse Column 2 for Guess.
+                var guessData = StringFormat(workSheet.Cell(currentRow, 2).GetString());
 
-                char[] guessChars = guessData.ToCharArray(); //Turns player guess into char array.
+                //Turns player guess into char array.
+                char[] guessChars = guessData.ToCharArray();
 
-                short columnElement = Settings.columns; // Holds the current position of each final column sqaure of that row.
-                int currentElementHolder = 0; // Holds current absolute element postion.
+                // Holds the current position of each final column sqaure of that row.
+                short columnElement = Settings.columns;
+                // Holds current absolute element postion.
+                int currentElementHolder = 0;
 
-                int score = 0; // Starting score
-                short sqaureValue = Settings.baseSquareValue; // Resets the value for next player loop.
-
+                // Starting score.
+                int score = 0;
+                // Resets the value for next player loop.
+                short sqaureValue = Settings.baseSquareValue; 
+                
+                // Checks if current player has enough squares gussed. 
                 if (guessChars.Length >= (Settings.columns * Settings.rows))
                 {
                     // Loops through rows.
@@ -67,7 +76,8 @@ namespace tog_bingo
                                 // Checks if the sqaure was skipped by checking if the skip charachter was used.
                                 if (guessChars[currentElement] == Settings.bonusSkipChar)
                                 {
-                                    score += 0; // If skipped, add 0 to score.
+                                    // If skipped, add 0 to score.
+                                    score += 0; 
                                 }
                                 // Checks if the guess matches.
                                 else if (guessChars[currentElement] == keyChars[currentElement])
@@ -102,11 +112,13 @@ namespace tog_bingo
                         columnElement += Settings.columns;
                     }
 
+                    //Add Current Player to List.
+                    players.Add(new Player(nameData, guessData, score));
+                    //Sort List so highest Score is on top.
+                    players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));
 
-                    players.Add(new Player(nameData, guessData, score));//Add Current Player to List.
-                    players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));//Sort List so highest Score is on top.
-
-                    currentRow++;// Goes to next row in spreadsheet.
+                    // Goes to next row in spreadsheet.
+                    currentRow++;
 
                     // After all players have been added, writes each out to file.
                     using TextWriter writer = new StreamWriter(Settings.fileName);
@@ -116,7 +128,8 @@ namespace tog_bingo
                     }
                 }
                 else
-                {
+                {   
+                    // If they dont have enough sqaures guessed, the program will end and inform user of where the culprit is in the spreadsheet.
                     Console.Clear();
                     Console.WriteLine(AsciiTitle(""));
                     Console.WriteLine("\n\n\n\n");
@@ -126,6 +139,7 @@ namespace tog_bingo
                     Environment.Exit(0);
                 }
             }
+            // Successful run of application
             Console.Clear();
             Console.WriteLine(AsciiTitle(""));
             Console.WriteLine("\n\n\n\n");
@@ -140,6 +154,7 @@ namespace tog_bingo
             return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
         }
 
+        // Holder for the Ascii Art Title
         static string AsciiTitle(string _art)
         {
             return @"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
