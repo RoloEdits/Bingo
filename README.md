@@ -149,7 +149,7 @@ After these, the app asks for custom settings for different kind of fields, star
 
 ![image](https://user-images.githubusercontent.com/12489689/169608678-ce98980a-4b65-43cc-a8e2-653a37decc12.png)
 
-This amount is how many total columns there are in total, including the bonus columns.
+This amount is how many columns there are in total, including the bonus columns.
 
 Default settings loads a value of 4.
 
