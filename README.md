@@ -130,14 +130,103 @@ The output file is saved in the same location as the previously entered path, an
 
 ![image](https://user-images.githubusercontent.com/12489689/169420438-0e8599fa-ed9d-4642-8ded-765928293b41.png)
 
-### Windows Video Demo
+##### Windows Video Demo
 
 https://user-images.githubusercontent.com/12489689/169410567-bd73cd2a-0bc5-404c-b2b3-1dfb9e746ded.mp4
 
 
-### Linux Video Demo
+##### Linux Video Demo
 
 https://user-images.githubusercontent.com/12489689/169419831-eedaaec2-5261-47f6-9537-bdf750da77e8.mp4
 
+#### Custom
 
+Besides the default configuration, the solver also supports custom inputs. 
 
+Press `2` and press `ENTER` and initially it will present you with the same input fields, asking for the file path and for a Key.
+
+After these, the app asks for custom settings for different kind of fields, starting with the column amount.
+
+![image](https://user-images.githubusercontent.com/12489689/169608678-ce98980a-4b65-43cc-a8e2-653a37decc12.png)
+
+This amount is how many total columns there are in total, including the bonus columns.
+
+Default settings loads a value of 4.
+
+`0` `0` `0` `0`
+
+In this example I will be using a column value of 5.
+
+`0` `0` `0` `0` `0`
+
+![image](https://user-images.githubusercontent.com/12489689/169608961-e0b18924-cde9-4b21-8b01-6f039ccd4b92.png)
+
+Next it asks for a row input. I'll also be using a value of 5, for a total of 25 total sqaures.
+
+`0`
+
+`0`
+
+`0`
+
+`0`
+
+`0`
+
+![image](https://user-images.githubusercontent.com/12489689/169609143-387e4f85-9829-4087-b7c3-3ed0cdf012b5.png)
+
+Now it asks for the bonus column amount. In the default config, of the 4 total columns, the 1 final column is the bonus. Like a 3x3 grid, plus an extra row.
+
+`0` `0` `0`  +  `0`
+
+For this example I will be saying that out of the 5 total columns, 2 will be bonus.
+
+`0` `0` `0`  +  `0` `0`
+
+![image](https://user-images.githubusercontent.com/12489689/169609593-1741999c-ab91-495b-813b-b839ca4945da.png)
+
+Next is how much each row will increment over the current row. In the default config the first row is worth 10 per normal sqaure, with a value of 20 here, the next row will go up to 30. Then the following row will go up another 20 to equal 50.
+
+`10` `10` `10` + `0`
+
++20
+
+`20` `20` `20` + `0`
+
+For this example I will use 50 as the value:
+
+`10` `10` `10` + `0`
+
++50
+
+`60` `60` `60` + `0`
+
+![image](https://user-images.githubusercontent.com/12489689/169610055-0633a80d-173f-4172-b6ed-fc109df1c86f.png)
+
+Next is deciding the multiplier the bonus sqaures will have over their rows normal value. In the default config a value of 2 means that the bonus sqaures are worth twice the amount.
+
+`10` `10` `10` + `20`
+
+`30` `30` `30` + `60`
+
+I wil be using a 4 here, making each bonus sqaure worth four times the rows base amount.
+
+![image](https://user-images.githubusercontent.com/12489689/169610387-b62a14bd-2c95-4233-b567-03b243801111.png)
+
+Finally we have the starting rows base amount. This is what the worth is of the normal sqaures on the very first row. For this value I will use a 20 base value.
+
+So for this example we have a 5x5 grid, of which the final 2 columns are bonus columns, and which the first row starts with a base value of 20, and a 4 times multiplier for the bonus sqaures, with each rows base value going up by 50 from the previous.
+
+`20`  `20`  `20`  + `80` `80`
+
+`70`  `70` ` 70`  + `280` `280`
+
+`120` `120` `120` + `480` `480`
+
+`170` `170` `170` + `680` `680`
+
+`220` `220` `220` + `880` `880`
+
+And with that you are done. The solver will output in the same manner as before, making a markdown file with the same name and location as the original spreadsheet. Also ordered from highest score to lowest.
+
+![image](https://user-images.githubusercontent.com/12489689/169611929-066c0dae-dfa9-48b0-a92a-72714816d2b3.png)
