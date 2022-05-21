@@ -209,7 +209,7 @@ Next is deciding the multiplier the bonus sqaures will have over their rows norm
 
 `30` `30` `30` + `60`
 
-I wil be using a 4 here, making each bonus sqaure worth four times the rows base amount.
+I will be using a 4 here, making each bonus sqaure worth four times the rows base amount.
 
 ![image](https://user-images.githubusercontent.com/12489689/169610387-b62a14bd-2c95-4233-b567-03b243801111.png)
 
