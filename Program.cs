@@ -29,7 +29,7 @@ namespace tog_bingo
             {
                 Console.Clear();
                 AsciiTitle();
-                Console.WriteLine($"Error Occured: You input an answer for only {keyChars.Length} total sqaures, must have enough for {Settings.columns * Settings.rows} total sqaures.");
+                Console.WriteLine($"Error Occured: You input an answer for only {keyChars.Length} total squares, must have enough for {Settings.columns * Settings.rows} total squares.");
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -52,7 +52,7 @@ namespace tog_bingo
                 //Turns player guess into char array.
                 char[] guessChars = guessData.ToCharArray();
 
-                // Holds the current position of each final column sqaure of that row.
+                // Holds the current position of each final column square of that row.
                 short columnElement = Settings.columns;
                 // Holds current absolute element postion.
                 int currentElementHolder = 0;
@@ -60,7 +60,7 @@ namespace tog_bingo
                 // Starting score.
                 int score = 0;
                 // Resets the value for next player loop.
-                short sqaureValue = Settings.baseSquareValue;
+                short squareValue = Settings.baseSquareValue;
 
                 // Checks if current player has enough squares gussed. 
                 if (guessChars.Length >= (Settings.columns * Settings.rows))
@@ -68,13 +68,13 @@ namespace tog_bingo
                     // Loops through rows.
                     for (short rowCounter = 0; rowCounter < Settings.rows; rowCounter++)
                     {
-                        // currentElement is the progress of what sqaure is being worked on. This value is not relative to the row, but is in the context of all elements.
-                        // columnElement is the current rows final column sqaure, setting up each row loop to end on that rows final sqaure, fucntionally blocking out each rows length.
+                        // currentElement is the progress of what square is being worked on. This value is not relative to the row, but is in the context of all elements.
+                        // columnElement is the current rows final column square, setting up each row loop to end on that rows final square, fucntionally blocking out each rows length.
                         for (int currentElement = currentElementHolder; currentElement < columnElement; currentElement++)
                         {
-                            // Checks if the sqaure being worked on lines up with the bonus sqaures of that row.
+                            // Checks if the square being worked on lines up with the bonus squares of that row.
                             if ((currentElement + Settings.bonusColumns) >= columnElement)
-                                // Checks if the sqaure was skipped by checking if the skip charachter was used.
+                                // Checks if the square was skipped by checking if the skip charachter was used.
                                 if (guessChars[currentElement] == Settings.bonusSkipChar)
                                 {
                                     // If skipped, add 0 to score.
@@ -84,31 +84,31 @@ namespace tog_bingo
                                 else if (guessChars[currentElement] == keyChars[currentElement])
                                 {
                                     // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
-                                    score += (sqaureValue * Settings.bonusMultiplier);
+                                    score += (squareValue * Settings.bonusMultiplier);
                                 }
                                 else
                                 {
                                     // If it doesnt match then it will subtract by the calculated amount.
-                                    score -= (sqaureValue * Settings.bonusMultiplier);
+                                    score -= (squareValue * Settings.bonusMultiplier);
                                 }
-                            // Checks if the current guess matches with the key for that sqaure.
+                            // Checks if the current guess matches with the key for that square.
                             else if (guessChars[currentElement] == keyChars[currentElement])
                             {
                                 // If matches adds current row value to score.
-                                score += sqaureValue;
+                                score += squareValue;
                             }
                             else
                             {
                                 // If it doesn't match, it will subract the rows' value from score. 
-                                score -= sqaureValue;
+                                score -= squareValue;
                             }
 
                             // This is to keep track of the current absolute element position and not have it reset to 0 in the next loop.
                             currentElementHolder = currentElement + 1;
 
                         }
-                        // Sets new base sqaure value for the next row.
-                        sqaureValue += Settings.rowValueOffset;
+                        // Sets new base square value for the next row.
+                        squareValue += Settings.rowValueOffset;
                         // Calculates the next rows final column in terms of absolute position.
                         columnElement += Settings.columns;
                     }
@@ -133,7 +133,7 @@ namespace tog_bingo
                     // If they dont have enough squares guessed, the program will end and inform user of where the culprit is in the spreadsheet.
                     Console.Clear();
                     AsciiTitle();
-                    Console.WriteLine($"Error Occured: On Row {currentRow} '{nameData}' has guessed for only {guessChars.Length} sqaures, needs to be for {Settings.columns * Settings.rows} sqaures.");
+                    Console.WriteLine($"Error Occured: On Row {currentRow} '{nameData}' has guessed for only {guessChars.Length} squares, needs to be for {Settings.columns * Settings.rows} squares.");
                     Console.Write("Press any key to exit...");
                     Console.ReadKey();
                     Environment.Exit(0);
@@ -193,7 +193,7 @@ namespace tog_bingo
                 Settings.bonusColumns = 1;
                 Settings.rowValueOffset = 20;
                 Settings.bonusMultiplier = 2;
-                Settings.bonusSkipChar = 'P'; // Which single character will be recognized as player having skipped the optional sqaures.
+                Settings.bonusSkipChar = 'P'; // Which single character will be recognized as player having skipped the optional squares.
                 Settings.baseSquareValue = 10;
 
                 // ASCII Title Art
@@ -227,19 +227,19 @@ namespace tog_bingo
                 // The y-axis row amount
                 Console.Write("Please Enter Row Amount(Default: 3): ");
                 Settings.rows = Int16.Parse(StringFormat(Console.ReadLine()));
-                // Of the given grid size, how many end columns are optional sqaures. The Purple Sqaures.
+                // Of the given grid size, how many end columns are optional squares. The Purple Squares.
                 Console.Write("Please Enter How Many Columns Will Be Optional(Default: 1): ");
                 Settings.bonusColumns = Int16.Parse(StringFormat(Console.ReadLine()));
                 // The offset amount to shift each rows values from the previous row. Example: first row is a 10 value, entering 20 here means next row is now worth 30.
                 Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row(Default: 20): ");
                 Settings.rowValueOffset = Int16.Parse(StringFormat(Console.ReadLine()));
-                // How much the bonus squares are compared to that rows base sqaure value. If a rows sqaure value is 10, a 2 multiplier will mean that rows bonus sqaures are worth 20.
+                // How much the bonus squares are compared to that rows base square value. If a rows square value is 10, a 2 multiplier will mean that rows bonus squares are worth 20.
                 Console.Write("Please Enter Score Multiplier For Optional Column/s(Default: 2): ");
                 Settings.bonusMultiplier = Int16.Parse(StringFormat(Console.ReadLine()));
-                // Which single character will be recognized as player having skipped the optional sqaures.
+                // Which single character will be recognized as player having skipped the optional squares.
                 Settings.bonusSkipChar = 'P';
-                // This sets the value for the normal sqaures in the very first row.
-                Console.Write("Please Enter The Starting Rows' Sqaure Value(Default: 10): ");
+                // This sets the value for the normal squares in the very first row.
+                Console.Write("Please Enter The Starting Rows' Square Value(Default: 10): ");
                 Settings.baseSquareValue = Int16.Parse(StringFormat(Console.ReadLine()));
             }
         }

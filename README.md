@@ -44,7 +44,7 @@ To start with, the spreadsheet:
 
 The app works on a per file basis, so each new chapter, or just any new bingo in general, would have its own file. All entries are done on the first sheet. Column A is where all names go. Column B is where their guesses go. The names should be continuous, with no empy row in-between any names. If done as such, no names past the break would be analyzed.
 
-The only valid characters are `Y` for Yes, `N` for No, and `P` for Pass. Any other character will be scored as an incorrect match, and their score would suffer from it. A player can only Pass on the bonus sqaures. If they attempt to Pass on sqaures they can't, the app will mark it as an incorrect guess by them. Case doesnt matter, nor any spaces.
+The only valid characters are `Y` for Yes, `N` for No, and `P` for Pass. Any other character will be scored as an incorrect match, and their score would suffer from it. A player can only Pass on the bonus squares. If they attempt to Pass on squares they can't, the app will mark it as an incorrect guess by them. Case doesnt matter, nor any spaces.
 
 ### Path
 
@@ -161,7 +161,7 @@ In this example I will be using a column value of 5.
 
 ![image](https://user-images.githubusercontent.com/12489689/169608961-e0b18924-cde9-4b21-8b01-6f039ccd4b92.png)
 
-Next it asks for a row input. I'll also be using a value of 5, for a total of 25 total sqaures.
+Next it asks for a row input. I'll also be using a value of 5, for a total of 25 total squares.
 
 `0`
 
@@ -185,7 +185,7 @@ For this example I will be saying that out of the 5 total columns, 2 will be bon
 
 ![image](https://user-images.githubusercontent.com/12489689/169609593-1741999c-ab91-495b-813b-b839ca4945da.png)
 
-Next is how much each row will increment over the current row. In the default config the first row is worth 10 per normal sqaure, with a value of 20 here, the next row will go up to 30. Then the following row will go up another 20 to equal 50.
+Next is how much each row will increment over the current row. In the default config the first row is worth 10 per normal square, with a value of 20 here, the next row will go up to 30. Then the following row will go up another 20 to equal 50.
 
 `10` `10` `10` + `0`
 
@@ -203,19 +203,19 @@ For this example I will use 50 as the value:
 
 ![image](https://user-images.githubusercontent.com/12489689/169610055-0633a80d-173f-4172-b6ed-fc109df1c86f.png)
 
-Next is deciding the multiplier the bonus sqaures will have over their rows normal value. In the default config a value of 2 means that the bonus sqaures are worth twice the amount.
+Next is deciding the multiplier the bonus squares will have over their rows normal value. In the default config a value of 2 means that the bonus squares are worth twice the amount.
 
 `10` `10` `10` + `20`
 
 `30` `30` `30` + `60`
 
-I will be using a 4 here, making each bonus sqaure worth four times the rows base amount.
+I will be using a 4 here, making each bonus square worth four times the rows base amount.
 
 ![image](https://user-images.githubusercontent.com/12489689/169610387-b62a14bd-2c95-4233-b567-03b243801111.png)
 
-Finally we have the starting rows base amount. This is what the worth is of the normal sqaures on the very first row. For this value I will use a 20 base value.
+Finally we have the starting rows base amount. This is what the worth is of the normal squares on the very first row. For this value I will use a 20 base value.
 
-So for this example we have a 5x5 grid, of which the final 2 columns are bonus columns, and which the first row starts with a base value of 20, and a 4 times multiplier for the bonus sqaures, with each rows base value going up by 50 from the previous.
+So for this example we have a 5x5 grid, of which the final 2 columns are bonus columns, and which the first row starts with a base value of 20, and a 4 times multiplier for the bonus squares, with each rows base value going up by 50 from the previous.
 
 `20`  `20`  `20`  + `80` `80`
 
