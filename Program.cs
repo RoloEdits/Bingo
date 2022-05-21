@@ -6,6 +6,9 @@ namespace tog_bingo
     {
         static void Main(string[] args)
         {
+            // Set console name and text color.
+            Console.Title = "Tower of God Bingo Solver";
+            Console.ForegroundColor = ConsoleColor.Red;
             // ASCII Title Art.
             Console.WriteLine(AsciiTitle(""));
             Console.WriteLine("\n\n\n\n");
@@ -59,8 +62,8 @@ namespace tog_bingo
                 // Starting score.
                 int score = 0;
                 // Resets the value for next player loop.
-                short sqaureValue = Settings.baseSquareValue; 
-                
+                short sqaureValue = Settings.baseSquareValue;
+
                 // Checks if current player has enough squares gussed. 
                 if (guessChars.Length >= (Settings.columns * Settings.rows))
                 {
@@ -77,7 +80,7 @@ namespace tog_bingo
                                 if (guessChars[currentElement] == Settings.bonusSkipChar)
                                 {
                                     // If skipped, add 0 to score.
-                                    score += 0; 
+                                    score += 0;
                                 }
                                 // Checks if the guess matches.
                                 else if (guessChars[currentElement] == keyChars[currentElement])
@@ -128,7 +131,7 @@ namespace tog_bingo
                     }
                 }
                 else
-                {   
+                {
                     // If they dont have enough sqaures guessed, the program will end and inform user of where the culprit is in the spreadsheet.
                     Console.Clear();
                     Console.WriteLine(AsciiTitle(""));
@@ -151,6 +154,16 @@ namespace tog_bingo
         // Formats string inputs by removing spaces, new lines,, returns, and makes all characters uppercase.
         static string StringFormat(string formatedString)
         {
+            // Redundant NULL input handling to allow graceful exit.
+            if (formatedString == null)
+            {
+                Console.Clear();
+                Console.WriteLine(AsciiTitle(""));
+                Console.WriteLine("\n\n\n\n");
+                Console.WriteLine("Error: Invalid Input. Press any key to exit program...");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
             return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
         }
 
