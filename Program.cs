@@ -10,8 +10,7 @@ namespace tog_bingo
             Console.Title = "Tower of God Bingo Solver";
             Console.ForegroundColor = ConsoleColor.Red;
             // ASCII Title Art.
-            Console.WriteLine(AsciiTitle(""));
-            Console.WriteLine("\n\n\n\n");
+            AsciiTitle();
             // Prompt User for which settings to load.
             Console.WriteLine("Load Default Settings: 1\nEnter Custom Settings: 2\n\n\n\n");
             Console.Write("Enter Option: ");
@@ -29,8 +28,7 @@ namespace tog_bingo
             if (keyChars.Length < (Settings.columns * Settings.rows))
             {
                 Console.Clear();
-                Console.WriteLine(AsciiTitle(""));
-                Console.WriteLine("\n\n\n\n");
+                AsciiTitle();
                 Console.WriteLine($"Error Occured: You input an answer for only {keyChars.Length} total sqaures, must have enough for {Settings.columns * Settings.rows} total sqaures.");
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
@@ -132,10 +130,9 @@ namespace tog_bingo
                 }
                 else
                 {
-                    // If they dont have enough sqaures guessed, the program will end and inform user of where the culprit is in the spreadsheet.
+                    // If they dont have enough squares guessed, the program will end and inform user of where the culprit is in the spreadsheet.
                     Console.Clear();
-                    Console.WriteLine(AsciiTitle(""));
-                    Console.WriteLine("\n\n\n\n");
+                    AsciiTitle();
                     Console.WriteLine($"Error Occured: On Row {currentRow} '{nameData}' has guessed for only {guessChars.Length} sqaures, needs to be for {Settings.columns * Settings.rows} sqaures.");
                     Console.Write("Press any key to exit...");
                     Console.ReadKey();
@@ -144,46 +141,45 @@ namespace tog_bingo
             }
             // Successful run of application
             Console.Clear();
-            Console.WriteLine(AsciiTitle(""));
-            Console.WriteLine("\n\n\n\n");
+            AsciiTitle();
             Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses.");
             Console.Write("Press any key to exit...");
             Console.ReadKey();
         }
 
         // Formats string inputs by removing spaces, new lines,, returns, and makes all characters uppercase.
-        static string StringFormat(string formatedString)
+        static string StringFormat(string? formatedString)
         {
             // Redundant NULL input handling to allow graceful exit.
             if (formatedString == null)
             {
                 Console.Clear();
-                Console.WriteLine(AsciiTitle(""));
-                Console.WriteLine("\n\n\n\n");
+                AsciiTitle();
                 Console.WriteLine("Error: Invalid Input. Press any key to exit program...");
                 Console.ReadKey();
                 Environment.Exit(0);
             }
-            return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
+            return formatedString = formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
         }
 
         // Holder for the Ascii Art Title
-        static string AsciiTitle(string _art)
+        static void AsciiTitle()
         {
-            return @"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
+            Console.WriteLine(@"    ___       ___       ___       ___       ___            ___       ___            ___       ___       ___   
    /\  \     /\  \     /\__\     /\  \     /\  \          /\  \     /\  \          /\  \     /\  \     /\  \  
    \:\  \   /::\  \   /:/\__\   /::\  \   /::\  \        /::\  \   /::\  \        /::\  \   /::\  \   /::\  \ 
    /::\__\ /:/\:\__\ /:/:/\__\ /::\:\__\ /::\:\__\      /:/\:\__\ /::\:\__\      /:/\:\__\ /:/\:\__\ /:/\:\__\
   /:/\/__/ \:\/:/  / \::/:/  / \:\:\/  / \;:::/  /      \:\/:/  / \/\:\/__/      \:\:\/__/ \:\/:/  / \:\/:/  /
   \/__/     \::/  /   \::/  /   \:\/  /   |:\/__/        \::/  /     \/__/        \::/  /   \::/  /   \::/  / 
              \/__/     \/__/     \/__/     \|__|          \/__/                    \/__/     \/__/     \/__/  
-                                  ___       ___       ___       ___       ___                                 
-                                 /\  \     /\  \     /\__\     /\  \     /\  \                                
-                                /::\  \   _\:\  \   /:| _|_   /::\  \   /::\  \                               
-                               /::\:\__\ /\/::\__\ /::|/\__\ /:/\:\__\ /:/\:\__\                              
-                               \:\::/  / \::/\/__/ \/|::/  / \:\:\/__/ \:\/:/  /                              
-                                \::/  /   \:\__\     |:/  /   \::/  /   \::/  /                               
-                                 \/__/     \/__/     \/__/     \/__/     \/__/";
+                                  ___       ___       ___       ___       ___                      
+                                 /\  \     /\  \     /\__\     /\  \     /\  \ 
+                                /::\  \   _\:\  \   /:| _|_   /::\  \   /::\  \ 
+                               /::\:\__\ /\/::\__\ /::|/\__\ /:/\:\__\ /:/\:\__\ 
+                               \:\::/  / \::/\/__/ \/|::/  / \:\:\/__/ \:\/:/  /
+                                \::/  /   \:\__\     |:/  /   \::/  /   \::/  /
+                                 \/__/     \/__/     \/__/     \/__/     \/__/");
+            Console.WriteLine("\n\n\n\n");
         }
 
         // Checks how user wants to handle settings.
@@ -201,8 +197,7 @@ namespace tog_bingo
                 Settings.baseSquareValue = 10;
 
                 // ASCII Title Art
-                Console.WriteLine(AsciiTitle(""));
-                Console.WriteLine("\n\n\n\n");
+                AsciiTitle();
                 Console.WriteLine("Default Settings Loaded...\n");
                 // Ask user for absolute file path.
                 Console.Write("Please Enter File Path: ");
@@ -217,8 +212,7 @@ namespace tog_bingo
             else if (selection == "2")
             {
                 // ASCII Title Art
-                Console.WriteLine(AsciiTitle(""));
-                Console.WriteLine("\n\n\n\n");
+                AsciiTitle();
                 // Ask user for absolute file path.
                 Console.Write("Please Enter File Path: ");
                 Settings.path = Console.ReadLine();
