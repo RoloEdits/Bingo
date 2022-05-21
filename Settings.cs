@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace tog_bingo
+﻿namespace tog_bingo
 {
     internal class Settings
     {
-        public static string path;
-        public static string key;
+        public static string path = String.Empty;
+        public static string key = String.Empty;
         public static short columns;
         public static short rows;
         public static short bonusColumns;
@@ -17,6 +11,6 @@ namespace tog_bingo
         public static short bonusMultiplier;
         public static char bonusSkipChar;
         public static short baseSquareValue;
-        public static string fileName;
+        public static string fileName = String.Empty;
     }
 }
