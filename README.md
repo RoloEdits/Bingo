@@ -65,7 +65,11 @@ Note: **The Spreadsheet Must Not be Opened By Another Program When Using App**
 
 On Windows you can simply open it like any other program.
 
-On Linux you can right-click in an empy space inside the directory, and click open in terminal.
+On linux, first you must make sure its executable.
+
+![image](https://user-images.githubusercontent.com/12489689/169674313-db774b5f-8c7f-4920-bfb0-57b999d05c47.png)
+
+Then you can right-click in an empy space inside the directory, and click open in terminal.
 
 ![image](https://user-images.githubusercontent.com/12489689/169414950-17b5a7c7-e26b-4248-ad15-aa03782a9762.png)
 
