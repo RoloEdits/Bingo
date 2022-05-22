@@ -121,12 +121,7 @@ namespace tog_bingo
                     // Goes to next row in spreadsheet.
                     currentRow++;
 
-                    // After all players have been added, writes each out to file.
-                    using TextWriter writer = new StreamWriter(Settings.fileName);
-                    foreach (var player in players)
-                    {
-                        writer.WriteLine($"{player.Name} {player.Score}");
-                    }
+                    
                 }
                 else
                 {
@@ -139,6 +134,14 @@ namespace tog_bingo
                     Environment.Exit(0);
                 }
             }
+
+            // After all players have been added, writes each out to file.
+            using TextWriter writer = new StreamWriter(Settings.fileName);
+            foreach (var player in players)
+            {
+                writer.WriteLine($"{player.Name} {player.Score}");
+            }
+
             // Successful run of application
             Console.Clear();
             AsciiTitle();
