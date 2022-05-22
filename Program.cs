@@ -150,6 +150,7 @@ namespace tog_bingo
             Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses.");
             Console.Write("Press any key to exit...");
             Console.ReadKey();
+            Console.WriteLine("\n");
             Console.ResetColor();
         }
 
