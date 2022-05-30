@@ -171,6 +171,7 @@ namespace Tog.Bingo
             Console.ReadKey();
             Console.WriteLine(Environment.NewLine);
             Console.ResetColor();
+            Environment.Exit(0);
         }
     }
 }
