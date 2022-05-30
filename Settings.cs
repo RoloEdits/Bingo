@@ -1,4 +1,4 @@
-﻿namespace tog_bingo
+﻿namespace Tog.Bingo
 {
     internal class Settings
     {
