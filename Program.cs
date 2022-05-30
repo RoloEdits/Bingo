@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
+using Markdown;
 
-namespace tog_bingo
+namespace Tog.Bingo
 {
     internal class Program
     {
@@ -24,7 +25,7 @@ namespace tog_bingo
             char[] keyChars = StringFormat(Settings.key).ToCharArray();
             // Make players list of type Player.
             var players = new List<Player>();
-
+            var logCorrectSquares = new List<int>();
             // Checks if the key is large enough to answer for the bingo.
             if (keyChars.Length < (Settings.columns * Settings.rows))
             {
@@ -87,6 +88,7 @@ namespace tog_bingo
                                 {
                                     // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
                                     score += (squareValue * Settings.bonusMultiplier);
+                                    logCorrectSquares.Add(currentElement);
                                 }
                                 else
                                 {
@@ -98,6 +100,7 @@ namespace tog_bingo
                             {
                                 // If matches adds current row value to score.
                                 score += squareValue;
+                                logCorrectSquares.Add(currentElement);
                             }
                             else
                             {
@@ -141,10 +144,19 @@ namespace tog_bingo
             // After all players have been added, writes each out to file.
             using (TextWriter writer = new StreamWriter(Settings.fileName))
             {
+                writer.WriteLine("| Names | Scores |");
+                writer.WriteLine("|---|---|");
                 foreach (var player in players)
                 {
-                    writer.WriteLine($"{player.Name} {player.Score}");
+                    writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
+                writer.WriteLine("---");
+
+                var playerCount = players.Count;
+                string table = Table.Write(logCorrectSquares, Settings.rows, Settings.columns, Settings.bonusColumns, playerCount);
+
+                writer.Write(table);
+                
             }
             
 
