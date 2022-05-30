@@ -1,16 +1,15 @@
-﻿namespace Markdown
+﻿namespace Tog.Bingo
 {
     internal class Table
     {
-       public static string Write(List<int> loggedCorrectSquares, short _rows, short _columns, short _bonusColumns, int playerCount)
+        public static string Write(List<int> loggedCorrectSquares, short _rows, short _columns, short _bonusColumns, int playerCount)
         {
-
             string fullTable = "";
-            var  columns = _columns;
-            var  rows = _rows;
+            var columns = _columns;
+            var rows = _rows;
             var bonus = _bonusColumns;
             var gridColumns = columns + 1;
-            var  bonusColumns = columns - bonus;
+            var bonusColumns = columns - bonus;
 
             var squaresAmount = columns * rows;
 
@@ -20,7 +19,7 @@
             for (int i = 0; i < squaresAmount; i++)
             {
                var summedCount = loggedCorrectSquares.Count( square => square == i );
-                finalCount.Add(summedCount);
+               finalCount.Add(summedCount);
             }
 
             foreach (var sqaure in finalCount)
@@ -51,14 +50,14 @@
                 }
             }
             //Goes to next line.
-            fullTable += "\n";
+            fullTable += Environment.NewLine;
             // Writes out dividing row.
             for (int i = 0; i < gridColumns; i++)
             {
                 fullTable += $" :---: |" ;
             }
             // Goes to next line.
-            fullTable += "\n";
+            fullTable += Environment.NewLine;
 
             // Writes out true rows.
             for (int row = 0; row < rows; row++)
@@ -77,7 +76,7 @@
                 }
                 endRowSquare += columns;
                 // Goes to next row.
-                fullTable += "\n";
+                fullTable += Environment.NewLine;
             }
             return fullTable;
         }
