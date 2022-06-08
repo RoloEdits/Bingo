@@ -68,7 +68,7 @@ namespace Tog.Bingo
                 // Resets the value for next player loop.
                 short squareValue = Settings.baseSquareValue;
 
-                // Checks if current player has enough squares gussed. 
+                // Checks if current player has enough squares guessed. 
                 if (guessChars.Length >= (Settings.columns * Settings.rows))
                 {
                     // Loops through rows.
@@ -148,18 +148,27 @@ namespace Tog.Bingo
                 //Sort List so highest Score is on top.
                 players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));
 
+
+                string answerTable = Table.answerTable(keyChars, Settings.rows, Settings.columns, Settings.bonusColumns);
+
+                writer.Write(answerTable);
+
+                writer.WriteLine();
+
+                var playerCount = players.Count;
+                string percentageTable = Table.percentageTable(logCorrectSquares, Settings.rows, Settings.columns, Settings.bonusColumns, playerCount);
+
+                writer.Write(percentageTable);
+
+                writer.WriteLine();
+
                 writer.WriteLine("| Names | Scores |");
                 writer.WriteLine("|---|---|");
                 foreach (var player in players)
                 {
                     writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
-                writer.WriteLine("---");
-
-                var playerCount = players.Count;
-                string table = Table.Write(logCorrectSquares, Settings.rows, Settings.columns, Settings.bonusColumns, playerCount);
-
-                writer.Write(table);
+                
                 
             }
 
