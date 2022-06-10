@@ -2,26 +2,27 @@
 {
     internal class Table
     {
-        public static string percentageTable(List<int> loggedCorrectSquares, short _rows, short _columns, short _bonusColumns, int playerCount)
+        public static string PercentageTable()
         {
             // Holder for table construct.
             string fullTable = "";
-            var columns = _columns;
-            var rows = _rows;
-            var bonus = _bonusColumns;
+            var columns = Settings.Columns;
+            var rows = Settings.Rows;
+            var bonus = Settings.BonusColumns;
+            var playerCount = Player.PlayerCount;
             var gridColumns = columns + 1;
             var bonusColumns = columns - bonus;
             var squaresAmount = columns * rows;
 
             // Holds the amount of times an sqaure was chosen as correct.
-            List<int> finalCount = new List<int>();
+            var finalCount = new List<int>();
             // Holds final percentages.
-            List<double> percentages = new List<double>();
+            var percentages = new List<double>();
             
             // Counts how many correct guesses there were for each sqaure.
             for (int i = 0; i < squaresAmount; i++)
             {
-               var summedCount = loggedCorrectSquares.Count( square => square == i );
+               var summedCount = Player.CorrectGuesses.Count( square => square == i );
                finalCount.Add(summedCount);
             }
             // Calculates the percentages for each sqaure.
@@ -84,17 +85,16 @@
             return fullTable;
         }
 
-        public static string answerTable(char[] _key, short _rows, short _columns, short _bonusColumns)
+        public static string AnswerTable()
         {
             // Holder for table construct.
             string fullTable = "";
-            char[] key = _key;
-            var columns = _columns;
-            var rows = _rows;
-            var bonus = _bonusColumns;
+            char[] key = Settings.Key;
+            var columns = Settings.Columns;
+            var rows = Settings.Rows;
+            var bonus = Settings.BonusColumns;
             var gridColumns = columns + 1;
             var bonusColumns = columns - bonus;
-            var squaresAmount = columns * rows;
 
             // Sets first row label to 'A'.
             char rowLabel = 'A';
