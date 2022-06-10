@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.1.32421.90
+VisualStudioVersion = 17.2.32526.322
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "tog-bingo", "tog-bingo.csproj", "{B344C043-CDA5-47A9-97EA-9DBA0E478206}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo", "Bingo.csproj", "{C28F8B9D-8DDB-4E22-B936-5042F6813599}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B344C043-CDA5-47A9-97EA-9DBA0E478206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B344C043-CDA5-47A9-97EA-9DBA0E478206}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B344C043-CDA5-47A9-97EA-9DBA0E478206}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B344C043-CDA5-47A9-97EA-9DBA0E478206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C28F8B9D-8DDB-4E22-B936-5042F6813599}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C28F8B9D-8DDB-4E22-B936-5042F6813599}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C28F8B9D-8DDB-4E22-B936-5042F6813599}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C28F8B9D-8DDB-4E22-B936-5042F6813599}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {4B9F4CD8-7580-4654-A5C1-4BF188499241}
+		SolutionGuid = {0FD14899-6DCF-4005-8228-CC4DA779347C}
 	EndGlobalSection
 EndGlobal

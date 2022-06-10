@@ -1,4 +1,10 @@
-﻿namespace Tog.Bingo
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Bingo
 {
     internal class Table
     {
@@ -18,12 +24,12 @@
             var finalCount = new List<int>();
             // Holds final percentages.
             var percentages = new List<double>();
-            
+
             // Counts how many correct guesses there were for each sqaure.
             for (int i = 0; i < squaresAmount; i++)
             {
-               var summedCount = Player.CorrectGuesses.Count( square => square == i );
-               finalCount.Add(summedCount);
+                var summedCount = Player.CorrectGuesses.Count(square => square == i);
+                finalCount.Add(summedCount);
             }
             // Calculates the percentages for each sqaure.
             foreach (var sqaure in finalCount)
@@ -36,21 +42,21 @@
             char rowLabel = 'A';
             int absoluteIndex = 0;
             int endRowSquare = columns;
-            
+
             // Writes out Header row.
             for (int headerColumn = 0; headerColumn < gridColumns; headerColumn++)
             {
                 if (headerColumn == 0)
                 {
-                    fullTable += "| Stats |" ;
+                    fullTable += "| Stats |";
                 }
                 else if (headerColumn >= bonusColumns + 1)
                 {
-                    fullTable += " Bonus |" ;
+                    fullTable += " Bonus |";
                 }
                 else
                 {
-                    fullTable += $" {headerColumn} |" ;
+                    fullTable += $" {headerColumn} |";
                 }
             }
             //Goes to next line.
@@ -58,7 +64,7 @@
             // Writes out dividing row.
             for (int i = 0; i < gridColumns; i++)
             {
-                fullTable += $" :---: |" ;
+                fullTable += $" :---: |";
             }
             // Goes to next line.
             fullTable += Environment.NewLine;
@@ -74,8 +80,8 @@
                 for (int currentIndex = absoluteIndex; currentIndex < endRowSquare; currentIndex++)
                 {
                     // Writes out each square's value.
-                    fullTable += $" {percentages[currentIndex].ToString("P2")} |" ;
-                    
+                    fullTable += $" {percentages[currentIndex].ToString("P2")} |";
+
                     absoluteIndex = currentIndex + 1;
                 }
                 endRowSquare += columns;

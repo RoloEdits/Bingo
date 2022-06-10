@@ -1,6 +1,6 @@
 ﻿using ClosedXML.Excel;
 
-namespace Tog.Bingo
+namespace Bingo
 {
     internal class Program
     {
@@ -121,7 +121,7 @@ namespace Tog.Bingo
 
                     //Add Current Player to List.
                     players.Add(new Player(nameData, guessData, score));
-                    
+
                     // Goes to next row in spreadsheet.
                     currentRow++;
                 }

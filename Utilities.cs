@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tog.Bingo
+namespace Bingo
 {
-    public static class Utilities
+    internal class Utilities
     {
-        // Formats string inputs by removing spaces, new lines, returns, and makes all characters uppercase.
         public static string StringFormat(string? formatedString)
         {
             // Redundant NULL input handling to allow graceful exit.
