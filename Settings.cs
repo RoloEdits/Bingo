@@ -9,7 +9,6 @@ namespace Bingo
     internal class Settings
     {
         public static string? Path;
-        public static char[]? Key;
         public static short Columns;
         public static short Rows;
         public static short BonusColumns;
@@ -44,7 +43,7 @@ namespace Bingo
                 Settings.FileName = System.IO.Path.ChangeExtension(Settings.Path, "md");
                 // Enter known correct answer key
                 Console.Write("Please Enter Answer Key: ");
-                Settings.Key = Utilities.StringFormat(Console.ReadLine()).ToCharArray();
+                Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
             }
             // Asks user to input custom values.
             else if (selection == "2")
@@ -78,7 +77,7 @@ namespace Bingo
                 Settings.FileName = System.IO.Path.ChangeExtension(Settings.Path, "md");
                 // Enter known correct answer key
                 Console.Write("Please Enter Answer Key: ");
-                Settings.Key = Utilities.StringFormat(Console.ReadLine()).ToCharArray();
+                Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
             }
             // If its not 1 or 2 prompt user and exit program.
             else

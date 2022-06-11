@@ -8,14 +8,13 @@ namespace Bingo
 {
     internal class Table
     {
-        public static string PercentageTable()
+        public static string PercentageTable(int playerCount)
         {
             // Holder for table construct.
             string fullTable = "";
             var columns = Settings.Columns;
             var rows = Settings.Rows;
             var bonus = Settings.BonusColumns;
-            var playerCount = Player.PlayerCount;
             var gridColumns = columns + 1;
             var bonusColumns = columns - bonus;
             var squaresAmount = columns * rows;
@@ -37,7 +36,6 @@ namespace Bingo
                 double percentage = ((double)sqaure / playerCount);
                 percentages.Add(percentage);
             }
-
             // Sets first row label to 'A'.
             char rowLabel = 'A';
             int absoluteIndex = 0;
@@ -95,7 +93,7 @@ namespace Bingo
         {
             // Holder for table construct.
             string fullTable = "";
-            char[] key = Settings.Key;
+            var key = Game.Key;
             var columns = Settings.Columns;
             var rows = Settings.Rows;
             var bonus = Settings.BonusColumns;
@@ -144,7 +142,7 @@ namespace Bingo
                 for (int currentIndex = absoluteIndex; currentIndex < endRowSquare; currentIndex++)
                 {
                     // Writes out each square's value.
-                    fullTable += $"  {key[currentIndex]}  |";
+                    fullTable += $"  {key![currentIndex]}  |";
 
                     absoluteIndex = currentIndex + 1;
                 }

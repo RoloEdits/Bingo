@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using System.Runtime.InteropServices;
 
 namespace Bingo
 {
@@ -9,6 +10,12 @@ namespace Bingo
             // Set console name and text color.
             Console.Title = "Tower of God Bingo Solver";
             Console.ForegroundColor = ConsoleColor.Red;
+            // Checks if tthe OS is windows. If it is, sets console window height.
+            if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                Console.WindowHeight = 35;
+            }
+
             // ASCII Title Art.
             Utilities.AsciiTitle();
             // Prompt User for which settings to load.
@@ -25,11 +32,11 @@ namespace Bingo
             Settings.SettingsLoad(Options);
 
             // Checks if the key is large enough to answer for the bingo.
-            if (Settings.Key.Length < (Settings.Columns * Settings.Rows))
+            if (Game.Key!.Count < (Settings.Columns * Settings.Rows))
             {
                 Console.Clear();
                 Utilities.AsciiTitle();
-                Console.WriteLine($"Error Occured: You input an answer for only {Settings.Key.Length} total squares, must have enough for {Settings.Columns * Settings.Rows} total squares.");
+                Console.WriteLine($"Error Occured: You input an answer for only {Game.Key.Count} total squares, must have enough for {Settings.Columns * Settings.Rows} total squares.");
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
                 Console.ResetColor();
@@ -52,92 +59,20 @@ namespace Bingo
                 string nameData = workSheet.Cell(currentRow, 1).GetString();
                 //Parse Column 2 for Guess.
                 string guessData = Utilities.StringFormat(workSheet.Cell(currentRow, 2).GetString());
+                // Starting score.
+                int score = 0;
 
-                //Turns player guess into char array.
-                char[] guessChars = guessData.ToCharArray();
+                //Add Current Player to List.
+                players.Add(new Player(nameData, guessData, score));
 
-                // Checks if current player has enough squares guessed. 
-                if (guessChars.Length >= (Settings.Columns * Settings.Rows))
-                {
-                    // Holds the current position of each final column square of that row.
-                    short finalColumn = Settings.Columns;
-                    // Holds current absolute element postion.
-                    int currentIndexHolder = 0;
-
-                    // Starting score.
-                    int score = 0;
-
-                    // Resets the value for next player loop.
-                    short squareValue = Settings.BaseSquareValue;
-                    // Loops through rows.
-                    for (short rowCounter = 0; rowCounter < Settings.Rows; rowCounter++)
-                    {
-                        // currentElement is the progress of what square is being worked on. This value is not relative to the row, but is in the context of all elements.
-                        // columnElement is the current rows final column square, setting up each row loop to end on that rows final square, fucntionally blocking out each rows length.
-                        for (int currentIndex = currentIndexHolder; currentIndex < finalColumn; currentIndex++)
-                        {
-                            // Checks if the square being worked on lines up with the bonus squares of that row.
-                            if ((currentIndex + Settings.BonusColumns) >= finalColumn)
-                            {
-                                // Checks if the square was skipped by checking if the skip charachter was used.
-                                if (guessChars[currentIndex] != Settings.BonusSkipChar)
-                                {
-                                    // Checks if the guess matches.
-                                    if (guessChars[currentIndex] == Settings.Key[currentIndex])
-                                    {
-                                        // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
-                                        score += (squareValue * Settings.BonusMultiplier);
-                                        Player.CorrectGuesses.Add(currentIndex);
-                                    }
-                                    else
-                                    {
-                                        // If it doesnt match then it will subtract by the calculated amount.
-                                        score -= (squareValue * Settings.BonusMultiplier);
-                                    }
-                                }
-                            }
-
-                            // Checks if the current guess matches with the key for that square.
-                            else if (guessChars[currentIndex] == Settings.Key[currentIndex])
-                            {
-                                // If matches adds current row value to score.
-                                score += squareValue;
-                                Player.CorrectGuesses.Add(currentIndex);
-                            }
-                            else
-                            {
-                                // If it doesn't match, it will subract the rows' value from score. 
-                                score -= squareValue;
-                            }
-
-                            // This is to keep track of the current absolute element position and not have it reset to 0 in the next loop.
-                            currentIndexHolder = currentIndex + 1;
-                        }
-                        // Sets new base square value for the next row.
-                        squareValue += Settings.RowValueOffset;
-                        // Calculates the next rows final column in terms of absolute position.
-                        finalColumn += Settings.Columns;
-                    }
-
-                    //Add Current Player to List.
-                    players.Add(new Player(nameData, guessData, score));
-
-                    // Goes to next row in spreadsheet.
-                    currentRow++;
-                }
-                else
-                {
-                    // If they dont have enough squares guessed, the program will end and inform user of where the culprit is in the spreadsheet.
-                    Console.Clear();
-                    Utilities.AsciiTitle();
-                    Console.WriteLine($"Error Occured: On Row {currentRow} '{nameData}' has guessed for only {guessChars.Length} squares, needs to be for {Settings.Columns * Settings.Rows} squares.");
-                    Console.Write("Press any key to exit...");
-                    Console.ReadKey();
-                    Console.ResetColor();
-                    Environment.Exit(1);
-                }
+                // Goes to next row in spreadsheet.
+                currentRow++;
             }
-
+            // Goes through each player and calculates score.
+            foreach (var player in players)
+            {
+                player.Score = Game.PlayerScore(player.Guess, player.Name);
+            }
             // After all players have been added, writes each out to file.
             using (TextWriter writer = new StreamWriter(Settings.FileName!))
             {
@@ -148,7 +83,7 @@ namespace Bingo
                 writer.WriteLine();
 
                 // Writes out table for the amount of correct guesses per sqaure.
-                writer.Write(Table.PercentageTable());
+                writer.Write(Table.PercentageTable(players.Count));
                 writer.WriteLine();
 
                 // Writes out table for players and their scores.
@@ -162,7 +97,7 @@ namespace Bingo
             // Successful run of application
             Console.Clear();
             Utilities.AsciiTitle();
-            Console.WriteLine($"Successfully Finished Going Through {Player.PlayerCount} Players' Guesses.");
+            Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses.");
             Console.Write("Press any key to exit...");
             Console.ReadKey();
             Console.WriteLine(Environment.NewLine);

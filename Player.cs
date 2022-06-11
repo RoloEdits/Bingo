@@ -10,9 +10,7 @@ namespace Bingo
     {
         public string Name { get; }
         public List<char> Guess { get; }
-        public int Score { get; }
-
-        public static int PlayerCount = 0;
+        public int Score { get; set; }
 
         public static List<int> CorrectGuesses = new();
 
@@ -21,8 +19,6 @@ namespace Bingo
             Name = name;
             Guess = guess.ToList();
             Score = score;
-
-            PlayerCount++;
         }
     }
 }
