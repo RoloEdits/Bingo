@@ -35,6 +35,8 @@ Tower Of God Bingo
     ->  tog-bingo.exe
 ```
 
+If you need a free and open scource desktop spreadsheet app I recommend [OnlyOffice](https://www.onlyoffice.com/). Otherwise a Google Spreadsheet can be downloaded in the `xlsx` format.
+
 ## Spreadsheet
 
 To start with, the spreadsheet:
