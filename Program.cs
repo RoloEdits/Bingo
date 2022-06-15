@@ -7,6 +7,8 @@ namespace Bingo
     {
         static void Main(string[] args)
         {
+            var watch = new System.Diagnostics.Stopwatch();
+
             // Set console name and text color.
             Console.Title = "Tower of God Bingo Solver";
             Console.ForegroundColor = ConsoleColor.Red;
@@ -30,6 +32,8 @@ namespace Bingo
             string Options = Utilities.StringFormat(Console.ReadLine());
             Console.Clear();
             Settings.SettingsLoad(Options);
+
+            watch.Start();
 
             // Checks if the key is large enough to answer for the bingo.
             if (Game.Key!.Count < (Settings.Columns * Settings.Rows))
@@ -94,10 +98,12 @@ namespace Bingo
                     writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
             }
+
+            watch.Stop();
             // Successful run of application
             Console.Clear();
             Utilities.AsciiTitle();
-            Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses.");
+            Console.WriteLine($"Successfully Finished Going Through {players.Count} Players' Guesses in {watch.ElapsedMilliseconds}ms.");
             Console.Write("Press any key to exit...");
             Console.ReadKey();
             Console.WriteLine(Environment.NewLine);
