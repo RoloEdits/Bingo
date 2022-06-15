@@ -35,6 +35,8 @@ Tower Of God Bingo
     ->  tog-bingo.exe
 ```
 
+If you need a free and open scource desktop spreadsheet app I recommend [OnlyOffice](https://www.onlyoffice.com/). Otherwise a Google Spreadsheet can be downloaded in the `xlsx` format.
+
 ## Spreadsheet
 
 To start with, the spreadsheet:
@@ -141,7 +143,7 @@ With the file open in MarkText click the hamburger menu and go to `File` -> `Exp
 
 ![image](https://user-images.githubusercontent.com/12489689/173171858-dbb76428-fd02-4d1b-a191-58c10547a513.png)
 
-From there a box will pop up. You can search through and tweak things if you'd like, but you can also just leave it default which is what I have done in this example. Just name the file what you want, and click save.
+From there a box will pop up. You can search through and tweak things if you'd like, one of which i'd recommend being the font size, but you can also just leave it default which is what I have done in this example. Just name the file what you want, and click save.
 
 ![image](https://user-images.githubusercontent.com/12489689/173171903-9e20d599-a56d-4962-bed6-a95ada1c69e0.png)
 
@@ -153,7 +155,7 @@ Next you'll want to open the new HTML file. This should open your default browse
 
 ![image](https://user-images.githubusercontent.com/12489689/173172004-e7f52e38-25e7-4d7b-85d2-d556504c6b46.png)
 
-To get a thinner, and in my opinion, a nicer looking final image, you can just make the browser window itself as thin as can be.
+To get a thinner, and in my opinion, a nicer looking final image, you can just make the browser window itself as thin as you need.
 
 ![image](https://user-images.githubusercontent.com/12489689/173172062-f076d221-5cfa-47ae-aa07-e6af7ac29cce.png)
 
