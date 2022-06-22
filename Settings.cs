@@ -21,7 +21,7 @@ namespace Bingo
         // Checks how user wants to handle settings.
         public static void SettingsLoad(string selection)
         {
-            while (!(selection == "1" ^ selection == "2"))
+            while (selection != "1" && selection != "2")
             {
                 Console.Write($"You entered {selection}, must be either 1 or 2:");
 
@@ -59,9 +59,9 @@ namespace Bingo
                 Console.Write("Please Enter Answer Key: ");
                 Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
 
-                while (!(Game.Key.Count == 12))
+                while ( Game.Key.Count != 12 || Game.Key.Any(key => key != 'Y' && key != 'N')  )
                 {
-                    Console.Write($"You entered for {Game.Key.Count} Squares. Make sure you enter for 12: ");
+                    Console.Write("Invalid key. Make sure you enter for 12 squares, and only Y or N: ");
                     Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
                 }
             }
@@ -152,9 +152,9 @@ namespace Bingo
                 Console.Write("Please Enter Answer Key: ");
                 Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
 
-                while (!(Game.Key.Count == (Settings.Rows * Settings.Columns)))
+                while ( Game.Key.Count != (Settings.Rows * Settings.Columns) || Game.Key.Any(key => key != 'Y' && key != 'N') )
                 {
-                    Console.Write($"You entered for {Game.Key.Count} Squares. Make sure you enter for {Settings.Rows * Settings.Columns}: ");
+                    Console.Write($"Invalid key. Make sure you enter for {Settings.Rows * Settings.Columns} squares, and only Y or N: ");
                     Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
                 }
             }
