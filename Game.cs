@@ -10,12 +10,12 @@ namespace Bingo
     {
         public static List<char>? Key;
 
-        public static int PlayerScore(List<char> guess, string name)
+        public static int PlayerScore(List<char> guess, string name, bool allYes, bool allNo)
         {
             int score = 0;
 
             // Checks if current player has enough squares guessed. 
-            if (guess.Count >= (Settings.Columns * Settings.Rows))
+            if (guess.Count == (Settings.Columns * Settings.Rows))
             {
                 // Holds the current position of each final column square of that row.
                 short finalColumn = Settings.Columns;
@@ -42,7 +42,11 @@ namespace Bingo
                                 {
                                     // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
                                     score += (squareValue * Settings.BonusMultiplier);
-                                    Player.CorrectGuesses.Add(currentIndex);
+                                    // Checks if current player guessed all Y or all N. If they did, exclude from stats.
+                                    if (!(allYes || allNo))
+                                    {
+                                        Player.CorrectGuesses.Add(currentIndex);
+                                    }
                                 }
                                 else
                                 {
@@ -57,7 +61,11 @@ namespace Bingo
                         {
                             // If matches adds current row value to score.
                             score += squareValue;
-                            Player.CorrectGuesses.Add(currentIndex);
+                            // Checks if current player guessed all Y or all N. If they did, exclude from stats.
+                            if (!(allYes || allNo))
+                            {
+                                Player.CorrectGuesses.Add(currentIndex);
+                            }
                         }
                         else
                         {
@@ -79,7 +87,7 @@ namespace Bingo
                 // If they dont have enough squares guessed, the program will end and inform user of where the culprit is in the spreadsheet.
                 Console.Clear();
                 Utilities.AsciiTitle();
-                Console.WriteLine($"Error Occured:'{name}' has guessed for only {guess.Count} squares, needs to be for {Settings.Columns * Settings.Rows} squares.");
+                Console.WriteLine($"Error Occured:'{name}' has guessed for {guess.Count} squares, needs to be for {Settings.Columns * Settings.Rows} squares.");
                 Console.Write("Press any key to exit...");
                 Console.ReadKey();
                 Console.ResetColor();
