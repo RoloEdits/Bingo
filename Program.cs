@@ -7,6 +7,7 @@ namespace Bingo
     {
         static void Main(string[] args)
         {
+            // Creates timer.
             var watch = new System.Diagnostics.Stopwatch();
 
             // Set console name and text color.
@@ -29,23 +30,12 @@ namespace Bingo
             Console.WriteLine();
             Console.Write("Enter Option: ");
             // Pass answer to function.
-            string Options = Utilities.StringFormat(Console.ReadLine());
+            string options = Utilities.StringFormat(Console.ReadLine());
+            Settings.SettingsLoad(options);
             Console.Clear();
-            Settings.SettingsLoad(Options);
 
+            // Starts timer.
             watch.Start();
-
-            // Checks if the key is large enough to answer for the bingo.
-            if (Game.Key!.Count < (Settings.Columns * Settings.Rows))
-            {
-                Console.Clear();
-                Utilities.AsciiTitle();
-                Console.WriteLine($"Error Occured: You input an answer for only {Game.Key.Count} total squares, must have enough for {Settings.Columns * Settings.Rows} total squares.");
-                Console.Write("Press any key to exit...");
-                Console.ReadKey();
-                Console.ResetColor();
-                Environment.Exit(1);
-            }
 
             // Make players list of type Player.
             var players = new List<Player>();
@@ -75,7 +65,7 @@ namespace Bingo
             // Goes through each player and calculates score.
             foreach (var player in players)
             {
-                player.Score = Game.PlayerScore(player.Guess, player.Name);
+                player.Score = Game.PlayerScore(player.Guess, player.Name, player.AllYes, player.AllNo);
             }
             // After all players have been added, writes each out to file.
             using (TextWriter writer = new StreamWriter(Settings.FileName!))
@@ -98,7 +88,7 @@ namespace Bingo
                     writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
             }
-
+            // Ends timer.
             watch.Stop();
             // Successful run of application
             Console.Clear();
