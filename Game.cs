@@ -8,6 +8,7 @@ namespace Bingo
 {
     internal class Game
     {
+        // List of characters to hold the Key.
         public static List<char>? Key;
 
         public static int PlayerScore(List<char> guess, string name, bool allYes, bool allNo)
@@ -55,7 +56,6 @@ namespace Bingo
                                 }
                             }
                         }
-
                         // Checks if the current guess matches with the key for that square.
                         else if (guess[currentIndex] == Game.Key![currentIndex])
                         {
@@ -93,6 +93,7 @@ namespace Bingo
                 Console.ResetColor();
                 Environment.Exit(1);
             }
+            // Returns final score for that player.
             return score;
         }
     }
