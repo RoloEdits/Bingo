@@ -13,7 +13,7 @@ namespace Bingo
         public int Score { get; set; }
         public bool AllYes { get; }
         public bool AllNo { get; }
-        
+        // Holds correct Guesses players have made.
         public static List<int> CorrectGuesses = new();
 
         public Player(string name, string guess, int score)

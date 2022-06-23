@@ -86,6 +86,7 @@ namespace Bingo
                 // Goes to next row.
                 fullTable += Environment.NewLine;
             }
+            // Returns fully build table as a string.
             return fullTable;
         }
 
@@ -150,6 +151,7 @@ namespace Bingo
                 // Goes to next row.
                 fullTable += Environment.NewLine;
             }
+            // Returns fully build table as a string.
             return fullTable;
         }
     }
