@@ -41,7 +41,7 @@ namespace Bingo
             var players = new List<Player>();
 
             // Import spreadsheet and look to the first Worksheet.
-            using var workbook = new XLWorkbook(Settings.Path);
+            using var workbook = new XLWorkbook(Settings.filePath);
             var workSheet = workbook.Worksheet(1);
 
             // Starting spreadsheet row for While loop.
@@ -65,6 +65,7 @@ namespace Bingo
             // Goes through each player and calculates score.
             foreach (var player in players)
             {
+                // Passes each player from the list to get their score calculated.
                 player.Score = Game.PlayerScore(player.Guess, player.Name, player.AllYes, player.AllNo);
             }
             // After all players have been added, writes each out to file.
@@ -85,6 +86,7 @@ namespace Bingo
                 writer.WriteLine("|---|---|");
                 foreach (Player player in players)
                 {
+                    // Replaces all pipes with an escaped verion so that the Markdown Table wont be broken.
                     writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
             }
