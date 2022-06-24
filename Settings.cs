@@ -22,6 +22,7 @@ namespace Bingo
         // Checks how user wants to handle settings.
         public static void SettingsLoad(string selection)
         {
+            // Checks that user input either 1 or 2, and only one of those two options. Will reprompt if not 1 or 2.
             while (selection != "1" && selection != "2")
             {
                 Console.Write($"You entered {selection}, must be either 1 or 2:");
