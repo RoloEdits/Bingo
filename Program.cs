@@ -72,7 +72,7 @@ namespace Bingo
             using (TextWriter writer = new StreamWriter(Settings.FileName!))
             {
                 //Sort List so highest Score is on top.
-                players.Sort((lower, higher) => higher.Score.CompareTo(lower.Score));
+                players = players.OrderByDescending(player => player.Score).ThenBy(player => player.Name).ToList();
                 // Writes out the correct answer key to a table.
                 writer.Write(Table.AnswerTable());
                 writer.WriteLine();
