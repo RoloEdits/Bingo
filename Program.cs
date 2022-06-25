@@ -39,6 +39,8 @@ namespace Bingo
 
             // Make players list of type Player.
             var players = new List<Player>();
+            // Tracks the rows of players who have an incorrect amount of squares guessed.
+            var game = new List<Game>();
 
             // Import spreadsheet and look to the first Worksheet.
             using var workbook = new XLWorkbook(Settings.filePath);
@@ -56,11 +58,32 @@ namespace Bingo
                 // Starting score.
                 int score = 0;
 
+                game.Add(new Game (nameData, guessData.Length, currentRow));
                 //Add Current Player to List.
                 players.Add(new Player(nameData, guessData, score));
 
                 // Goes to next row in spreadsheet.
                 currentRow++;
+            }
+            // Sends game List to check how many guessers have incorrect amount of guesses.
+             var incorrectGuessers = Game.WrongAmountGuessedFor(game);
+
+            // If there is any amount greater than 0, then it will begin to exit and inform of all bad guessers.
+            if (incorrectGuessers.Count > 0)
+            {
+                Console.Clear();
+                Utilities.AsciiTitle();
+                Console.WriteLine($"Error Occured:" );
+                // Goes through each bad guesser and writes out what row they are at, and how many they guessed for.
+                foreach (var guesser in incorrectGuessers)
+                {
+                    Console.WriteLine($"Player in Row:{guesser.Row} has guessed for {guesser.GuessLength} squares.");
+                }
+                Console.WriteLine($"Needs to be for {Settings.Columns * Settings.Rows} squares. Please double check guesses.");
+                Console.Write("Press any key to exit...");
+                Console.ReadKey();
+                Console.ResetColor();
+                Environment.Exit(1);
             }
             // Goes through each player and calculates score.
             foreach (var player in players)
