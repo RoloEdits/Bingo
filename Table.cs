@@ -37,7 +37,7 @@ namespace Bingo
                 percentages.Add(percentage);
             }
             // Sets first row label to 'A'.
-            char rowLabel = 'A';
+            byte rowLabel = 0;
             int absoluteIndex = 0;
             int endRowSquare = columns;
 
@@ -71,14 +71,14 @@ namespace Bingo
             for (int row = 0; row < rows; row++)
             {
                 // Writes out row label.
-                fullTable += $"| **{rowLabel}** |";
+                fullTable += $"| **{RowLabel(rowLabel)}** |";
                 // Iterates to next letter in alphabet for next rows label.
                 rowLabel++;
                 // Writes out each square.
                 for (int currentIndex = absoluteIndex; currentIndex < endRowSquare; currentIndex++)
                 {
                     // Writes out each square's value.
-                    fullTable += $" {percentages[currentIndex].ToString("P2")} |";
+                    fullTable += $" {percentages[currentIndex]:P2} |";
 
                     absoluteIndex = currentIndex + 1;
                 }
@@ -102,7 +102,7 @@ namespace Bingo
             var bonusColumns = columns - bonus;
 
             // Sets first row label to 'A'.
-            char rowLabel = 'A';
+            byte rowLabel = 0;
             int absoluteIndex = 0;
             int endRowSquare = columns;
 
@@ -136,7 +136,7 @@ namespace Bingo
             for (int row = 0; row < rows; row++)
             {
                 // Writes out row label.
-                fullTable += $"| **{rowLabel}** |";
+                fullTable += $"| **{RowLabel(rowLabel)}** |";
                 // Iterates to next letter in alphabet for next rows label.
                 rowLabel++;
                 // Writes out each square.
@@ -153,6 +153,105 @@ namespace Bingo
             }
             // Returns fully build table as a string.
             return fullTable;
+        }
+    
+        private static string RowLabel(byte totalCount)
+        {
+            // Full alphabet to use as a base.
+            const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            // Initiating the return label.
+            string label = string.Empty;
+            byte counter;
+            // All of this effectivly blocks out a base-26 number system. Enough to cover the full 255 range of a byte.
+            if (totalCount < alphabet.Length)
+            {
+                char singleChar = alphabet[totalCount];
+                label = singleChar.ToString();
+            }
+            else if (totalCount < alphabet.Length * 2)
+            {
+                // From here on, counter will always be set to a range from 0-25
+                counter = (byte)(totalCount - alphabet.Length);
+                // A
+                char singleCharA = alphabet[0];
+                // A - Z
+                char singleCharB = alphabet[counter];
+                // Concatenate the two charracters and store in label for return. AA, AB, AC, etc.
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 3)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 2);
+                // B
+                char singleCharA = alphabet[1];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 4)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 3);
+                // C
+                char singleCharA = alphabet[2];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 5)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 4);
+                // D
+                char singleCharA = alphabet[3];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 6)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 5);
+                // E
+                char singleCharA = alphabet[4];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 7)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 6);
+                // F
+                char singleCharA = alphabet[5];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 8)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 7);
+                // G
+                char singleCharA = alphabet[6];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 9)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 8);
+                // H
+                char singleCharA = alphabet[7];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            else if (totalCount < alphabet.Length * 10)
+            {
+                counter = (byte)(totalCount - alphabet.Length * 9);
+                // I
+                char singleCharA = alphabet[8];
+                char singleCharB = alphabet[counter];
+
+                label = singleCharA + singleCharB.ToString();
+            }
+            return label;
         }
     }
 }
