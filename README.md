@@ -262,17 +262,31 @@ As the host of the Bingo, you can decide the rules to voting, where you can say 
 
 Now as this isn't an actual bingo, where you have to make a full connected line, a free space doesn't really serve a purpose, but just for demonstration purposes I will include it. A free square is really just that you would always enter something in that spot, that everyone knows this, and entered it in themselves in that spot for a correct guess. For this example I will use also be using `X` and `O`.
 
+![image](https://user-images.githubusercontent.com/12489689/175805438-52c932a8-a950-4d52-a529-d90504108cb7.png)
+
 I set the the Columns and Rows to 5, to set the 5x5 grid size.
+
+![image](https://user-images.githubusercontent.com/12489689/175805418-c76d7d96-f162-4a86-acab-61e717ba165d.png)
 
 The way the program works by default is that only bonus squares can be Passed, so to make it possible to pass on any square in the grid, we need to set the bonus columns to the same amount as the full range of columns, in this case 5. This qualifies the full grid as "Bonus", allowing any to be passed with a `P`.
 
+![image](https://user-images.githubusercontent.com/12489689/175805457-9d644a8f-d72e-4141-a20a-4db8289b5baf.png)
+
 As I am making each square worth 50, I set this to 50.
+
+![image](https://user-images.githubusercontent.com/12489689/175805474-bdfc8a34-21c2-48e9-9781-7cae8aee6c78.png)
 
 As I want all squares on all rows to be worth the same, 50, I will set this to 0.
 
+![image](https://user-images.githubusercontent.com/12489689/175805480-486eb4a0-3705-4be5-9fcf-b7d8603c6b0d.png)
+
 Although we effectively made the entire bingo grid a bonus grid, as I've already set the value I wanted, I don't need any multiplier. I will set it to 1 so that the value for all squares are left at 50, 50 x 1 = 50.
 
+![image](https://user-images.githubusercontent.com/12489689/175805500-3940b1aa-1b23-4fa9-b1f8-b34c149354cc.png)
+
 And with that the grid is built. Next you just enter the file path as normal.
+
+![image](https://user-images.githubusercontent.com/12489689/175805534-50f5f2df-b4fe-40b2-9387-e24b98f4808c.png)
 
 For the answer key, you would just enter the known correct outcome, making sure to answer the free square, that everyone would have, with the agreed upon character. For the center square I made sure that it was an `O` that would line up with what everyone else would have picked there, making a "free" square.
 
