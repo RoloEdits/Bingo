@@ -11,8 +11,7 @@ namespace Bingo
         public string Name { get; }
         public List<char> Guess { get; }
         public int Score { get; set; }
-        public bool AllYes { get; }
-        public bool AllNo { get; }
+        public bool AllSame { get; }
         // Holds correct Guesses players have made.
         public static List<int> CorrectGuesses = new();
 
@@ -21,9 +20,8 @@ namespace Bingo
             Name = name;
             Guess = guess.ToList();
             Score = score;
-            // Checks if player guess is all Y or all N.
-            AllYes = Guess.All(check => check.Equals('Y'));
-            AllNo = Guess.All(check => check.Equals('N'));
+            // Checks if player guess is all the same.
+            AllSame = Guess.All(check => check.Equals(Guess[0]));
         }
     }
 }

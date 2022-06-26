@@ -20,7 +20,7 @@ namespace Bingo
             GuessLength = guessLength;
             Row = row;
         }
-        public static int PlayerScore(List<char> guess, string name, bool allYes, bool allNo)
+        public static int PlayerScore(List<char> guess, string name, bool allSame)
         {
             int score = 0;
 
@@ -50,8 +50,8 @@ namespace Bingo
                             {
                                 // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
                                 score += (squareValue * Settings.BonusMultiplier);
-                                // Checks if current player guessed all Y or all N. If they did, exclude from stats.
-                                if (!(allYes || allNo))
+                                // Checks if current player guessed the same answer for all the guess. If they did, exclude from stats.
+                                if (!allSame)
                                 {
                                     Player.CorrectGuesses.Add(currentIndex);
                                 }
@@ -68,8 +68,8 @@ namespace Bingo
                     {
                         // If matches adds current row value to score.
                         score += squareValue;
-                        // Checks if current player guessed all Y or all N. If they did, exclude from stats.
-                        if (!(allYes || allNo))
+                        // Checks if current player guessed the same answer for all the guess. If they did, exclude from stats.
+                        if (!allSame)
                         {
                             Player.CorrectGuesses.Add(currentIndex);
                         }

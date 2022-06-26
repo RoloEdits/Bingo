@@ -89,7 +89,7 @@ namespace Bingo
             foreach (var player in players)
             {
                 // Passes each player from the list to get their score calculated.
-                player.Score = Game.PlayerScore(player.Guess, player.Name, player.AllYes, player.AllNo);
+                player.Score = Game.PlayerScore(player.Guess, player.Name, player.AllSame);
             }
             // After all players have been added, writes each out to file.
             using (TextWriter writer = new StreamWriter(Settings.FileName!))
