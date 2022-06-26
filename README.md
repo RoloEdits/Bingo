@@ -28,6 +28,10 @@ Note: If you are copying names directly from Discord, or just names in general c
 
 And turn off "Automatically detect file encoding" and make sure default encoding it set to `UTF-8`
 
+If you are looking for a specific section there is a Table of Contents:
+
+![brave_9SHeXeXKGF](https://user-images.githubusercontent.com/12489689/175805739-394ce64b-eb3a-4ca7-b396-fe75598eaaee.gif)
+
 ---
 
 I made this app for Tower of God Wiki/Reddit Discord, but there is no reason this couldn't be used by other communities or for personal use. This is the format that the App is based around, but it is not limited to this, and offers a wide variety of customization:
