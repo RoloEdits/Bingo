@@ -17,7 +17,20 @@
 
 Can find downloads [here](https://github.com/RoloEdits/tog-bingo/releases)
 
-I made this app for Tower of God Wiki/Reddit Discord, but there is no reason this couldn't be used by other communities. This is the format that the App is based around:
+To make sure this is as accessible as possible to all people, all examples below use free and open source software, and there is no requirement to use any service or be connected to the internet for any of this to work. I am also providing files that would work on Linux, so even the Operating System would not require a potentially country restricted one like Windows, or hardware specific ones like Macintosh.
+
+- Spreadsheet: [OnlyOffice](https://www.onlyoffice.com/)
+- Markdown Reader: [MarkText](https://github.com/marktext/marktext).
+
+Note: If you are copying names directly from Discord, or just names in general contain non-ASCII charterers, then I would recommend you change a setting in MarkText to better handle UTF encoding.
+
+`File` -> `Preferences` -> `Editor` -> `File Representation`
+
+And turn off "Automatically detect file encoding" and make sure default encoding it set to `UTF-8`
+
+---
+
+I made this app for Tower of God Wiki/Reddit Discord, but there is no reason this couldn't be used by other communities or for personal use. This is the format that the App is based around, but it is not limited to this, and offers a wide variety of customization:
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/12489689/169417021-1cef0ba1-3d51-4867-a5d0-2b85d8d93f07.png" width="500" alt="Bingo"/>
@@ -35,9 +48,9 @@ Tower Of God Bingo
     ->  tog-bingo.exe
 ```
 
-If you need a free and open scource desktop spreadsheet app I recommend [OnlyOffice](https://www.onlyoffice.com/). Otherwise a Google Spreadsheet can be downloaded in the `xlsx` format.
+## Handling Data
 
-## Spreadsheet
+### Managing Spreadsheet
 
 To start with, the spreadsheet:
 
@@ -45,9 +58,9 @@ To start with, the spreadsheet:
 
 The app works on a per file basis, so each new chapter, or just any new bingo in general, would have its own file. All entries are done on the first sheet. Column A is where all names go. Column B is where their guesses go. The names should be continuous, with no empty row in-between any names. If done as such, no names past the break would be analyzed.
 
-The only valid characters are `Y` for Yes, `N` for No, and `P` for Pass. Any other character will be scored as an incorrect match, and their score would suffer from it. A player can only Pass on the bonus squares. If they attempt to Pass on squares they can't, the app will mark it as an incorrect guess by them. Case doesn't matter, nor any spaces.
+All characters are valid except for `P` which is reserved to pass on squares. In the examples below I use `Y` and `N`, but you could just as easily use `X` and `O`, or any other combination of characters, what's important here is to be consistent and everyone follow the syntax. A player can only Pass on the bonus squares. If they attempt to Pass on squares they can't, the app will mark it as an incorrect guess by them. Case doesn't matter, nor any spaces.
 
-### Path
+### Getting File Path
 
 Getting the path to the file is pretty simple. In the normal Windows Explorer, you can click the arrow on the top right and more options will cascade. Simply click the file to highlight it, and then click "Copy path". This will copy it to the clipboard.
 
@@ -59,7 +72,7 @@ If you are using OneCommander, there is an option on the bottom of the right-cli
 
 (Note: Keyboard shortcut only works in OneCommander)
 
-On Linux you can simply just copy the file as if to copy the file,  and when you paste inside a text field, it will paste the path to the file.
+On Linux you can simply just copy the file as a normal copy, and when you paste inside a text field, it will paste the path to the file.
 
 ## Running App
 
@@ -79,13 +92,13 @@ This will open the current directory in the terminal. From there type `./` and t
 
 ![image](https://user-images.githubusercontent.com/12489689/169415250-55369479-c423-4205-a49f-e31bf32f88cc.png)
 
-### Using App
+## Using App
 
 Upon running the app, it will ask you to decide on a choice:
 
 ![image](https://user-images.githubusercontent.com/12489689/173170956-40d189fe-c05c-45c1-84ff-693cb4fa0ada.png)
 
-#### Default
+### Default Configuration
 
 Entering `1` will load the default settings based on this format:
 
@@ -93,11 +106,11 @@ Entering `1` will load the default settings based on this format:
 
 That is to say a 4x3 grid, with the bonus being the final column. Think of it like a 3x3 + 1 Column:
 
-`10` `10` `10`  `20`
-
-`30` `30` `30`  `60`
-
-`50` `50` `50`  `100`
+| Grid   | 1   | 2   | 3   | Bonus |
+|:-----:|:---:|:---:|:---:|:-----:|
+| **A** | 10   | 10   | 10   | 20     |
+| **B** | 30   | 30   | 30   | 60     |
+| **C** | 50   | 50   | 50   | 100     |
 
 After entering `1` and pressing `ENTER` to submit, it will inform you the settings were loaded and now ask for the path you should have copied to your clipboard.
 
@@ -121,7 +134,7 @@ The order is read from left to right, and row to row.
 
 `50` `50` `50`  `100`
 
-For the default settings, the key must be 12 characters long. If you do not enter enough, the program will tell you, and ask to be closed. You will then need to run the App again and reenter the `PATH` and then give a valid key entry. As with the Guess entries, only a `Y` and `N` should be considered valid. A Key should not contain any other characters. Case doesn't matter, nor any spaces.
+For the default settings, the key must be 12 characters long. If you do not enter enough, the program will tell prompt you again. A Key should **NOT** contain any other characters other than the decided syntax, `Y` and `N`, `X` and `O`, etc. Case doesn't matter, nor any spaces.
 
 ![image](https://user-images.githubusercontent.com/12489689/173171119-cced4e5e-9adc-4bf1-8123-6c90bea28767.png)
 
@@ -129,21 +142,179 @@ Upon entering in the key press `ENTER` to submit. If there are no errors, it wil
 
 ![image](https://user-images.githubusercontent.com/12489689/173171157-dd749d61-994c-444f-b0b3-b71c55fa1794.png)
 
-The output file is saved in the same location as the previously entered path, and takes the same name as well. It saves it as a Markdown file, but it also functions just fine as a normal text document. The output file is pre ordered from highest score to lowest, with the names corresponding. Along with the scores, it also outputs two tables, the first one shows the correct bingo answer, and the second shows the total number of correct picks for the respective squares. Its output in a percentage format.
+The output file is saved in the same location as the previously entered path, and takes the same name as well. It saves it as a Markdown file, but it also functions just fine as a normal text document. The output file is pre ordered from highest score to lowest, with the names corresponding.
+
+Along with the scores, it also outputs two tables, the first one shows the correct bingo answer, and the second shows the total number of correct picks for the respective squares. Its output in a percentage format.
 
 ![image](https://user-images.githubusercontent.com/12489689/173171191-fb17375b-8d13-4986-94ea-455608ffc82c.png)
 
 ![image](https://user-images.githubusercontent.com/12489689/173171215-2466641f-fccc-41d3-a0e8-9d242dfd48e5.png)
 
+### Custom Configuration
+
+Besides the default configuration, the solver also supports custom inputs.
+
+The maximum size for the grid is 255 x 255, for a total of 65,025 squares. Under realistic conditions this is well beyond reasonable usage, as there would need to be just as many questions that are thought up.
+
+Press `2` and press `ENTER` and initially it will ask you for an input of some value and also show what the default settings are for reference.
+
+#### Default XL
+
+![image](https://user-images.githubusercontent.com/12489689/173171468-fc4cf19d-b831-4acb-ab10-29a705c5f68b.png)
+
+This amount is how many columns there are in total, including the bonus columns.
+
+Default settings loads a value of 4.
+
+| Grid   | 1   | 2   | 3   | 4 |
+|:-----:|:---:|:---:|:---:|:-----:|
+
+In this example I will be using a column value of 5.
+
+| Grid   | 1   | 2   | 3   | 4 | 5 |
+|:-----:|:---:|:---:|:---:|:-----:|:-----:|
+
+![image](https://user-images.githubusercontent.com/12489689/173171523-d6ab255f-bacc-41b7-87d3-082c771b8c1a.png)
+
+Next it asks for a row input. I'll also be using a value of 5, for a total of 25 total squares.
+
+| Grid | 1 | 2 | 3 | 4 | 5 |
+ :---: | :---: | :---: | :---: | :---: | :---: |
+| **A** |    |    |    |    |    |
+| **B** |    |    |    |    |    |
+| **C** |    |    |    |    |    |
+| **D** |    |    |    |    |    |
+| **E** |    |    |    |    |    |
+
+![image](https://user-images.githubusercontent.com/12489689/173171543-7e929aaa-41af-4de3-bb07-0b95f0af7453.png)
+
+Now it asks for the bonus column amount. In the default config, of the 4 total columns, the 1 final column is the bonus. Like a 3x3 grid, plus an extra row.
+
+| Grid   | 1   | 2   | 3   | Bonus |
+|:-----:|:---:|:---:|:---:|:-----:|
+
+For this example I will be saying that out of the 5 total columns, 2 will be bonus.
+
+| Grid   | 1   | 2   | 3   | Bonus | Bonus |
+|:-----:|:---:|:---:|:---:|:-----:|:-----:|
+
+![image](https://user-images.githubusercontent.com/12489689/173171565-541ebaf0-f7d8-458b-9f62-575278145a80.png)
+
+Next is how much each row will increment over the current row. In the default config the first row is worth 10 per normal square, with a value of 20 here, the next row will go up to 30. Then the following row will go up another 20 to equal 50.
+
+| Grid   | 1   |
+|:-----:|:---:|
+| **A** | 10   |
+| **B** | 30   |
+| **C** | 50   |
+
+For this example I will use 50 as the value:
+
+| Grid   | 1   |
+|:-----:|:---:|
+| **A** | 10   |
+| **B** | 60   |
+| **C** | 110  |
+
+
+![image](https://user-images.githubusercontent.com/12489689/173171591-9c85ccbd-dfbf-496d-a9a6-d62c35dab01b.png)
+
+Next is deciding the multiplier the bonus squares will have over their rows normal value. In the default config a value of 2 means that the bonus squares are worth twice the amount.
+
+| Grid   | 1   | 2   | 3   | Bonus |
+|:-----:|:---:|:---:|:---:|:-----:|
+| **A** | 10   | 10   | 10   | 20  |
+| **B** | 30   | 30   | 30   | 60  |
+
+I will be using a 4 here, making each bonus square worth four times the rows base amount.
+
+![image](https://user-images.githubusercontent.com/12489689/173171608-a283c0c7-4e9b-4367-ac81-f2b63b360f00.png)
+
+Finally we have the starting rows base amount. This is what the worth is of the normal squares on the very first row. For this value I will use a 20 base value.
+
+So for this example we have a 5x5 grid, of which the final 2 columns are bonus columns, and which the first row starts with a base value of 20, and a 4 times multiplier for the bonus squares, with each rows base value going up by 50 from the previous.
+
+| Grid | 1 | 2 | 3 | Bonus | Bonus |
+ :---: | :---: | :---: | :---: | :---: | :---: |
+| **A** |  20  |  20  |  20  |  80  |  80  |
+| **B** |  70  |  70  |  70  |  280  |  280  |
+| **C** |  120  |  120  |  120  |  480  |  480  |
+| **D** |  170  |  170  |  170  |  680  |  680  |
+| **E** |  220  |  220  |  220  |  880  |  880  |
+
+![image](https://user-images.githubusercontent.com/12489689/173171632-62bd7be5-da12-4c23-91d4-1925a8e3a79b.png)
+
+It then asks to input the path. This is done just as normal.
+
+![image](https://user-images.githubusercontent.com/12489689/173171671-fc1959c5-81a8-40e5-ac4c-e98b37cf9e52.png)
+
+And finally you enter the key. And with that you are done. The solver will output in the same manner as before, making a markdown file with the same name and location as the original spreadsheet. Also ordered from highest score to lowest. Also with the table of the correct answer, and the correct amount of guesses.
+
+![image](https://user-images.githubusercontent.com/12489689/173171729-c3eb7321-6d1f-4c10-952f-b91409ee8f1d.png)
+
+#### Standard Bingo
+
+If you wanted a more standard Bingo format, where every square would be the same value, no bonus squares, a free square, etc., then you can also get that functionality as well.
+
+Firstly, I will be making a 5x5 grid, with a free space in the middle. Each square will be worth 50 points, and you can pass on any square.
+
+As the host of the Bingo, you can decide the rules to voting, where you can say to just pick what they think is going to happen, passing on squares they don't think will happen, and leave it at that. However, you could also decide to award points for those who want to say that some things wont happen instead. Its all decided on the Key input in the end. For this example I will just be taking inputs that people think will happen, and just skip those they think won't.
+
+Now as this isn't an actual bingo, where you have to make a full connected line, a free space doesn't really serve a purpose, but just for demonstration purposes I will include it. A free square is really just that you would always enter something in that spot, that everyone knows this, and entered it in themselves in that spot for a correct guess. For this example I will use also be using `X` and `O`.
+
+I set the the Columns and Rows to 5, to set the 5x5 grid size.
+
+The way the program works by default is that only bonus squares can be Passed, so to make it possible to pass on any square in the grid, we need to set the bonus columns to the same amount as the full range of columns, in this case 5. This qualifies the full grid as "Bonus", allowing any to be passed with a `P`.
+
+As I am making each square worth 50, I set this to 50.
+
+As I want all squares on all rows to be worth the same, 50, I will set this to 0.
+
+Although we effectively made the entire bingo grid a bonus grid, as I've already set the value I wanted, I don't need any multiplier. I will set it to 1 so that the value for all squares are left at 50, 50 x 1 = 50.
+
+And with that the grid is built. Next you just enter the file path as normal.
+
+For the answer key, you would just enter the known correct outcome, making sure to answer the free square, that everyone would have, with the agreed upon character. For the center square I made sure that it was an `O` that would line up with what everyone else would have picked there, making a "free" square.
+
+| Key | 1 | 2 | 3 | 4 | 5 |
+ :---: | :---: | :---: | :---: | :---: | :---: |
+| **A** |  X  |  O  |  O  |  X  |  X  |
+| **B** |  X  |  X  |  O  |  O  |  O  |
+| **C** |  O  |  X  |  O  |  X  |  X  |
+| **D** |  X  |  O  |  O  |  X  |  X  |
+| **E** |  O  |  X  |  X  |  O  |  X  |
+
+A guess by someone could then look like this, having followed the rules and only voted for what they thought would happen, and passed the ones they thought wouldn't:
+
+| Guess |   1   |   2   | 3  | 4 |   5   |
+ :---: | :---: | :---: | :---: | :---: | :---: |
+| **A** |  P   |  P  |  O  |  O  |  P  |
+| **B** |  P |  P  |  O  |  P  |  O  |
+| **C** |  O  |  P  |  O  |  O  |  P  |
+| **D** |  P |  O  |  O  |  O  |  P  |
+| **E** |  O  |  P  |  P  |  O  |  P  |
+
+Now first of all, depending on your humor, this can be hilarious. And secondly, the result such a guess would have would be:
+
+| Stats | 1 | 2 | 3 | 4 | 5 |
+ :---: | :---: | :---: | :---: | :---: | :---: |
+| **A** | 0.00% | 0.00% | 100.00% | 0.00% | 0.00% |
+| **B** | 0.00% | 0.00% | 100.00% | 0.00% | 100.00% |
+| **C** | 100.00% | 0.00% | 100.00% | 0.00% | 0.00% |
+| **D** | 0.00% | 100.00% | 100.00% | 0.00% | 0.00% |
+| **E** | 100.00% | 0.00% | 0.00% | 100.00% | 0.00% |
+
+| Names | Scores |
+|---|---|
+| Rolo | 300 |
 ## Markdown to PNG
 
-This process in manual for now, and uses the free and open source Markdown reader [MarkText](https://github.com/marktext/marktext).
-
-With the file open in MarkText click the hamburger menu and go to `File` -> `Export` -> `HTML`.
+This process in manual for now. With the file open in MarkText click the hamburger menu and go to:
+ `File` -> `Export` -> `HTML`
 
 ![image](https://user-images.githubusercontent.com/12489689/173171858-dbb76428-fd02-4d1b-a191-58c10547a513.png)
 
-From there a box will pop up. You can search through and tweak things if you'd like, one of which i'd recommend being the font size, but you can also just leave it default which is what I have done in this example. Just name the file what you want, and click save.
+From there a box will pop up. You can search through and tweak things if you'd like, one of which I'd recommend being the font size, but you can also just leave it default which is what I have done in this example. Just name the file what you want, and click save.
 
 ![image](https://user-images.githubusercontent.com/12489689/173171903-9e20d599-a56d-4962-bed6-a95ada1c69e0.png)
 
@@ -180,99 +351,3 @@ From there press `CTRL` + `SHIFT` + `P` to bring up the command pallet. Type in 
 And with that you have a PNG image with that width you set.
 
 ![image](https://user-images.githubusercontent.com/12489689/173172260-cfdf1d18-fb7c-4015-ac8a-0e7937053ff7.png)
-
-## Custom
-
-Besides the default configuration, the solver also supports custom inputs.
-
-Press `2` and press `ENTER` and initially it will ask you for an input of some value and also show what the default settings are for reference.
-
-![image](https://user-images.githubusercontent.com/12489689/173171468-fc4cf19d-b831-4acb-ab10-29a705c5f68b.png)
-
-This amount is how many columns there are in total, including the bonus columns.
-
-Default settings loads a value of 4.
-
-`0` `0` `0` `0`
-
-In this example I will be using a column value of 5.
-
-`0` `0` `0` `0` `0`
-
-![image](https://user-images.githubusercontent.com/12489689/173171523-d6ab255f-bacc-41b7-87d3-082c771b8c1a.png)
-
-Next it asks for a row input. I'll also be using a value of 5, for a total of 25 total squares.
-
-`0`
-
-`0`
-
-`0`
-
-`0`
-
-`0`
-
-![image](https://user-images.githubusercontent.com/12489689/173171543-7e929aaa-41af-4de3-bb07-0b95f0af7453.png)
-
-Now it asks for the bonus column amount. In the default config, of the 4 total columns, the 1 final column is the bonus. Like a 3x3 grid, plus an extra row.
-
-`0` `0` `0`  +  `0`
-
-For this example I will be saying that out of the 5 total columns, 2 will be bonus.
-
-`0` `0` `0`  +  `0` `0`
-
-![image](https://user-images.githubusercontent.com/12489689/173171565-541ebaf0-f7d8-458b-9f62-575278145a80.png)
-
-Next is how much each row will increment over the current row. In the default config the first row is worth 10 per normal square, with a value of 20 here, the next row will go up to 30. Then the following row will go up another 20 to equal 50.
-
-`10` `10` `10` + `0`
-
-+20
-
-`20` `20` `20` + `0`
-
-For this example I will use 50 as the value:
-
-`10` `10` `10` + `0`
-
-+50
-
-`60` `60` `60` + `0`
-
-![image](https://user-images.githubusercontent.com/12489689/173171591-9c85ccbd-dfbf-496d-a9a6-d62c35dab01b.png)
-
-Next is deciding the multiplier the bonus squares will have over their rows normal value. In the default config a value of 2 means that the bonus squares are worth twice the amount.
-
-`10` `10` `10` + `20`
-
-`30` `30` `30` + `60`
-
-I will be using a 4 here, making each bonus square worth four times the rows base amount.
-
-![image](https://user-images.githubusercontent.com/12489689/173171608-a283c0c7-4e9b-4367-ac81-f2b63b360f00.png)
-
-Finally we have the starting rows base amount. This is what the worth is of the normal squares on the very first row. For this value I will use a 20 base value.
-
-So for this example we have a 5x5 grid, of which the final 2 columns are bonus columns, and which the first row starts with a base value of 20, and a 4 times multiplier for the bonus squares, with each rows base value going up by 50 from the previous.
-
-`20`  `20`  `20`  + `80` `80`
-
-`70`  `70` `70`  + `280` `280`
-
-`120` `120` `120` + `480` `480`
-
-`170` `170` `170` + `680` `680`
-
-`220` `220` `220` + `880` `880`
-
-![image](https://user-images.githubusercontent.com/12489689/173171632-62bd7be5-da12-4c23-91d4-1925a8e3a79b.png)
-
-It then asks to input the path. This is done just as normal.
-
-![image](https://user-images.githubusercontent.com/12489689/173171671-fc1959c5-81a8-40e5-ac4c-e98b37cf9e52.png)
-
-And finally you enter the key. And with that you are done. The solver will output in the same manner as before, making a markdown file with the same name and location as the original spreadsheet. Also ordered from highest score to lowest. Also with the table of the correct answer, and the correct amount of guesses.
-
-![image](https://user-images.githubusercontent.com/12489689/173171729-c3eb7321-6d1f-4c10-952f-b91409ee8f1d.png)
