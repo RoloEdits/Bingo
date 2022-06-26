@@ -70,7 +70,7 @@ namespace Bingo
                 Console.Write("Please Enter Answer Key: ");
                 Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
                 // Checks if the amount entered is 12, and that it has only Y and N inputs. 
-                while ( Game.Key.Count != 12 || Game.Key.Any(key => key != 'Y' && key != 'N')  )
+                while ( Game.Key.Count != 12 )
                 {
                     Console.Write("Invalid key. Make sure you enter for 12 squares, and only Y or N: ");
                     Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
@@ -166,7 +166,7 @@ namespace Bingo
                 Console.Write("Please Enter Answer Key: ");
                 Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
                 // Checks if the amount entered is the same as the total amount of squares, and that it has only Y and N inputs. 
-                while ( Game.Key.Count != (Settings.Rows * Settings.Columns) || Game.Key.Any(key => key != 'Y' && key != 'N') )
+                while ( Game.Key.Count != (Settings.Rows * Settings.Columns) )
                 {
                     Console.Write($"Invalid key. Make sure you enter for {Settings.Rows * Settings.Columns} squares, and only Y or N: ");
                     Game.Key = Utilities.StringFormat(Console.ReadLine()).ToList();
