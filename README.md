@@ -22,7 +22,7 @@ To make sure this is as accessible as possible to all people, all examples below
 - Spreadsheet: [OnlyOffice](https://www.onlyoffice.com/)
 - Markdown Reader: [MarkText](https://github.com/marktext/marktext).
 
-Note: If you are copying names directly from Discord, or just names in general contain non-ASCII charterers, then I would recommend you change a setting in MarkText to better handle UTF encoding.
+Note: If you are copying names directly from Discord, or just names in general contain non-ASCII characters, then I would recommend you change a setting in MarkText to better handle UTF encoding.
 
 `File` -> `Preferences` -> `Editor` -> `File Representation`
 
