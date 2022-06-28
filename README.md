@@ -260,6 +260,8 @@ And finally you enter the key. And with that you are done. The solver will outpu
 
 If you wanted a more standard Bingo format, where every square would be the same value, no bonus squares, a free square, etc., then you can also get that functionality as well.
 
+![image](https://user-images.githubusercontent.com/12489689/176079283-3df9a5db-1425-48f0-8168-44a36fbe9854.png)
+
 Firstly, I will be making a 5x5 grid, with a free space in the middle. Each square will be worth 50 points, and you can pass on any square.
 
 As the host of the Bingo, you can decide the rules to voting, where you can say to just pick what they think is going to happen, passing on squares they don't think will happen, and leave it at that. However, you could also decide to award points for those who want to say that some things wont happen instead. Its all decided on the Key input in the end. For this example I will just be taking inputs that people think will happen, and just skip those they think won't.
