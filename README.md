@@ -164,9 +164,12 @@ Press `2` and press `ENTER` and initially it will ask you for an input of some v
 
 #### Default XL
 
-![image](https://user-images.githubusercontent.com/12489689/173171468-fc4cf19d-b831-4acb-ab10-29a705c5f68b.png)
+What I will be building in this example:
+![image](https://user-images.githubusercontent.com/12489689/176079659-2c591848-d003-425e-a342-745f18065344.png)
 
 This amount is how many columns there are in total, including the bonus columns.
+
+![image](https://user-images.githubusercontent.com/12489689/173171468-fc4cf19d-b831-4acb-ab10-29a705c5f68b.png)
 
 Default settings loads a value of 4.
 
