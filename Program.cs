@@ -13,7 +13,7 @@ namespace Bingo
             // Set console name and text color.
             Console.Title = "Tower of God Bingo Solver";
             Console.ForegroundColor = ConsoleColor.Red;
-            // Checks if tthe OS is windows. If it is, sets console window height.
+            // Checks if the OS is windows. If it is, sets console window height.
             if (System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 Console.WindowHeight = 35;
@@ -52,7 +52,7 @@ namespace Bingo
             while (!workSheet.Cell(currentRow, 1).IsEmpty())
             {
                 // Parse Column 1 for Name.
-                string nameData = workSheet.Cell(currentRow, 1).GetString();
+                string nameData = workSheet.Cell(currentRow, 1).GetString().Trim();
                 //Parse Column 2 for Guess.
                 string guessData = Utilities.StringFormat(workSheet.Cell(currentRow, 2).GetString());
                 // Starting score.
@@ -73,7 +73,7 @@ namespace Bingo
             {
                 Console.Clear();
                 Utilities.AsciiTitle();
-                Console.WriteLine($"Error Occured:" );
+                Console.WriteLine($"Error Occurred:" );
                 // Goes through each bad guesser and writes out what row they are at, and how many they guessed for.
                 foreach (var guesser in incorrectGuessers)
                 {
@@ -109,7 +109,7 @@ namespace Bingo
                 writer.WriteLine("|---|---|");
                 foreach (Player player in players)
                 {
-                    // Replaces all pipes with an escaped verion so that the Markdown Table wont be broken.
+                    // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
                     writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
                 }
             }

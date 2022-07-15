@@ -27,7 +27,7 @@ namespace Bingo
 
             // Holds the current position of each final column square of that row.
             short finalColumn = Settings.Columns;
-            // Holds current absolute element postion.
+            // Holds current absolute element position.
             int currentIndexHolder = 0;
 
             // Resets the value for next player loop.
@@ -42,13 +42,13 @@ namespace Bingo
                     // Checks if the square being worked on lines up with the bonus squares of that row.
                     if ((currentIndex + Settings.BonusColumns) >= finalColumn)
                     {
-                        // Checks if the square was skipped by checking if the skip charachter was used.
+                        // Checks if the square was skipped by checking if the skip character was used.
                         if (guess[currentIndex] != Settings.BonusSkipChar)
                         {
                             // Checks if the guess matches.
                             if (guess[currentIndex] == Game.Key![currentIndex])
                             {
-                                // If it matches, it will take the base sqare value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
+                                // If it matches, it will take the base square value of the current row and multiply it by the bonus multiplier and add it to the score. e.g 10 * 2.
                                 score += (squareValue * Settings.BonusMultiplier);
                                 // Checks if current player guessed the same answer for all the guess. If they did, exclude from stats.
                                 if (!allSame)
@@ -76,7 +76,7 @@ namespace Bingo
                     }
                     else
                     {
-                        // If it doesn't match, it will subract the rows' value from score. 
+                        // If it doesn't match, it will subtract the rows' value from score. 
                         score -= squareValue;
                     }
 
