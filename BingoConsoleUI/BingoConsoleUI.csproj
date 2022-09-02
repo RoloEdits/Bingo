@@ -16,4 +16,9 @@
 		<PackageReference Include="ClosedXML" Version="0.95.4" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <ProjectReference Include="..\Bingo\Bingo.csproj" />
+	  <ProjectReference Include="..\Markdown\Markdown.csproj" />
+	</ItemGroup>
+
 </Project>
