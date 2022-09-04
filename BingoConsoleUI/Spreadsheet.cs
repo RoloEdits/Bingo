@@ -5,37 +5,68 @@ namespace BingoConsoleUI;
 
 internal class Spreadsheet
 {
-    public Dictionary<int, string> IncorrectGuessAmount { get; set; }
+    public Dictionary<int, string>? InvalidGuesses { get; set; }
+    public string FilePath { get; init; }
 
-    public Spreadsheet(Game game, string filepath)
+    public Spreadsheet(string filepath)
     {
-        using var workbook = new XLWorkbook(filepath);
+        FilePath = filepath;
+    }
+
+    public List<Player> GetPlayers(Format format)
+    {
+        using var workbook = new XLWorkbook(FilePath);
         var worksheet = workbook.Worksheet(1);
 
-        var invalidGuessers = new Dictionary<int, string>();
+        InvalidGuesses = new Dictionary<int, string>();
+
+        var players = new List<Player>();
 
         short currentRow = 1;
         while (!worksheet.Cell(currentRow, 1).IsEmpty())
         {
-
             var name = worksheet.Cell(currentRow, 1).GetString().Trim();
 
             var guess = Utilities.StringFormat(worksheet.Cell(currentRow, 2).GetString());
 
-            var guessCheck = Game.CheckValidGuessAmount(guess, game.Config);
+            var guessCheck = Game.CheckValidGuessAmount(guess, format);
 
             if (!guessCheck)
             {
-                invalidGuessers.Add(currentRow, name);
+                InvalidGuesses.Add(currentRow, name);
+                players.Add(new Player(name, guess));
             }
             else
             {
-                game.Players.Add(new Player(name, guess));
+                players.Add(new Player(name, guess));
             }
 
             currentRow++;
         }
 
-        IncorrectGuessAmount = invalidGuessers;
+        if (InvalidGuesses.Count > 0)
+        {
+            Console.Clear();
+            Utilities.AsciiTitle();
+            Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
+            foreach (var incorrectGuesser in InvalidGuesses)
+            {
+                var (row, name) = incorrectGuesser;
+                Console.WriteLine($"Row:{row} Name:{name}");
+            }
+            Console.Write("Please resolve issue and try again.");
+            Console.Write("Press any key to exit...");
+            Console.ReadKey();
+            Console.WriteLine(Environment.NewLine);
+            Console.ResetColor();
+            Environment.Exit(5);
+        }
+
+        return players;
+    }
+
+    public Dictionary<int, string>? GetInvalidGuesses()
+    {
+        return InvalidGuesses;
     }
 }
