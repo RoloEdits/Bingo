@@ -17,43 +17,19 @@ internal class Program
             Console.WindowHeight = 45;
         }
 
-        var config = Prompt.Config();
-        var key = Prompt.Key(config);
+        var format = Prompt.Format();
+        var key = Prompt.Key(format);
         var path = Prompt.Path();
 
-        var game = new Game(config, key);
-        var spreadsheet = new Spreadsheet(game, path);
+        var spreadsheet = new Spreadsheet(path);
+        var players = spreadsheet.GetPlayers(format);
 
-        if (spreadsheet.IncorrectGuessAmount.Count > 0)
-        {
-            Console.Clear();
-            Utilities.AsciiTitle();
-            Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
-            foreach (var incorrectGuesser in spreadsheet.IncorrectGuessAmount)
-            {
-                var (row, name) = incorrectGuesser;
-                Console.WriteLine($"Row:{row} Name:{name}");
-            }
-            Console.Write("Please resolve issue and try again.");
-            Console.Write("Press any key to exit...");
-            Console.ReadKey();
-            Console.WriteLine(Environment.NewLine);
-            Console.ResetColor();
-            Environment.Exit(5);
-        }
-
+        var game = new Game(players, format, key);
         game.Play();
 
         FileWrite.WriteToFile(game, path);
 
-        Console.Clear();
-        Utilities.AsciiTitle();
-        Console.WriteLine($"Successfully Finished Going Through {game.Players.Count} Players' Guesses in {game.Timer}ms.");
-        Console.Write("Press any key to exit...");
-        Console.ReadKey();
-        Console.WriteLine(Environment.NewLine);
-        Console.ResetColor();
-        Environment.Exit(0);
+        game.End();
 
     }
 }

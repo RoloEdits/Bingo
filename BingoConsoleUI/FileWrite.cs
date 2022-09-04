@@ -14,7 +14,7 @@ internal class FileWrite
             .OrderByDescending(player => player.Score)
             .ThenBy(player => player.Name).ToList();
 
-        var dynamicTable = new Table(game.Config.Columns, game.Config.Rows, game.Config.BonusColumns);
+        var dynamicTable = new Table(game.Format.Columns, game.Format.Rows, game.Format.BonusColumns);
 
         var percentages = Game.GetPercentageOfCorrectGuesses(game);
         var key = game.Key.ToList();

@@ -3,10 +3,10 @@
 namespace BingoConsoleUI;
 internal class Prompt
 {
-    public static Config Config()
+    public static Format Format()
     {
         var option = GetConfigOptionFromUser();
-        var config = new Config();
+
 
         Console.Clear();
         Utilities.AsciiTitle();
@@ -14,23 +14,27 @@ internal class Prompt
         if (option == "1")
         {
             Console.WriteLine("Loaded Default Configuration....");
+            return new Format(4, 3, 10, 20, 2, 2);
         }
         else
         {
-            config.Columns = GetColumnAmount();
-            config.Rows = GetRowAmount();
-            config.BaseSquareValue = GetBaseSquareValue();
-            config.RowValueOffset = GetRowValueOffset();
-            config.BonusColumns = GetBonusColumnAmount(config.Columns);
-            if (config.BonusColumns != 0)
+            var columns = GetColumnAmount();
+            var rows = GetRowAmount();
+            var baseSquareValue = GetBaseSquareValue();
+            var rowValueOffset = GetRowValueOffset();
+            var bonusColumns = GetBonusColumnAmount(columns);
+
+            byte bonusMultiplier = 0;
+            if (bonusColumns != 0)
             {
-                config.BonusMultiplier = GetBonusMultiplier();
+                bonusMultiplier = GetBonusMultiplier();
             }
+
+            return new Format(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
         }
-        return config;
     }
     public static string Path() => GetFilePath();
-    public static string Key(Config config) => GetKey(config.Rows * config.Columns);
+    public static string Key(Format config) => GetKey(config.Rows * config.Columns);
 
     // Helper functions.
     private static string GetKey(int squares)
