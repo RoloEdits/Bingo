@@ -21,10 +21,11 @@ internal class Program
         var key = Prompt.Key(format);
         var path = Prompt.Path();
 
-        var spreadsheet = new Spreadsheet(path);
+        var spreadsheet = new SpreadsheetParse(path);
         var players = spreadsheet.GetPlayers(format);
 
         var game = new Game(players, format, key);
+
         game.Play();
 
         FileWrite.WriteToFile(game, path);
