@@ -3,14 +3,15 @@ using ClosedXML.Excel;
 
 namespace BingoConsoleUI;
 
-internal class Spreadsheet
+internal class SpreadsheetParse
 {
-    public Dictionary<int, string>? InvalidGuesses { get; set; }
+    public Dictionary<int, string> InvalidGuesses { get; set; }
     public string FilePath { get; init; }
 
-    public Spreadsheet(string filepath)
+    public SpreadsheetParse(string filepath)
     {
         FilePath = filepath;
+        InvalidGuesses = new Dictionary<int, string>();
     }
 
     public List<Player> GetPlayers(Format format)
@@ -34,13 +35,11 @@ internal class Spreadsheet
             if (!guessCheck)
             {
                 InvalidGuesses.Add(currentRow, name);
-                players.Add(new Player(name, guess));
             }
             else
             {
                 players.Add(new Player(name, guess));
             }
-
             currentRow++;
         }
 
@@ -65,7 +64,7 @@ internal class Spreadsheet
         return players;
     }
 
-    public Dictionary<int, string>? GetInvalidGuesses()
+    public Dictionary<int, string> GetInvalidGuesses()
     {
         return InvalidGuesses;
     }
