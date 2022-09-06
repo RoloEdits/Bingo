@@ -14,7 +14,7 @@ internal class Program
         // Checks if the OS is windows. If it is, sets console window height.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            Console.WindowHeight = 31;
+            Console.WindowHeight = 32;
         }
 
         var format = Prompt.Format();
