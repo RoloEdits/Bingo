@@ -14,7 +14,7 @@ internal static class GameExtentions
         Utilities.AsciiTitle();
         Console.WriteLine($"Successfully Finished Going Through {game.Players.Count} Players' Guesses in {game.ScoreCalculationTime}ms.");
         Console.Write("Press any key to exit...");
-        Console.ReadKey();
+        Console.ReadKey(true);
         Console.WriteLine(Environment.NewLine);
         Console.ResetColor();
         Environment.Exit(0);
