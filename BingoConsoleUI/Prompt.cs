@@ -14,7 +14,7 @@ internal class Prompt
         if (option == "1")
         {
             Console.WriteLine("Loaded Default Configuration....");
-            return new Format(4, 3, 10, 20, 2, 2);
+            return new Format(4, 3, 10, 20, 1, 2);
         }
         else
         {
