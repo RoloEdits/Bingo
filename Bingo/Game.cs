@@ -2,7 +2,7 @@
 
 namespace Bingo;
 
-public record Game
+public class Game
 {
     public List<Player> Players { get; init; }
     public Format Format { get; init; }

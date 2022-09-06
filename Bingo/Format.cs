@@ -1,6 +1,6 @@
 ﻿namespace Bingo;
 
-public record Format
+public class Format
 {
     public byte Columns { get; init; }
     public byte Rows { get; init; }

@@ -1,10 +1,9 @@
 ﻿namespace Bingo;
 
-public record Player
+public class Player
 {
     public string Name { get; init; }
     public string Guess { get; init; }
-    // Mutable
     public int Score { get; set; }
     public bool AllSameGuess { get; init; }
 
