@@ -5,21 +5,19 @@ namespace BingoConsoleUI;
 
 internal class SpreadsheetParse
 {
-    public Dictionary<int, string> InvalidGuesses { get; set; }
+    public List<InvalidGuesser> InvalidGuesses { get; set; }
     public string FilePath { get; init; }
 
     public SpreadsheetParse(string filepath)
     {
         FilePath = filepath;
-        InvalidGuesses = new Dictionary<int, string>();
+        InvalidGuesses = new List<InvalidGuesser>();
     }
 
     public List<Player> GetPlayers(Format format)
     {
         using var workbook = new XLWorkbook(FilePath);
         var worksheet = workbook.Worksheet(1);
-
-        InvalidGuesses = new Dictionary<int, string>();
 
         var players = new List<Player>();
 
@@ -34,7 +32,7 @@ internal class SpreadsheetParse
 
             if (!guessCheck)
             {
-                InvalidGuesses.Add(currentRow, name);
+                InvalidGuesses.Add(new InvalidGuesser(currentRow, name, guess.Length));
             }
             else
             {
@@ -48,24 +46,19 @@ internal class SpreadsheetParse
             Console.Clear();
             Utilities.AsciiTitle();
             Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
+            Console.WriteLine($"Make sure each player has guessed for {format.TotalSquares} squares.");
             foreach (var incorrectGuesser in InvalidGuesses)
             {
-                var (row, name) = incorrectGuesser;
-                Console.WriteLine($"Row:{row} Name:{name}");
+                Console.WriteLine($"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row} guessed for {incorrectGuesser.GuessAmount} squares");
             }
-            Console.Write("Please resolve issue and try again.");
-            Console.Write("Press any key to exit...");
-            Console.ReadKey();
+            Console.WriteLine("Please resolve issue and try again.");
+            Console.Write("Press Enter to exit....");
+            Console.ReadKey(true);
             Console.WriteLine(Environment.NewLine);
             Console.ResetColor();
             Environment.Exit(5);
         }
 
         return players;
-    }
-
-    public Dictionary<int, string> GetInvalidGuesses()
-    {
-        return InvalidGuesses;
     }
 }
