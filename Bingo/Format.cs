@@ -9,6 +9,7 @@ public class Format
     public byte BonusColumns { get; init; }
     public byte BonusMultiplier { get; init; }
     public char BonusSkipChar { get; init; }
+    public int TotalSquares { get; init; }
 
     public Format()
     {
@@ -23,6 +24,7 @@ public class Format
         RowValueOffset = rowOffsetValue;
         BonusColumns = bonusColumns;
         BonusMultiplier = bonusMultiplier;
+        TotalSquares = columns * rows;
 
         BonusSkipChar = 'P';
     }
