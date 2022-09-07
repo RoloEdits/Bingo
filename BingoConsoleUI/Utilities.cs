@@ -1,49 +1,25 @@
-﻿namespace Bingo;
+﻿using System.Text;
+
+namespace Bingo;
 
 internal static class Utilities
 {
-    public static string StringFormat(this string formatedString)
+    public static string StringFormat(this string toFormat)
     {
-        if (formatedString is null)
+        ReadOnlySpan<char> text = toFormat;
+        Span<char> span = stackalloc char[toFormat.Length];
+
+        for (int i = 0; i < toFormat.Length; i++)
         {
-            Console.Clear();
-            AsciiTitle();
-            Console.WriteLine("Error: Invalid Input. Press any key to exit program...");
-            Console.ReadKey();
-            Console.ResetColor();
-            Environment.Exit(1);
+            span[i] = text[i] switch
+            {
+                >= 'a' and <= 'z' => (char)(text[i] - 32),
+                _ => text[i],
+            };
         }
-        return formatedString.Replace(" ", "").Replace("\r\n", "").Replace("\n", "").ToUpper();
-    }
 
-    public static void AsciiTitle()
-    {
-        Console.WriteLine(@"                                                           .,.                                      
-                                                        .,*****,,.                                  
-                                                    .,,,.........,,,,.                              
-                                                ..,,,..,,,*****,,...,,,,.                           
-                                              .,,,..,,************,,...,,,.                         
-                                            .,,,...,,******,,,*****,,...,,*,.                       
-                                         .,,,......,,****,,...,,****,....,,**,,.                    
-                                      .,,,***,,....,,*******,,*****,,...,,***,,,...                 
-                                 .,,**,,,,,,,**,,...,,************,,..,,***,,,,,,,,**,,.            
-                              .,*,,............,,,*,,..,,******,,...,,*,,............,,*,,          
-                           .,*,,....,,*******,,....,,**,,,.....,,,**,,...,,,******,,...,,**.        
-                          ,,,....,,************,,....,,***********,,...,,************,,...,,,.      
-                         *,,.....,****,,..,,****,,.....,,**,,,,,*,,....,****,,...,,***,....,**   
-                          ,,,...,,****,,..,,****,,....,,,,.     .,,,...,*****,..,,****,..,,,,       
-                           .,,,..,,*************,...,,*,.         .,,,.,,************,,,,*,,       
-                             .,,,,.,,*********,,..,,*,.             ..,,..,,******,,.,,*,.          
-                              .,,,,,,..........,,*,..                  .,*,,.....,,,*,,..         
-                                    .,,,**,,,,..                          ..,,,,*,..                
-                                                                                                    
-                                                .,.        .,.       .,.                                     
-                                               .,,,.      .,,,.     .,,,.                            
-                                                .,.        .,.       .,.");
-
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine();
-        Console.WriteLine();
+        var builder = new StringBuilder(toFormat.Length);
+        builder.Append(span);
+        return builder.Replace(" ", "").ToString();
     }
 }
