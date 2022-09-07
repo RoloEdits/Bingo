@@ -7,9 +7,8 @@ internal class Prompt
     {
         var option = GetConfigOptionFromUser();
 
-
         Console.Clear();
-        Utilities.AsciiTitle();
+        Ascii.Title();
 
         if (option == "1")
         {
@@ -22,8 +21,8 @@ internal class Prompt
             var rows = GetRowAmount();
             var baseSquareValue = GetBaseSquareValue();
             var rowValueOffset = GetRowValueOffset();
-            var bonusColumns = GetBonusColumnAmount(columns);
 
+            var bonusColumns = GetBonusColumnAmount(columns);
             byte bonusMultiplier = 0;
             if (bonusColumns != 0)
             {
@@ -34,16 +33,16 @@ internal class Prompt
         }
     }
     public static string Path() => GetFilePath();
-    public static string Key(Format config) => GetKey(config.Rows * config.Columns);
+    public static string Key(Format config) => GetKey(config.TotalSquares);
 
     // Helper functions.
-    private static string GetKey(int squares)
+    private static string GetKey(in int squares)
     {
         Console.Write("Please Enter Answer Key: ");
         var key = Console.ReadLine()?.StringFormat();
         while (key?.Length != (squares))
         {
-            Console.Write($"Invalid key. Make sure you enter for {squares} squares: ");
+            Console.Write($"Invalid key. Make sure you enter for {squares.ToString()} squares: ");
             key = Console.ReadLine()?.StringFormat();
         }
         return key;
@@ -62,7 +61,7 @@ internal class Prompt
             }
             else if (System.IO.Path.GetExtension(path) != ".xlsx")
             {
-                Console.Write("Invalid filetype. Please use a filetype of '.xlsx': ");
+                Console.Write("Invalid file type. Please use a file type of '.xlsx': ");
                 path = Console.ReadLine()?.Trim();
             }
         }
@@ -71,12 +70,11 @@ internal class Prompt
     private static string GetConfigOptionFromUser()
     {
         Console.Clear();
-        Utilities.AsciiTitle();
-
+        Ascii.Title();
         Console.WriteLine("Load Default Settings: 1");
         Console.WriteLine("Enter Custom Settings: 2");
-        Console.WriteLine();
-        Console.WriteLine();
+        Console.Write(Environment.NewLine);
+        Console.Write(Environment.NewLine);
         Console.Write("Enter Option: ");
 
         var selection = Console.ReadLine()?.StringFormat();
@@ -93,70 +91,70 @@ internal class Prompt
     private static byte GetColumnAmount()
     {
         Console.Write("Please Enter Column Amount( Default: 4 ): ");
-        var columnsPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var columns);
+        var columnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var columns);
         while (!(columns > 0 && columnsPass))
         {
             Console.Write("Invalid amount. Please enter a number from 1 to 255: ");
-            columnsPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out columns);
+            columnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out columns);
         }
         return columns;
     }
     private static byte GetRowAmount()
     {
         Console.Write("Please Enter Row Amount( Default: 3 ): ");
-        var rowPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var rows);
+        var rowPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var rows);
         while (!(rows > 0 && rowPass))
         {
             Console.Write("Invalid amount. Please enter a number from 1 to 255: ");
-            rowPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out rows);
+            rowPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out rows);
         }
         return rows;
     }
     private static byte GetBonusColumnAmount(byte columns)
     {
         Console.Write("Please Enter How Many Columns Will Be Optional( Default: 1 ): ");
-        var bonusColumnsPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var bonus);
+        var bonusColumnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var bonus);
 
         while (!(bonus >= 0 && bonus <= columns && bonusColumnsPass))
         {
-            Console.Write($"Invalid amount. Please enter a number from 0 to {columns}: ");
-            bonusColumnsPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out bonus);
+            Console.Write($"Invalid amount. Please enter a number from 0 to {columns.ToString()}: ");
+            bonusColumnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out bonus);
         }
         return bonus;
     }
     private static byte GetBaseSquareValue()
     {
         Console.Write("Please Enter The Starting Rows' Square Value( Default: 10 ): ");
-        var baseSquarePass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var value);
+        var baseSquarePass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var value);
 
         while (!(value > 0 && baseSquarePass))
         {
             Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            baseSquarePass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out value);
+            baseSquarePass = byte.TryParse(Console.ReadLine()?.StringFormat(), out value);
         }
         return value;
     }
     private static byte GetRowValueOffset()
     {
         Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row( Default: 20 ): ");
-        var rowOffsetPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var offset);
+        var rowOffsetPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var offset);
 
         while (!(offset >= 0 && rowOffsetPass))
         {
             Console.Write($"Invalid amount. Please enter a number from 0 to 255: ");
-            rowOffsetPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out offset);
+            rowOffsetPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out offset);
         }
         return offset;
     }
     private static byte GetBonusMultiplier()
     {
         Console.Write("Please Enter Score Multiplier For Optional Column/s( Default: 2 ): ");
-        var bonusMultiplierPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out var multiplier);
+        var bonusMultiplierPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var multiplier);
 
         while (!(multiplier > 0 && bonusMultiplierPass))
         {
             Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            bonusMultiplierPass = Byte.TryParse(Console.ReadLine()?.StringFormat(), out multiplier);
+            bonusMultiplierPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out multiplier);
         }
         return multiplier;
     }

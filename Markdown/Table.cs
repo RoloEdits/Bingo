@@ -9,7 +9,6 @@ public class Table
     private byte Bonus { get; init; }
     private short GridColumns { get; init; }
     private short BonusColumns { get; init; }
-    private int Squares { get; init; }
 
     public Table(byte columns, byte rows, byte bonus)
     {
@@ -18,7 +17,6 @@ public class Table
         Bonus = bonus;
         GridColumns = (short)(Columns + 1);
         BonusColumns = (short)(Columns - Bonus);
-        Squares = Columns * Rows;
     }
 
     public static string CreateDynamic<T>(string corner, List<T> data, Table table)
@@ -45,7 +43,7 @@ public class Table
             }
             else
             {
-                builder.Append($" {headerColumn} |");
+                builder.Append($" {headerColumn.ToString()} |");
             }
         }
         builder.Append(Environment.NewLine);
@@ -92,7 +90,7 @@ public class Table
             {
                 for (var ones = 'A'; ones <= 'Z'; ones++)
                 {
-                    label.Add($"{ones}");
+                    label.Add($"{ones.ToString()}");
                 }
             }
             else
@@ -101,7 +99,7 @@ public class Table
                 {
                     for (var ones = 'A'; ones <= 'Z'; ones++)
                     {
-                        label.Add($"{tens}{ones}");
+                        label.Add($"{tens.ToString()}{ones.ToString()}");
                     }
                 }
             }

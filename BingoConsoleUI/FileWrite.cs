@@ -30,7 +30,7 @@ internal class FileWrite
         foreach (var player in playerScore)
         {
             // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
-            writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
+            writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score.ToString()} |");
         }
     }
     private static string GetFileName(string filepath)

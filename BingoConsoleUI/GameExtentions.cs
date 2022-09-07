@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Bingo;
+﻿using Bingo;
 
 namespace BingoConsoleUI;
 internal static class GameExtentions
@@ -11,8 +6,8 @@ internal static class GameExtentions
     public static void End(this Game game)
     {
         Console.Clear();
-        Utilities.AsciiTitle();
-        Console.WriteLine($"Successfully Finished Going Through {game.Players.Count} Players' Guesses in {game.ScoreCalculationTime}ms.");
+        Ascii.Title();
+        Console.WriteLine($"Successfully Finished Going Through {game.Players.Count.ToString()} Players' Guesses in {game.ScoreCalculationTime.ToString()}ms.");
         Console.Write("Press any key to exit...");
         Console.ReadKey(true);
         Console.WriteLine(Environment.NewLine);
