@@ -7,7 +7,6 @@ public class Game
     public List<Player> Players { get; init; }
     public Format Format { get; init; }
     public string Key { get; init; }
-    // Mutable
     public Dictionary<int, uint> CorrectGuessesPerSquare { get; set; }
     public long ScoreCalculationTime { get; set; }
 
@@ -16,7 +15,6 @@ public class Game
         Players = players;
         Format = format;
         Key = key;
-
         CorrectGuessesPerSquare = new Dictionary<int, uint>();
     }
     public void Play()
