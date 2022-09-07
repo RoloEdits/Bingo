@@ -6,11 +6,26 @@ public class Player
     public string Guess { get; init; }
     public int Score { get; set; }
     public bool AllSameGuess { get; init; }
-
     public Player(string name, string guess)
     {
         Name = name;
         Guess = guess;
-        AllSameGuess = Guess.All(check => check.Equals(Guess[0]));
+        AllSameGuess = IsAllSame(Guess);
+
+        static bool IsAllSame(ReadOnlySpan<char> guess)
+        {
+            for (int i = 1; i < guess.Length; i++)
+            {
+                if (guess[0] == guess[i])
+                {
+                    continue;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
