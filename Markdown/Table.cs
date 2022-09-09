@@ -60,7 +60,7 @@ public class Table
     {
 
         var absoluteIndex = 0;
-        short endColumnnSquare = table.Columns;
+        short endColumnSquare = table.Columns;
 
         var labels = GetLabel(table.Rows);
 
@@ -69,14 +69,14 @@ public class Table
             // Writes out row label.
             builder.Append($"| **{labels[row]}** |");
             // Writes out each square.
-            for (var currentIndex = absoluteIndex; currentIndex < endColumnnSquare; currentIndex++)
+            for (var currentIndex = absoluteIndex; currentIndex < endColumnSquare; currentIndex++)
             {
                 // Writes out each square's value.
                 builder.Append($" {data[currentIndex]} |");
 
                 absoluteIndex = currentIndex + 1;
             }
-            endColumnnSquare += table.Columns;
+            endColumnSquare += table.Columns;
             // Goes to next row.
             builder.Append(Environment.NewLine);
         }
@@ -84,27 +84,33 @@ public class Table
     private static List<string> GetLabel(byte rows)
     {
         var label = new List<string>();
-        for (var row = 0; row < rows; row++)
+        if (rows < 27)
         {
-            if (row < 27)
+            for (var ones = 'A'; ones <= 'Z'; ones++)
+            {
+                label.Add($"{ones}");
+            }
+            return label;
+        }
+        else
+        {
+            for (var ones = 'A'; ones <= 'Z'; ones++)
+            {
+                label.Add($"{ones}");
+            }
+
+            for (var tens = 'A'; tens <= 'Z'; tens++)
             {
                 for (var ones = 'A'; ones <= 'Z'; ones++)
                 {
-                    label.Add($"{ones.ToString()}");
-                }
-            }
-            else
-            {
-                for (var tens = 'A'; tens <= 'Z'; tens++)
-                {
-                    for (var ones = 'A'; ones <= 'Z'; ones++)
+                    label.Add($"{tens}{ones}");
+                    if (label.Count >= 64)
                     {
-                        label.Add($"{tens.ToString()}{ones.ToString()}");
+                        return label;
                     }
                 }
             }
+            return label;
         }
-
-        return label;
     }
 }
