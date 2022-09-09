@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+    </ItemGroup>
+
 </Project>

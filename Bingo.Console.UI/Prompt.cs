@@ -4,7 +4,7 @@ namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
-    public static Grid Format()
+    public static Card Format()
     {
         var option = GetConfigOptionFromUser();
 
@@ -14,7 +14,7 @@ internal static class Prompt
         if (option == "1")
         {
             System.Console.WriteLine("Loaded Default Configuration....");
-            return new Grid(4, 3, 10, 20, 1, 2);
+            return new Card(4, 3, 10, 20, 1, 2);
         }
         else
         {
@@ -30,12 +30,12 @@ internal static class Prompt
                 bonusMultiplier = GetBonusMultiplier();
             }
 
-            return new Grid(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
+            return new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
         }
     }
 
     public static string Path() => GetFilePath();
-    public static string Key(Grid config) => GetKey(config.TotalSquares);
+    public static string Key(Card config) => GetKey(config.TotalSquares);
 
     // Helper functions.
     private static string GetKey(in int squares)

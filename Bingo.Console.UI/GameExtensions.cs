@@ -9,7 +9,7 @@ internal static class GameExtensions
         System.Console.Clear();
         Ascii.Title();
         System.Console.WriteLine(
-            $"Successfully finished scoring {game.Format.TotalSquares} Squares for {game.Players.Count} Players in {game.ScoreCalculationTime} milliseconds.");
+            $"Successfully finished scoring {game.Card.TotalSquares} Squares for {game.Players.Count} Players in {game.ScoreCalculationTime} milliseconds.");
         System.Console.Write("Press any key to exit...");
         System.Console.ReadKey(true);
         System.Console.Write(Environment.NewLine);

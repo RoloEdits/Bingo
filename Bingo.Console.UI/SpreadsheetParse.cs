@@ -14,7 +14,7 @@ internal class SpreadsheetParse
         InvalidGuesses = new List<InvalidGuesser>();
     }
 
-    public List<Player> GetPlayers(Grid format)
+    public List<Player> GetPlayers(Card format)
     {
         using var workbook = new XLWorkbook(FilePath);
         var worksheet = workbook.Worksheet(1);

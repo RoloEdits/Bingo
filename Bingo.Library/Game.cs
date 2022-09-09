@@ -5,25 +5,24 @@ namespace Bingo.Library;
 public class Game
 {
     public List<Player> Players { get; init; }
-    public Grid Format { get; init; }
+    public Card Card { get; init; }
     public string Key { get; init; }
     private Dictionary<int, uint> CorrectGuessesPerSquare { get; set; }
     public double ScoreCalculationTime { get; private set; }
 
-    public Game(List<Player> players, Grid format, string key)
+    public Game(List<Player> players, Card card, string key)
     {
         Players = players;
-        Format = format;
+        Card = card;
         Key = key;
 
-        var initializeDict = new Dictionary<int, uint>(Format.TotalSquares);
-        for (var i = 0; i < Format.TotalSquares; i++)
+        var initializeDict = new Dictionary<int, uint>(Card.TotalSquares);
+        for (var i = 0; i < Card.TotalSquares; i++)
         {
             initializeDict.TryAdd(i, 0);
         }
 
         CorrectGuessesPerSquare = initializeDict;
-
     }
 
     public void Play()
@@ -49,14 +48,14 @@ public class Game
     {
         long score = 0;
 
-        var columns = game.Format.Columns;
-        var rows = game.Format.Rows;
-        var bonusAmount = game.Format.BonusColumns;
-        var bonusChar = game.Format.BonusSkipChar;
-        short finalColumnOfRow = game.Format.Columns;
-        long squareValue = game.Format.BaseSquareValue;
-        var bonusMultiplier = game.Format.BonusMultiplier;
-        var rowOffset = game.Format.RowValueOffset;
+        var columns = game.Card.Columns;
+        var rows = game.Card.Rows;
+        var bonusAmount = game.Card.BonusColumns;
+        var bonusChar = game.Card.BonusSkipChar;
+        short finalColumnOfRow = game.Card.Columns;
+        long squareValue = game.Card.BaseSquareValue;
+        var bonusMultiplier = game.Card.BonusMultiplier;
+        var rowOffset = game.Card.RowValueOffset;
 
         var holder = 0;
 
@@ -108,7 +107,7 @@ public class Game
         }
     }
 
-    public static bool CheckValidGuessAmount(ReadOnlySpan<char> guess, Grid config)
+    public static bool CheckValidGuessAmount(ReadOnlySpan<char> guess, Card config)
     {
         return (guess.Length == (config.Columns * config.Rows));
     }
