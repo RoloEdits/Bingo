@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace BingoConsoleUI;
 
-internal class Program
+internal static class Program
 {
     private static void Main()
     {
@@ -18,8 +18,8 @@ internal class Program
         }
 
         var format = Prompt.Format();
-        var key = Prompt.Key(format);
         var path = Prompt.Path();
+        var key = Prompt.Key(format);
 
         var spreadsheet = new SpreadsheetParse(path);
         var players = spreadsheet.GetPlayers(format);
@@ -31,6 +31,5 @@ internal class Program
         FileWrite.WriteToFile(game, path);
 
         game.End();
-
     }
 }
