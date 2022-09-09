@@ -5,8 +5,8 @@ namespace BingoConsoleUI;
 
 internal class SpreadsheetParse
 {
-    public List<InvalidGuesser> InvalidGuesses { get; set; }
-    public string FilePath { get; init; }
+    private List<InvalidGuesser> InvalidGuesses { get; set; }
+    private string FilePath { get; init; }
 
     public SpreadsheetParse(string filepath)
     {
@@ -26,7 +26,7 @@ internal class SpreadsheetParse
         {
             var name = worksheet.Cell(currentRow, 1).GetString().Trim();
 
-            var guess = Utilities.StringFormat(worksheet.Cell(currentRow, 2).GetString());
+            var guess = worksheet.Cell(currentRow, 2).GetString().StringFormat();
 
             var guessCheck = Game.CheckValidGuessAmount(guess, format);
 
