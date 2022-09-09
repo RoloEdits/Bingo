@@ -3,7 +3,7 @@ using Markdown;
 
 namespace BingoConsoleUI;
 
-internal class FileWrite
+internal static class FileWrite
 {
     public static void WriteToFile(Game game, string filepath)
     {
