@@ -14,17 +14,17 @@ internal static class FileWrite
             .OrderByDescending(player => player.Score)
             .ThenBy(player => player.Name).ToList();
 
-        var dynamicTable = new Table(game.Format.Columns, game.Format.Rows, game.Format.BonusColumns);
+        var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
 
         var percentages = Game.GetPercentageOfCorrectGuesses(game);
         var key = game.Key.ToList();
 
-        writer.Write(Table.CreateDynamic("Key", key, dynamicTable));
+        writer.Write(table.CreateDynamic("Key", key));
         writer.WriteLine();
 
         if (percentages.Count > 0)
         {
-            writer.Write(Table.CreateDynamic("Stats", percentages, dynamicTable));
+            writer.Write(table.CreateDynamic("Stats", percentages));
             writer.WriteLine();
         }
 

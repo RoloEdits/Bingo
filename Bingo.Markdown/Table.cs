@@ -1,89 +1,90 @@
 ﻿using System.Text;
+using Bingo.Library;
 
 namespace Bingo.Markdown;
 
-public class Table
+public class Table : IGrid
 {
-    private byte Columns { get; init; }
-    private byte Rows { get; init; }
-    private byte Bonus { get; init; }
-    private short ColumnOffset { get; init; }
+    public byte Columns { get; init; }
+    public byte Rows { get; init; }
+    public short TotalSquares { get; init; }
     private short BonusColumns { get; init; }
 
     public Table(byte columns, byte rows, byte bonus)
     {
         Columns = columns;
         Rows = rows;
-        Bonus = bonus;
-        ColumnOffset = (short)(Columns + 1);
-        BonusColumns = (short)(Columns - Bonus);
+        TotalSquares = (short)(Columns * Rows);
+        BonusColumns = (short)(Columns - bonus);
     }
 
-    public static string CreateDynamic<T>(string corner, List<T> data, Table table)
+    public string CreateDynamic<T>(string corner, List<T> data)
     {
+        var table = this;
         var builder = new StringBuilder();
 
-        WriteHeader(corner, table, builder);
+        WriteHeader(table, builder, corner);
         WriteDivider(table, builder);
-        WriteRows(table, data, builder);
+        WriteRows(table, builder, data);
 
         return builder.ToString();
     }
 
-    private static void WriteHeader(string corner, Table table, StringBuilder builder)
+    private static void WriteHeader(Table table, StringBuilder header, string corner)
     {
-        for (var headerColumn = 0; headerColumn < table.ColumnOffset; headerColumn++)
+        header.Append($"| {corner} |");
+
+        for (var headerColumn = 0; headerColumn < table.Columns; headerColumn++)
         {
-            if (headerColumn == 0)
+            if (headerColumn >= table.BonusColumns)
             {
-                builder.Append($"| {corner} |");
-            }
-            else if (headerColumn >= table.BonusColumns + 1)
-            {
-                builder.Append(" Bonus |");
+                header.Append(" Bonus |");
             }
             else
             {
-                builder.Append($" {headerColumn.ToString()} |");
+                header.Append($" {headerColumn + 1} |");
             }
         }
 
-        builder.Append(Environment.NewLine);
+        header.Append(Environment.NewLine);
     }
 
-    private static void WriteDivider(Table table, StringBuilder builder)
+    private static void WriteDivider(Table table, StringBuilder divider)
     {
-        for (var i = 0; i < table.ColumnOffset; i++)
+        divider.Append(" :---: |");
+
+        for (var i = 0; i < table.Columns; i++)
         {
-            builder.Append(" :---: |");
+            divider.Append(" :---: |");
         }
 
-        builder.Append(Environment.NewLine);
+        divider.Append(Environment.NewLine);
     }
 
-    private static void WriteRows<T>(Table table, IReadOnlyList<T> data, StringBuilder builder)
+    private static void WriteRows<T>(Table table, StringBuilder rows, List<T> data)
     {
-        var absoluteIndex = 0;
-        short endColumnSquare = table.Columns;
+        var absolute = 0;
+        // That rows final column square
+        short finalColumn = table.Columns;
 
         var labels = GetLabel(table.Rows);
 
         for (var row = 0; row < table.Rows; row++)
         {
             // Writes out row label.
-            builder.Append($"| **{labels[row]}** |");
-            // Writes out each square.
-            for (var currentIndex = absoluteIndex; currentIndex < endColumnSquare; currentIndex++)
+            rows.Append($"| **{labels[row]}** |");
+            // Writes out each row.
+            for (var current = absolute; current < finalColumn; current++)
             {
                 // Writes out each square's value.
-                builder.Append($" {data[currentIndex]} |");
+                rows.Append($" {data[current]} |");
 
-                absoluteIndex = currentIndex + 1;
+                absolute = current + 1;
             }
 
-            endColumnSquare += table.Columns;
+            finalColumn += table.Columns;
             // Goes to next row.
-            builder.Append(Environment.NewLine);
+            rows.Append(Environment.NewLine);
         }
     }
 
@@ -99,26 +100,24 @@ public class Table
 
             return label;
         }
-        else
+
+        for (var ones = 'A'; ones <= 'Z'; ones++)
+        {
+            label.Add($"{ones}");
+        }
+
+        for (var tens = 'A'; tens <= 'Z'; tens++)
         {
             for (var ones = 'A'; ones <= 'Z'; ones++)
             {
-                label.Add($"{ones}");
-            }
-
-            for (var tens = 'A'; tens <= 'Z'; tens++)
-            {
-                for (var ones = 'A'; ones <= 'Z'; ones++)
+                label.Add($"{tens}{ones}");
+                if (label.Count >= 64)
                 {
-                    label.Add($"{tens}{ones}");
-                    if (label.Count >= 64)
-                    {
-                        return label;
-                    }
+                    return label;
                 }
             }
-
-            return label;
         }
+
+        return label;
     }
 }
