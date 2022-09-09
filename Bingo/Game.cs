@@ -1,14 +1,12 @@
-﻿using System.Diagnostics;
-
-namespace Bingo;
+﻿namespace Bingo;
 
 public class Game
 {
     public List<Player> Players { get; init; }
     public Format Format { get; init; }
     public string Key { get; init; }
-    public Dictionary<int, uint> CorrectGuessesPerSquare { get; set; }
-    public long ScoreCalculationTime { get; set; }
+    private Dictionary<int, uint> CorrectGuessesPerSquare { get; set; }
+    public double ScoreCalculationTime { get; private set; }
 
     public Game(List<Player> players, Format format, string key)
     {
@@ -20,53 +18,59 @@ public class Game
     public void Play()
     {
         var game = this;
-        var watch = Stopwatch.StartNew();
-        watch.Start();
+        var start = DateTime.UtcNow;
 
         foreach (var player in game.Players)
         {
-            player.Score = CalculatePlayerScore(game.Key, player.Guess, player.AllSameGuess, game);
+            player.Score = CalculatePlayerScore(
+                game.Key,
+                player.Guess,
+                player.AllSameGuess,
+                game);
         }
-        watch.Stop();
+        var spent = DateTime.UtcNow - start;
 
-        game.ScoreCalculationTime = watch.ElapsedMilliseconds;
+        game.ScoreCalculationTime = (double)spent.Ticks / 10_000;
     }
-    public static int CalculatePlayerScore(ReadOnlySpan<char> key, ReadOnlySpan<char> guess, bool same, Game game)
+    public static long CalculatePlayerScore(ReadOnlySpan<char> key, ReadOnlySpan<char> guess, bool same, Game game)
     {
-        var score = 0;
+        long score = 0;
 
         short finalColumnOfRow = game.Format.Columns;
         var holder = 0;
-        short baseSquareValue = game.Format.BaseSquareValue;
+        long squareValue = game.Format.BaseSquareValue;
 
         for (short rowCounter = 0; rowCounter < game.Format.Rows; rowCounter++)
         {
             for (var current = holder; current < finalColumnOfRow; current++)
             {
-                if ((current + game.Format.BonusColumns) >= finalColumnOfRow && guess[current] != game.Format.BonusSkipChar)
+                var isBonus = (current + game.Format.BonusColumns) >= finalColumnOfRow;
+                var isNotSkipChar = guess[current] != game.Format.BonusSkipChar;
+
+                if ( isBonus && isNotSkipChar)
                 {
                     if (guess[current] == key[current])
                     {
-                        score += (baseSquareValue * game.Format.BonusMultiplier);
+                        score += (squareValue * game.Format.BonusMultiplier);
                         AddCorrectGuesses(current, same, game);
                     }
                     else
                     {
-                        score -= (baseSquareValue * game.Format.BonusMultiplier);
+                        score -= (squareValue * game.Format.BonusMultiplier);
                     }
                 }
                 else if (guess[current] == key[current])
                 {
-                    score += baseSquareValue;
+                    score += squareValue;
                     AddCorrectGuesses(current, same, game);
                 }
                 else
                 {
-                    score -= baseSquareValue;
+                    score -= squareValue;
                 }
                 holder = current + 1;
             }
-            baseSquareValue += game.Format.RowValueOffset;
+            squareValue += game.Format.RowValueOffset;
             finalColumnOfRow += game.Format.Columns;
         }
         return score;
@@ -75,7 +79,8 @@ public class Game
     {
         return (guess.Length == (config.Columns * config.Rows));
     }
-    public static void AddCorrectGuesses(int key, bool same, Game game)
+
+    private static void AddCorrectGuesses(int key, bool same, Game game)
     {
         if (!same)
         {
