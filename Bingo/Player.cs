@@ -4,7 +4,7 @@ public class Player
 {
     public string Name { get; init; }
     public string Guess { get; init; }
-    public int Score { get; set; }
+    public long Score { get; set; }
     public bool AllSameGuess { get; init; }
     public Player(string name, string guess)
     {
@@ -18,7 +18,6 @@ public class Player
             {
                 if (guess[0] == guess[i])
                 {
-                    continue;
                 }
                 else
                 {
