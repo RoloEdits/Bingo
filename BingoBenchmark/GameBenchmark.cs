@@ -11,7 +11,7 @@ public class GameBenchmark
     // 4x3
     private const string Key4x3 = "YYYYYYNYYYYY";
     private static readonly Player Player4x3 = new Player("Rolo", Key4x3);
-    private static readonly Format Format4x3 = new Format();
+    private static readonly Format Format4x3 = new Format(4, 3, 10, 20, 1, 2);
     private static readonly List<Player> Players4x3 = new List<Player> { Player4x3 };
     private static readonly Game Game4x3 = new Game(Players4x3, Format4x3, Key4x3);
     // 7x5
