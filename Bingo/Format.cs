@@ -11,7 +11,8 @@ public class Format
     public char BonusSkipChar { get; init; }
     public short TotalSquares { get; init; }
 
-    public Format(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier)
+    public Format(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns,
+        byte bonusMultiplier)
     {
         Columns = columns;
         Rows = rows;

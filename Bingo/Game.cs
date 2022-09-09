@@ -1,4 +1,6 @@
-﻿namespace Bingo;
+﻿using System.Collections;
+
+namespace Bingo;
 
 public class Game
 {
@@ -13,8 +15,17 @@ public class Game
         Players = players;
         Format = format;
         Key = key;
-        CorrectGuessesPerSquare = new Dictionary<int, uint>();
+
+        var initializeDict = new Dictionary<int, uint>(Format.TotalSquares);
+        for (var i = 0; i < Format.TotalSquares; i++)
+        {
+            initializeDict.TryAdd(i, 0);
+        }
+
+        CorrectGuessesPerSquare = initializeDict;
+
     }
+
     public void Play()
     {
         var game = this;
@@ -28,85 +39,103 @@ public class Game
                 player.AllSameGuess,
                 game);
         }
+
         var spent = DateTime.UtcNow - start;
 
         game.ScoreCalculationTime = (double)spent.Ticks / 10_000;
     }
+
     public static long CalculatePlayerScore(ReadOnlySpan<char> key, ReadOnlySpan<char> guess, bool same, Game game)
     {
         long score = 0;
 
+        var columns = game.Format.Columns;
+        var rows = game.Format.Rows;
+        var bonusAmount = game.Format.BonusColumns;
+        var bonusChar = game.Format.BonusSkipChar;
         short finalColumnOfRow = game.Format.Columns;
-        var holder = 0;
         long squareValue = game.Format.BaseSquareValue;
+        var bonusMultiplier = game.Format.BonusMultiplier;
+        var rowOffset = game.Format.RowValueOffset;
 
-        for (short rowCounter = 0; rowCounter < game.Format.Rows; rowCounter++)
+        var holder = 0;
+
+        for (short rowCounter = 0; rowCounter < rows; rowCounter++)
         {
             for (var current = holder; current < finalColumnOfRow; current++)
             {
-                var isBonus = (current + game.Format.BonusColumns) >= finalColumnOfRow;
-                var isNotSkipChar = guess[current] != game.Format.BonusSkipChar;
+                var isBonus = (current + bonusAmount) >= finalColumnOfRow;
+                var isNotSkipChar = guess[current] != bonusChar;
 
-                if ( isBonus && isNotSkipChar)
+                if (isBonus && isNotSkipChar)
                 {
                     if (guess[current] == key[current])
                     {
-                        score += (squareValue * game.Format.BonusMultiplier);
-                        AddCorrectGuesses(current, same, game);
+                        score += (squareValue * bonusMultiplier);
+                        AddCorrectGuesses(current, same, game.CorrectGuessesPerSquare);
                     }
                     else
                     {
-                        score -= (squareValue * game.Format.BonusMultiplier);
+                        score -= (squareValue * bonusMultiplier);
                     }
                 }
                 else if (guess[current] == key[current])
                 {
                     score += squareValue;
-                    AddCorrectGuesses(current, same, game);
+                    AddCorrectGuesses(current, same, game.CorrectGuessesPerSquare);
                 }
                 else
                 {
                     score -= squareValue;
                 }
+
                 holder = current + 1;
             }
-            squareValue += game.Format.RowValueOffset;
-            finalColumnOfRow += game.Format.Columns;
+
+            squareValue += rowOffset;
+            finalColumnOfRow += columns;
         }
+
         return score;
+
+        void AddCorrectGuesses(int square, bool isSame, Dictionary<int, uint> correctGuesses)
+        {
+            // 'if (!isSame)' Decides whether to include or exclude all same guessers from the stats
+            if (!isSame)
+            {
+                correctGuesses[square]++;
+            }
+        }
     }
+
     public static bool CheckValidGuessAmount(ReadOnlySpan<char> guess, Format config)
     {
         return (guess.Length == (config.Columns * config.Rows));
     }
 
-    private static void AddCorrectGuesses(int key, bool same, Game game)
-    {
-        if (!same)
-        {
-            if (game.CorrectGuessesPerSquare.ContainsKey(key))
-            {
-                game.CorrectGuessesPerSquare[key]++;
-            }
-            else
-            {
-                game.CorrectGuessesPerSquare.Add(key, 1);
-            }
-        }
-    }
     public static List<string> GetPercentageOfCorrectGuesses(Game game)
     {
         var correctGuesses = game.CorrectGuessesPerSquare;
         var percentages = new List<string>();
 
+        const string zero = "0.00%";
+
         foreach (var guess in correctGuesses)
         {
             var (_, count) = guess;
 
-            var percentage = ((double)count / game.Players.Count).ToString("P2");
+            if (count == 0)
+            {
+                percentages.Add(zero);
+            }
+            else
+            {
+                var percentage = ((double)count / game.Players.Count).ToString("P2");
 
-            percentages.Add(percentage);
+                percentages.Add(percentage);
+            }
         }
+
         return percentages;
     }
 }

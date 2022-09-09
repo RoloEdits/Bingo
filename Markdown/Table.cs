@@ -7,7 +7,7 @@ public class Table
     private byte Columns { get; init; }
     private byte Rows { get; init; }
     private byte Bonus { get; init; }
-    private short GridColumns { get; init; }
+    private short ColumnOffset { get; init; }
     private short BonusColumns { get; init; }
 
     public Table(byte columns, byte rows, byte bonus)
@@ -15,7 +15,7 @@ public class Table
         Columns = columns;
         Rows = rows;
         Bonus = bonus;
-        GridColumns = (short)(Columns + 1);
+        ColumnOffset = (short)(Columns + 1);
         BonusColumns = (short)(Columns - Bonus);
     }
 
@@ -29,9 +29,10 @@ public class Table
 
         return builder.ToString();
     }
+
     private static void WriteHeader(string corner, Table table, StringBuilder builder)
     {
-        for (var headerColumn = 0; headerColumn < table.GridColumns; headerColumn++)
+        for (var headerColumn = 0; headerColumn < table.ColumnOffset; headerColumn++)
         {
             if (headerColumn == 0)
             {
@@ -46,19 +47,22 @@ public class Table
                 builder.Append($" {headerColumn.ToString()} |");
             }
         }
+
         builder.Append(Environment.NewLine);
     }
+
     private static void WriteDivider(Table table, StringBuilder builder)
     {
-        for (var i = 0; i < table.GridColumns; i++)
+        for (var i = 0; i < table.ColumnOffset; i++)
         {
-            builder.Append($" :---: |");
+            builder.Append(" :---: |");
         }
+
         builder.Append(Environment.NewLine);
     }
-    private static void WriteRows<T>(Table table, List<T> data, StringBuilder builder)
-    {
 
+    private static void WriteRows<T>(Table table, IReadOnlyList<T> data, StringBuilder builder)
+    {
         var absoluteIndex = 0;
         short endColumnSquare = table.Columns;
 
@@ -76,11 +80,13 @@ public class Table
 
                 absoluteIndex = currentIndex + 1;
             }
+
             endColumnSquare += table.Columns;
             // Goes to next row.
             builder.Append(Environment.NewLine);
         }
     }
+
     private static List<string> GetLabel(byte rows)
     {
         var label = new List<string>();
@@ -90,6 +96,7 @@ public class Table
             {
                 label.Add($"{ones}");
             }
+
             return label;
         }
         else
@@ -110,6 +117,7 @@ public class Table
                     }
                 }
             }
+
             return label;
         }
     }

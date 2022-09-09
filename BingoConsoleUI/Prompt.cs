@@ -1,6 +1,7 @@
 ﻿using Bingo;
 
 namespace BingoConsoleUI;
+
 internal static class Prompt
 {
     public static Format Format()
@@ -32,6 +33,7 @@ internal static class Prompt
             return new Format(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
         }
     }
+
     public static string Path() => GetFilePath();
     public static string Key(Format config) => GetKey(config.TotalSquares);
 
@@ -45,8 +47,10 @@ internal static class Prompt
             Console.Write($"Invalid key. Make sure you enter for {squares} squares, you entered {key?.Length}: ");
             key = Console.ReadLine()?.StringFormat();
         }
+
         return key;
     }
+
     private static string GetFilePath()
     {
         Console.Write("Please Enter File Path: ");
@@ -65,8 +69,10 @@ internal static class Prompt
                 path = Console.ReadLine()?.Trim();
             }
         }
+
         return path;
     }
+
     private static string GetConfigOptionFromUser()
     {
         Console.Clear();
@@ -88,17 +94,20 @@ internal static class Prompt
 
         return selection;
     }
+
     private static byte GetColumnAmount()
     {
         Console.Write("Please Enter Column Amount( Default: 4 ): ");
         var columnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out var columns);
-        while ( columns <= 0 || !columnsPass || columns > 64)
+        while (columns <= 0 || !columnsPass || columns > 64)
         {
             Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
             columnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out columns);
         }
+
         return columns;
     }
+
     private static byte GetRowAmount()
     {
         Console.Write("Please Enter Row Amount( Default: 3 ): ");
@@ -108,8 +117,10 @@ internal static class Prompt
             Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
             rowPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out rows);
         }
+
         return rows;
     }
+
     private static byte GetBonusColumnAmount(byte columns)
     {
         Console.Write("Please Enter How Many Columns Will Be Optional( Default: 1 ): ");
@@ -120,8 +131,10 @@ internal static class Prompt
             Console.Write($"Invalid amount. Please enter a number from 0 to {columns}: ");
             bonusColumnsPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out bonus);
         }
+
         return bonus;
     }
+
     private static byte GetBaseSquareValue()
     {
         Console.Write("Please Enter The Starting Rows' Square Value( Default: 10 ): ");
@@ -132,8 +145,10 @@ internal static class Prompt
             Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
             baseSquarePass = byte.TryParse(Console.ReadLine()?.StringFormat(), out value);
         }
+
         return value;
     }
+
     private static int GetRowValueOffset()
     {
         Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row( Default: 20 ): ");
@@ -144,8 +159,10 @@ internal static class Prompt
             Console.Write($"Invalid amount. Please enter a number from {int.MinValue} to {int.MaxValue}: ");
             rowOffsetPass = int.TryParse(Console.ReadLine()?.StringFormat(), out offset);
         }
+
         return offset;
     }
+
     private static byte GetBonusMultiplier()
     {
         Console.Write("Please Enter Score Multiplier For Optional Column/s( Default: 2 ): ");
@@ -156,6 +173,7 @@ internal static class Prompt
             Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
             bonusMultiplierPass = byte.TryParse(Console.ReadLine()?.StringFormat(), out multiplier);
         }
+
         return multiplier;
     }
 }

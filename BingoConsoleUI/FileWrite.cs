@@ -22,20 +22,23 @@ internal static class FileWrite
         writer.Write(Table.CreateDynamic("Key", key, dynamicTable));
         writer.WriteLine();
 
-        writer.Write(Table.CreateDynamic("Stats", percentages, dynamicTable));
-        writer.WriteLine();
+        if (percentages.Count > 0)
+        {
+            writer.Write(Table.CreateDynamic("Stats", percentages, dynamicTable));
+            writer.WriteLine();
+        }
 
         writer.WriteLine("| Names | Scores |");
         writer.WriteLine("|---|---|");
         foreach (var player in playerScore)
         {
             // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
-            writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score.ToString()} |");
+            writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
         }
     }
+
     private static string GetFileName(string filepath)
     {
         return Path.ChangeExtension(filepath, "md");
     }
-
 }

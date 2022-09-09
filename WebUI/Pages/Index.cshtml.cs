@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace WebUI.Pages;
+
 public class IndexModel : PageModel
 {
     private readonly ILogger<IndexModel> _logger;
@@ -13,6 +14,5 @@ public class IndexModel : PageModel
 
     public void OnGet()
     {
-
     }
 }

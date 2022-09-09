@@ -6,6 +6,7 @@ public class Player
     public string Guess { get; init; }
     public long Score { get; set; }
     public bool AllSameGuess { get; init; }
+
     public Player(string name, string guess)
     {
         Name = name;
@@ -14,7 +15,7 @@ public class Player
 
         static bool IsAllSame(ReadOnlySpan<char> guess)
         {
-            for (int i = 1; i < guess.Length; i++)
+            for (var i = 1; i < guess.Length; i++)
             {
                 if (guess[0] == guess[i])
                 {
@@ -24,6 +25,7 @@ public class Player
                     return false;
                 }
             }
+
             return true;
         }
     }

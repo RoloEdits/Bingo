@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 namespace BingoConsoleUI;
+
 internal static class Ascii
 {
     private const string Logo = @"
@@ -29,12 +30,13 @@ internal static class Ascii
 
     public static void Title()
     {
-        var spaces = new StringBuilder();
-
-        for (int i = 0; i < (Console.WindowWidth / 2); i++)
-        {
-            spaces.Append(' ');
-        }
+        // TODO - Better solution to center logo
+        // var spaces = new StringBuilder();
+        //
+        // for (var i = 0; i < (Console.WindowWidth / 2); i++)
+        // {
+        //     spaces.Append(' ');
+        // }
 
         Console.Write($"{Logo}");
         Console.Write(Environment.NewLine);

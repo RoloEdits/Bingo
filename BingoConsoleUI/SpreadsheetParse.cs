@@ -38,6 +38,7 @@ internal class SpreadsheetParse
             {
                 players.Add(new Player(name, guess));
             }
+
             currentRow++;
         }
 
@@ -46,11 +47,13 @@ internal class SpreadsheetParse
             Console.Clear();
             Ascii.Title();
             Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
-            Console.WriteLine($"Make sure each player has guessed for {format.TotalSquares.ToString()} squares.");
+            Console.WriteLine($"Make sure each player has guessed for {format.TotalSquares} squares.");
             foreach (var incorrectGuesser in InvalidGuesses)
             {
-                Console.WriteLine($"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row.ToString()} guessed for {incorrectGuesser.GuessAmount.ToString()} squares");
+                Console.WriteLine(
+                    $"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row} guessed for {incorrectGuesser.GuessAmount} squares");
             }
+
             Console.WriteLine("Please resolve issue and try again.");
             Console.Write("Press Enter to exit....");
             Console.ReadKey(true);
