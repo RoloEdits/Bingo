@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Bingo;
+namespace BingoConsoleUI;
 
 internal static class Utilities
 {
