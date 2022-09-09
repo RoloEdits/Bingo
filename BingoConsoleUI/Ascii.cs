@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace BingoConsoleUI;
-internal class Ascii
+internal static class Ascii
 {
-    private const string Logo = @".,.                                      
+    private const string Logo = @"
+                                                           .,.
                                                         .,*****,,.                                  
                                                     .,,,.........,,,,.                              
                                                 ..,,,..,,,*****,,...,,,,.                           
@@ -29,10 +26,17 @@ internal class Ascii
                                                 .,.        .,.       .,.                                     
                                                .,,,.      .,,,.     .,,,.                            
                                                 .,.        .,.       .,.";
-    
+
     public static void Title()
     {
-        Console.WriteLine($"                                                           {Logo}");
+        var spaces = new StringBuilder();
+
+        for (int i = 0; i < (Console.WindowWidth / 2); i++)
+        {
+            spaces.Append(' ');
+        }
+
+        Console.Write($"{Logo}");
         Console.Write(Environment.NewLine);
         Console.Write(Environment.NewLine);
         Console.Write(Environment.NewLine);
