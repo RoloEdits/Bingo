@@ -1,17 +1,17 @@
 ﻿namespace Bingo.Library;
 
-public class Player
+public class Player : IPlayer
 {
     public string Name { get; init; }
     public string Guess { get; init; }
     public long Score { get; set; }
-    public bool AllSameGuess { get; init; }
+    public bool IsAllSameGuess { get; init; }
 
     public Player(string name, string guess)
     {
         Name = name;
         Guess = guess;
-        AllSameGuess = IsAllSame(Guess);
+        IsAllSameGuess = IsAllSame(Guess);
 
         static bool IsAllSame(ReadOnlySpan<char> guess)
         {

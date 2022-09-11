@@ -1,6 +1,6 @@
 ﻿namespace Bingo.Library;
 
-public class Card : IGrid
+public class Card : ICard
 {
     public byte Columns { get; init; }
     public byte Rows { get; init; }
