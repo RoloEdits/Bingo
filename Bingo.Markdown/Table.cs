@@ -8,7 +8,7 @@ public class Table : IGrid
     public byte Columns { get; init; }
     public byte Rows { get; init; }
     public short TotalSquares { get; init; }
-    private short BonusColumns { get; init; }
+    private short BonusColumns { get; }
 
     public Table(byte columns, byte rows, byte bonus)
     {
@@ -30,6 +30,7 @@ public class Table : IGrid
         return builder.ToString();
     }
 
+    // TODO - Add check for if bonus columns == total columns. If so then dont add the bonus label.
     private static void WriteHeader(Table table, StringBuilder header, string corner)
     {
         header.Append($"| {corner} |");
@@ -49,7 +50,7 @@ public class Table : IGrid
         header.Append(Environment.NewLine);
     }
 
-    private static void WriteDivider(Table table, StringBuilder divider)
+    private static void WriteDivider(IGrid table, StringBuilder divider)
     {
         divider.Append(" :---: |");
 
@@ -61,7 +62,7 @@ public class Table : IGrid
         divider.Append(Environment.NewLine);
     }
 
-    private static void WriteRows<T>(Table table, StringBuilder rows, List<T> data)
+    private static void WriteRows<T>(IGrid table, StringBuilder rows, IReadOnlyList<T> data)
     {
         var absolute = 0;
         // That rows final column square
