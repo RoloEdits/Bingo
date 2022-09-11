@@ -22,4 +22,8 @@
         </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+    </ItemGroup>
+
 </Project>
