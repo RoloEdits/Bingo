@@ -10,13 +10,13 @@ internal static class FileWrite
         var fileName = GetFileName(filepath);
 
         using TextWriter writer = new StreamWriter(fileName);
-        var playerScore = game.Players
+        var playersOrdered = game.Players
             .OrderByDescending(player => player.Score)
             .ThenBy(player => player.Name).ToList();
 
         var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
 
-        var percentages = Game.GetPercentageOfCorrectGuesses(game);
+        var percentages = game.Stats.CorrectGuessesPerSquarePercentage;
         var key = game.Key.ToList();
 
         writer.Write(table.CreateDynamic("Key", key));
@@ -30,7 +30,7 @@ internal static class FileWrite
 
         writer.WriteLine("| Names | Scores |");
         writer.WriteLine("|---|---|");
-        foreach (var player in playerScore)
+        foreach (var player in playersOrdered)
         {
             // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
             writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");

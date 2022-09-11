@@ -13,12 +13,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ClosedXML" Version="0.95.4" />
+        <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+        <ProjectReference Include="..\Bingo.Markdown\Bingo.Markdown.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
-        <ProjectReference Include="..\Bingo.Markdown\Bingo.Markdown.csproj" />
+      <PackageReference Include="Spectre.Console" Version="0.45.1-preview.0.2" />
     </ItemGroup>
 
 </Project>

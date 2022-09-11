@@ -4,6 +4,7 @@ namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
+    // TODO - Implement Spectre prompts. 3x3min - 10x10max.
     public static Card Format()
     {
         var option = GetConfigOptionFromUser();
@@ -37,15 +38,47 @@ internal static class Prompt
     public static string Path() => GetFilePath();
     public static string Key(Card config) => GetKey(config.TotalSquares);
 
+    public static void InvalidGuessers(Card card, Game game)
+    {
+        System.Console.Clear();
+        Ascii.Title();
+        System.Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
+        System.Console.WriteLine($"Make sure each player has guessed for {card.TotalSquares} squares.");
+        foreach (var incorrectGuesser in game.InvalidGuesses)
+        {
+            System.Console.WriteLine(
+                $"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row} guessed for {incorrectGuesser.GuessAmount} squares");
+        }
+
+        System.Console.WriteLine("Please resolve issue and try again.");
+        System.Console.Write("Press Enter to exit....");
+        System.Console.ReadKey(true);
+        System.Console.WriteLine(Environment.NewLine);
+        System.Console.ResetColor();
+        Environment.Exit(5);
+    }
+    public static void End(Game game)
+    {
+        System.Console.Clear();
+        Ascii.Title();
+        System.Console.WriteLine(
+            $"Successfully finished scoring {game.Card.TotalSquares} Squares for {game.Players.Count} Players in {game.Stats.ScoreCalculationTime} milliseconds.");
+        System.Console.Write("Press any key to exit...");
+        System.Console.ReadKey(true);
+        System.Console.Write(Environment.NewLine);
+        System.Console.ResetColor();
+        Environment.Exit(0);
+    }
+
     // Helper functions.
     private static string GetKey(in int squares)
     {
         System.Console.Write("Please Enter Answer Key: ");
-        var key = System.Console.ReadLine()?.StringFormat();
-        while (key?.Length != (squares))
+        var key = System.Console.ReadLine().StringFormat();
+        while (key.Length != (squares))
         {
-            System.Console.Write($"Invalid key. Make sure you enter for {squares} squares, you entered {key?.Length}: ");
-            key = System.Console.ReadLine()?.StringFormat();
+            System.Console.Write($"Invalid key. Make sure you enter for {squares} squares, you entered {key.Length}: ");
+            key = System.Console.ReadLine().StringFormat();
         }
 
         return key;
@@ -54,19 +87,19 @@ internal static class Prompt
     private static string GetFilePath()
     {
         System.Console.Write("Please Enter File Path: ");
-        var path = System.Console.ReadLine()?.Trim();
+        var path = System.Console.ReadLine().Trim();
 
         while (!File.Exists(path) || System.IO.Path.GetExtension(path) != ".xlsx")
         {
             if (!File.Exists(path))
             {
                 System.Console.Write("File does not exist. Please enter correct file path: ");
-                path = System.Console.ReadLine()?.Trim();
+                path = System.Console.ReadLine().Trim();
             }
             else if (System.IO.Path.GetExtension(path) != ".xlsx")
             {
                 System.Console.Write("Invalid file type. Please use a file type of '.xlsx': ");
-                path = System.Console.ReadLine()?.Trim();
+                path = System.Console.ReadLine().Trim();
             }
         }
 
@@ -83,13 +116,13 @@ internal static class Prompt
         System.Console.Write(Environment.NewLine);
         System.Console.Write("Enter Option: ");
 
-        var selection = System.Console.ReadLine()?.StringFormat();
+        var selection = System.Console.ReadLine().StringFormat();
 
         while (selection != "1" && selection != "2")
         {
             System.Console.Write($"You entered {selection}, must be either 1 or 2: ");
 
-            selection = System.Console.ReadLine()?.StringFormat();
+            selection = System.Console.ReadLine().StringFormat();
         }
 
         return selection;
@@ -98,11 +131,11 @@ internal static class Prompt
     private static byte GetColumnAmount()
     {
         System.Console.Write("Please Enter Column Amount( Default: 4 ): ");
-        var columnsPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out var columns);
+        var columnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var columns);
         while (columns <= 0 || !columnsPass || columns > 64)
         {
             System.Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
-            columnsPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out columns);
+            columnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out columns);
         }
 
         return columns;
@@ -111,11 +144,11 @@ internal static class Prompt
     private static byte GetRowAmount()
     {
         System.Console.Write("Please Enter Row Amount( Default: 3 ): ");
-        var rowPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out var rows);
+        var rowPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var rows);
         while (rows <= 0 || !rowPass || rows > 64)
         {
             System.Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
-            rowPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out rows);
+            rowPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out rows);
         }
 
         return rows;
@@ -124,12 +157,12 @@ internal static class Prompt
     private static byte GetBonusColumnAmount(byte columns)
     {
         System.Console.Write("Please Enter How Many Columns Will Be Optional( Default: 1 ): ");
-        var bonusColumnsPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out var bonus);
+        var bonusColumnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var bonus);
 
         while (!(bonus <= columns && bonusColumnsPass))
         {
             System.Console.Write($"Invalid amount. Please enter a number from 0 to {columns}: ");
-            bonusColumnsPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out bonus);
+            bonusColumnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out bonus);
         }
 
         return bonus;
@@ -138,12 +171,12 @@ internal static class Prompt
     private static byte GetBaseSquareValue()
     {
         System.Console.Write("Please Enter The Starting Rows' Square Value( Default: 10 ): ");
-        var baseSquarePass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out var value);
+        var baseSquarePass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var value);
 
         while (!(value > 0 && baseSquarePass))
         {
             System.Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            baseSquarePass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out value);
+            baseSquarePass = byte.TryParse(System.Console.ReadLine().StringFormat(), out value);
         }
 
         return value;
@@ -152,12 +185,12 @@ internal static class Prompt
     private static int GetRowValueOffset()
     {
         System.Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row( Default: 20 ): ");
-        var rowOffsetPass = int.TryParse(System.Console.ReadLine()?.StringFormat(), out var offset);
+        var rowOffsetPass = int.TryParse(System.Console.ReadLine().StringFormat(), out var offset);
 
         while (!(offset >= 0 && rowOffsetPass))
         {
             System.Console.Write($"Invalid amount. Please enter a number from {int.MinValue} to {int.MaxValue}: ");
-            rowOffsetPass = int.TryParse(System.Console.ReadLine()?.StringFormat(), out offset);
+            rowOffsetPass = int.TryParse(System.Console.ReadLine().StringFormat(), out offset);
         }
 
         return offset;
@@ -166,12 +199,12 @@ internal static class Prompt
     private static byte GetBonusMultiplier()
     {
         System.Console.Write("Please Enter Score Multiplier For Optional Column/s( Default: 2 ): ");
-        var bonusMultiplierPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out var multiplier);
+        var bonusMultiplierPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var multiplier);
 
         while (!(multiplier > 0 && bonusMultiplierPass))
         {
             System.Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            bonusMultiplierPass = byte.TryParse(System.Console.ReadLine()?.StringFormat(), out multiplier);
+            bonusMultiplierPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out multiplier);
         }
 
         return multiplier;

@@ -17,19 +17,16 @@ internal static class Program
             System.Console.WindowHeight = 32;
         }
 
-        var format = Prompt.Format();
-        var path = Prompt.Path();
-        var key = Prompt.Key(format);
+        var card = Prompt.Format();
+        Game.Path = Prompt.Path();
+        var key = Prompt.Key(card);
 
-        var spreadsheet = new SpreadsheetParse(path);
-        var players = spreadsheet.GetPlayers(format);
-
-        var game = new Game(players, format, key);
+        var game = new Game(key, card);
 
         game.Play();
 
-        FileWrite.WriteToFile(game, path);
 
-        game.End();
     }
+
+
 }
