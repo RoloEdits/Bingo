@@ -1,15 +1,15 @@
 ﻿using System.Text;
 
-namespace Bingo.Console.UI;
+namespace Bingo.Library;
 
-internal static class Utilities
+public static class Utilities
 {
     public static string StringFormat(this string toFormat)
     {
         ReadOnlySpan<char> text = toFormat;
         Span<char> span = stackalloc char[toFormat.Length];
 
-        for (int i = 0; i < toFormat.Length; i++)
+        for (var i = 0; i < toFormat.Length; i++)
         {
             span[i] = text[i] switch
             {
