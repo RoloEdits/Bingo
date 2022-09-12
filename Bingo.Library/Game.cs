@@ -9,7 +9,7 @@ public class Game : IGame
     public List<InvalidGuesser> InvalidGuesses { get; } = new();
 
     // Settings
-    public static string Path;
+    public static string? Path;
     private bool WillLogStats { get; }
     private bool WillCountAllSameGuessInStats { get; }
 
@@ -28,7 +28,7 @@ public class Game : IGame
         {
             Stats = new Stats
             {
-                CorrectGuessesPerSquarePercentage = new List<double>(Card.TotalSquares),
+                CorrectGuessesPerSquareDouble = new List<double>(Card.TotalSquares),
                 CorrectGuessesPerSquare = new Dictionary<int, uint>(Card.TotalSquares),
                 ScoreCalculationTime = 0.0
             };
@@ -40,14 +40,17 @@ public class Game : IGame
         }
     }
 
-    public void Play()
+    public bool Play()
     {
         var (players, count) = Spreadsheet.Parse();
 
         Players = players;
         Stats.PlayerCount = count;
 
-        ValidatePlayersGuessAmount();
+        if (ThereArePlayersWithInvalidAmountOfSquares())
+        {
+            return true;
+        }
 
         var start = DateTime.UtcNow;
 
@@ -60,9 +63,11 @@ public class Game : IGame
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
         Stats.GetCorrectGuessesPerSquarePercentage();
+
+        return false;
     }
 
-    private void ValidatePlayersGuessAmount()
+    private bool ThereArePlayersWithInvalidAmountOfSquares()
     {
         for (var row = 0; row < Players.Count; row++)
         {
@@ -72,6 +77,8 @@ public class Game : IGame
                 InvalidGuesses.Add(new InvalidGuesser(row, player.Name, player.Guess.Length));
             }
         }
+
+        return InvalidGuesses.Count > 0;
     }
 
     public long CalculatePlayerScore(string guess, bool isAllSameGuess)
