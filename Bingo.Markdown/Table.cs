@@ -7,14 +7,14 @@ public class Table : IGrid
 {
     public byte Columns { get; init; }
     public byte Rows { get; init; }
-    public short TotalSquares { get; init; }
+    public byte TotalSquares { get; init; }
     private short BonusColumns { get; }
 
     public Table(byte columns, byte rows, byte bonus)
     {
         Columns = columns;
         Rows = rows;
-        TotalSquares = (short)(Columns * Rows);
+        TotalSquares = (byte)(Columns * Rows);
         BonusColumns = (short)(Columns - bonus);
     }
 

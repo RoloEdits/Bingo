@@ -7,5 +7,5 @@ public interface IGrid
     // Like for the Game.CorrectGuessesPerSquare. Dictionary<string squareLabel, int correctGuesses>
     public byte Columns { get; init; }
     public byte Rows { get; init; }
-    public short TotalSquares { get; init; }
+    public byte TotalSquares { get; init; }
 }
