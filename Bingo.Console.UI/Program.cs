@@ -9,7 +9,7 @@ internal static class Program
     {
         // Set console name and text color.
         System.Console.Title = "Tower of God Bingo Solver";
-        System.Console.ForegroundColor = ConsoleColor.Red;
+        // System.Console.ForegroundColor = ConsoleColor.Red;
 
         // Checks if the OS is windows. If it is, sets console window height.
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
@@ -17,14 +17,20 @@ internal static class Program
             System.Console.WindowHeight = 32;
         }
 
-        var card = Prompt.Format();
-        Game.Path = Prompt.Path();
-        var key = Prompt.Key(card);
-
+        var (card, path, key ) = Prompt.Input();
+        Game.Path = path;
         var game = new Game(key, card);
 
-        game.Play();
+        var thereAreInvalidGuesses = game.Play();
+        if (thereAreInvalidGuesses)
+        {
+            Prompt.InvalidGuessers(game);
+        }
 
+
+        FileWrite.WriteToFile(game);
+
+        Prompt.End(game);
 
     }
 

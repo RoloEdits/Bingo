@@ -1,10 +1,11 @@
 ﻿using System.Text;
+using Spectre.Console;
 
 namespace Bingo.Console.UI;
 
 internal static class Ascii
 {
-    private const string Logo = @"
+    public const string Logo = @"
                                                            .,.
                                                         .,*****,,.                                  
                                                     .,,,.........,,,,.                              
@@ -38,10 +39,10 @@ internal static class Ascii
         //     spaces.Append(' ');
         // }
 
-        System.Console.Write($"{Logo}");
-        System.Console.Write(Environment.NewLine);
-        System.Console.Write(Environment.NewLine);
-        System.Console.Write(Environment.NewLine);
-        System.Console.Write(Environment.NewLine);
+        AnsiConsole.MarkupInterpolated($"[red]{Logo}[/]");
+        AnsiConsole.Write(Environment.NewLine);
+        AnsiConsole.Write(Environment.NewLine);
+        AnsiConsole.Write(Environment.NewLine);
+        AnsiConsole.Write(Environment.NewLine);
     }
 }
