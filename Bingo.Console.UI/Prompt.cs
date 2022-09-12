@@ -1,53 +1,288 @@
 ﻿using Bingo.Library;
+using Spectre.Console;
 
 namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
     // TODO - Implement Spectre prompts. 3x3min - 10x10max.
-    public static Card Format()
+    public static (Card, string, string) Input()
     {
-        var option = GetConfigOptionFromUser();
-
-        System.Console.Clear();
+        // TODO - prompt user if they want to have stats or not, and if they do whether to include those with all the same guess
         Ascii.Title();
 
-        if (option == "1")
-        {
-            System.Console.WriteLine("Loaded Default Configuration....");
-            return new Card(4, 3, 10, 20, 1, 2);
-        }
-        else
-        {
-            var columns = GetColumnAmount();
-            var rows = GetRowAmount();
-            var baseSquareValue = GetBaseSquareValue();
-            var rowValueOffset = GetRowValueOffset();
-            var bonusColumns = GetBonusColumnAmount(columns);
+        const string option1 = "Load Default Configuration";
+        const string option2 = "Enter Custom Configuration";
 
-            byte bonusMultiplier = 0;
-            if (bonusColumns != 0)
+        var option = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[Red]Select an option:[/]")
+                    .HighlightStyle("red")
+                    .PageSize(3)
+                    .MoreChoicesText("[grey](Move up and down with arrow keys)[/]")
+                    .AddChoices(new[]
+                    {
+                        option1, option2,
+                    })) switch
             {
-                bonusMultiplier = GetBonusMultiplier();
-            }
+                option1 => 0,
+                option2 => 1,
+                _ => throw new Exception("Error handling configuration selection")
+            };
 
-            return new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
+        Card card;
+        string path;
+        string key;
+        switch (option)
+        {
+            case 0:
+                AnsiConsole.MarkupLineInterpolated($"[Red]Loaded Default Configuration....[/]");
+                card = new Card(4, 3, 10, 20, 1, 2);
+                path = GetFilePath();
+                key = GetKey(card.TotalSquares);
+                return (card, path, key);
+            case 1:
+                path = GetFilePath();
+                var columns = GetColumnAmount();
+                var rows = GetRowAmount();
+                var baseSquareValue = GetBaseSquareValue();
+                var rowValueOffset = GetRowValueOffset();
+                var bonusColumns = GetBonusColumnAmount(columns);
+                byte bonusMultiplier = 1;
+                if (bonusColumns != 0 && bonusColumns != columns)
+                {
+                    bonusMultiplier = GetBonusMultiplier();
+                }
+
+                card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
+                key = GetKey(card.TotalSquares);
+                return (card, path, key);
         }
+
+        throw new Exception("Unmanageable error handling prompts.");
     }
 
-    public static string Path() => GetFilePath();
-    public static string Key(Card config) => GetKey(config.TotalSquares);
-
-    public static void InvalidGuessers(Card card, Game game)
+    private static string GetFilePath()
     {
+        var rule = new Rule("[white]Eg. home/user/spreadsheet.xlsx[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path: [/]").Trim();
+
+        while (!File.Exists(path) || System.IO.Path.GetExtension(path) != ".xlsx")
+        {
+            if (!File.Exists(path))
+            {
+                path = AnsiConsole.Ask<string>("[white]File does not exist. Please enter correct file path: [/]").Trim();
+            }
+            else if (System.IO.Path.GetExtension(path) != ".xlsx")
+            {
+                path = AnsiConsole.Ask<string>("[white]Invalid file type. Please use a file type of '.xlsx': [/]").Trim();
+            }
+        }
+
+        return path;
+    }
+
+    private static byte GetColumnAmount()
+    {
+        var rule = new Rule("[white]Columns[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[Red]Select number of columns.[/]")
+                .HighlightStyle("red")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down with arrow keys)[/]")
+                .AddChoices(new[]
+                {
+                    "3", "4", "5", "6", "7", "8", "9","10"
+                }));
+
+        byte result = selection switch
+        {
+            "3" => 3,
+            "4" => 4,
+            "5" => 5,
+            "6" => 6,
+            "7" => 7,
+            "8" => 8,
+            "9" => 9,
+            "10" => 10,
+            _ => throw new Exception("Problem occured selecting the amount of columns.")
+        };
+
+        AnsiConsole.MarkupLineInterpolated($"[red]Selected:[/] {result.ToString()}");
+
+        return result;
+    }
+
+    private static byte GetRowAmount()
+    {
+        var rule = new Rule("[white]Rows[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[Red]Select number of rows.[/]")
+                .HighlightStyle("red")
+                .PageSize(10)
+                .MoreChoicesText("[grey](Move up and down with arrow keys)[/]")
+                .AddChoices(new[]
+                {
+                    "3", "4", "5", "6", "7", "8", "9", "10"
+                }));
+
+        byte result = selection switch
+        {
+            "3" => 3,
+            "4" => 4,
+            "5" => 5,
+            "6" => 6,
+            "7" => 7,
+            "8" => 8,
+            "9" => 9,
+            "10" => 10,
+            _ => throw new Exception("Problem occured selecting the amount of rows.")
+        };
+
+        AnsiConsole.MarkupLineInterpolated($"[red]Selected:[/] {result.ToString()}");
+
+        return result;
+    }
+
+    private static byte GetBaseSquareValue()
+    {
+
+        var rule = new Rule("[white]1 to 255[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        return (byte)AnsiConsole.Prompt(
+            new TextPrompt<int>("[red]How much will the base value be for a square? [/]")
+                .PromptStyle("white")
+                .ValidationErrorMessage("[white]Invalid amount[/]")
+                .Validate(age =>
+                {
+                    return age switch
+                    {
+                        <= 0 => ValidationResult.Error("Must at least be a value of 1"),
+                        > byte.MaxValue => ValidationResult.Error("Must not exceed 255"),
+                        _ => ValidationResult.Success(),
+                    };
+                }));
+    }
+
+    private static int GetRowValueOffset()
+    {
+        var rule = new Rule("[white]-100 to 100[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+        return AnsiConsole.Prompt(
+            new TextPrompt<int>("[red]How much will each row be offset by?[/]")
+                .PromptStyle("white")
+                .ValidationErrorMessage("[white]Invalid amount[/]")
+                .Validate(age =>
+                {
+                    return age switch
+                    {
+                        < -100 => ValidationResult.Error("Must not be below -100"),
+                        > 100 => ValidationResult.Error("Must not exceed 100"),
+                        _ => ValidationResult.Success(),
+                    };
+                }));
+    }
+
+    private static byte GetBonusColumnAmount(byte columns)
+    {
+        var rule = new Rule("[white]Bonus Column Amount[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        var allChoices = new[]
+        {
+            "[Red]None[/]", "[Red]1[/]", "[Red]2[/]", "[Red]3[/]", "[Red]4[/]", "[Red]5[/]", "[Red]6[/]",
+            "[Red]7[/]", "[Red]8[/]", "[Red]9[/]", "[Red]10[/]"
+        };
+
+        var choices = allChoices[..(columns + 1)].ToArray();
+        choices[^1] = "[Red]All[/]";
+
+            var selection = AnsiConsole.Prompt(
+            new SelectionPrompt<string>()
+                .Title("[Red]Select the number of bonus columns.[/]")
+                .HighlightStyle("red")
+                .PageSize(columns + 1)
+                .MoreChoicesText(
+                    $"[grey](Move up and down with arrow keys){Environment.NewLine}(Selecting the same amount as the columns selection will make it so that you can skip on any square.)[/]")
+                .AddChoices(choices));
+
+        byte result = selection switch
+        {
+            "[Red]None[/]" => 0,
+            "[Red]1[/]" => 1,
+            "[Red]2[/]" => 2,
+            "[Red]3[/]" => 3,
+            "[Red]4[/]" => 4,
+            "[Red]5[/]" => 5,
+            "[Red]6[/]" => 6,
+            "[Red]7[/]" => 7,
+            "[Red]8[/]" => 8,
+            "[Red]9[/]" => 9,
+            "[Red]10[/]" => 10,
+            "[Red]All[/]" => columns,
+            _ => throw new Exception("Problem occured selecting the amount of bonus columns.")
+        };
+
+        AnsiConsole.MarkupLineInterpolated($"[red]Selected:[/] {result.ToString()}");
+
+        return result;
+    }
+
+    private static byte GetBonusMultiplier()
+    {
+        // TODO - If user chose all columns as bonus, default to 1. and not prompt.
+        var rule = new Rule("[white]1 to 100. 2 is 2x, etc.[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+        return (byte)AnsiConsole.Prompt(
+            new TextPrompt<int>("[red]How much will the bonus multiplier be?[/]")
+                .PromptStyle("white")
+                .ValidationErrorMessage("[white]Invalid amount[/]")
+                .Validate(age =>
+                {
+                    return age switch
+                    {
+                        < 1 => ValidationResult.Error("Must at least 1"),
+                        > 100 => ValidationResult.Error("Must not exceed 100"),
+                        _ => ValidationResult.Success(),
+                    };
+                }));
+    }
+
+    private static string GetKey(int squares)
+    {
+        // TODO - See about prompting per row and have them be entered individually
+        var rule = new Rule("[white]Read Top to Bottom, Left to Right[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        var key = AnsiConsole.Ask<string>("[Red]Please Enter Key: [/]").StringFormat();
+
+        while (key.Length != (squares))
+        {
+            AnsiConsole.MarkupLineInterpolated($"[white]Invalid key. Make sure you enter for {squares.ToString()} squares. You entered {key.Length.ToString()}[/]");
+            key = AnsiConsole.Ask<string>("[Red]Please Enter Key: [/]").StringFormat();
+        }
+
+        return key;
+    }
+
+    public static void InvalidGuessers(Game game)
+    {// TODO - Make a table instead of just this text
         System.Console.Clear();
         Ascii.Title();
-        System.Console.WriteLine($"Detected: Players with incorrect amount of guesses!");
-        System.Console.WriteLine($"Make sure each player has guessed for {card.TotalSquares} squares.");
+        AnsiConsole.MarkupLineInterpolated($"Detected: Players with incorrect amount of guesses!");
+        AnsiConsole.MarkupLineInterpolated($"Make sure each player has guessed for {game.Card.TotalSquares.ToString()} squares.");
         foreach (var incorrectGuesser in game.InvalidGuesses)
         {
-            System.Console.WriteLine(
-                $"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row} guessed for {incorrectGuesser.GuessAmount} squares");
+            AnsiConsole.MarkupLineInterpolated(
+                $"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row.ToString()} guessed for {incorrectGuesser.GuessAmount.ToString()} squares");
         }
 
         System.Console.WriteLine("Please resolve issue and try again.");
@@ -57,156 +292,17 @@ internal static class Prompt
         System.Console.ResetColor();
         Environment.Exit(5);
     }
+
     public static void End(Game game)
     {
         System.Console.Clear();
         Ascii.Title();
-        System.Console.WriteLine(
-            $"Successfully finished scoring {game.Card.TotalSquares} Squares for {game.Players.Count} Players in {game.Stats.ScoreCalculationTime} milliseconds.");
-        System.Console.Write("Press any key to exit...");
+        AnsiConsole.MarkupLineInterpolated(
+            $"[red]Successfully finished scoring [/]{game.Card.TotalSquares.ToString()} [red]Squares for [/]{game.Players.Count.ToString()} [red]Players in [/]{game.Stats.ScoreCalculationTime.ToString()}[red] milliseconds.[/]");
+        AnsiConsole.MarkupLineInterpolated($"[red]Press any key to exit...[/]");
         System.Console.ReadKey(true);
         System.Console.Write(Environment.NewLine);
         System.Console.ResetColor();
         Environment.Exit(0);
-    }
-
-    // Helper functions.
-    private static string GetKey(in int squares)
-    {
-        System.Console.Write("Please Enter Answer Key: ");
-        var key = System.Console.ReadLine().StringFormat();
-        while (key.Length != (squares))
-        {
-            System.Console.Write($"Invalid key. Make sure you enter for {squares} squares, you entered {key.Length}: ");
-            key = System.Console.ReadLine().StringFormat();
-        }
-
-        return key;
-    }
-
-    private static string GetFilePath()
-    {
-        System.Console.Write("Please Enter File Path: ");
-        var path = System.Console.ReadLine().Trim();
-
-        while (!File.Exists(path) || System.IO.Path.GetExtension(path) != ".xlsx")
-        {
-            if (!File.Exists(path))
-            {
-                System.Console.Write("File does not exist. Please enter correct file path: ");
-                path = System.Console.ReadLine().Trim();
-            }
-            else if (System.IO.Path.GetExtension(path) != ".xlsx")
-            {
-                System.Console.Write("Invalid file type. Please use a file type of '.xlsx': ");
-                path = System.Console.ReadLine().Trim();
-            }
-        }
-
-        return path;
-    }
-
-    private static string GetConfigOptionFromUser()
-    {
-        System.Console.Clear();
-        Ascii.Title();
-        System.Console.WriteLine("Load Default Settings: 1");
-        System.Console.WriteLine("Enter Custom Settings: 2");
-        System.Console.Write(Environment.NewLine);
-        System.Console.Write(Environment.NewLine);
-        System.Console.Write("Enter Option: ");
-
-        var selection = System.Console.ReadLine().StringFormat();
-
-        while (selection != "1" && selection != "2")
-        {
-            System.Console.Write($"You entered {selection}, must be either 1 or 2: ");
-
-            selection = System.Console.ReadLine().StringFormat();
-        }
-
-        return selection;
-    }
-
-    private static byte GetColumnAmount()
-    {
-        System.Console.Write("Please Enter Column Amount( Default: 4 ): ");
-        var columnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var columns);
-        while (columns <= 0 || !columnsPass || columns > 64)
-        {
-            System.Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
-            columnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out columns);
-        }
-
-        return columns;
-    }
-
-    private static byte GetRowAmount()
-    {
-        System.Console.Write("Please Enter Row Amount( Default: 3 ): ");
-        var rowPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var rows);
-        while (rows <= 0 || !rowPass || rows > 64)
-        {
-            System.Console.Write("Invalid amount. Please enter a number from 1 to 64: ");
-            rowPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out rows);
-        }
-
-        return rows;
-    }
-
-    private static byte GetBonusColumnAmount(byte columns)
-    {
-        System.Console.Write("Please Enter How Many Columns Will Be Optional( Default: 1 ): ");
-        var bonusColumnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var bonus);
-
-        while (!(bonus <= columns && bonusColumnsPass))
-        {
-            System.Console.Write($"Invalid amount. Please enter a number from 0 to {columns}: ");
-            bonusColumnsPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out bonus);
-        }
-
-        return bonus;
-    }
-
-    private static byte GetBaseSquareValue()
-    {
-        System.Console.Write("Please Enter The Starting Rows' Square Value( Default: 10 ): ");
-        var baseSquarePass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var value);
-
-        while (!(value > 0 && baseSquarePass))
-        {
-            System.Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            baseSquarePass = byte.TryParse(System.Console.ReadLine().StringFormat(), out value);
-        }
-
-        return value;
-    }
-
-    private static int GetRowValueOffset()
-    {
-        System.Console.Write("Please Enter How Much The Next Row Will Go Up In Value From Current Row( Default: 20 ): ");
-        var rowOffsetPass = int.TryParse(System.Console.ReadLine().StringFormat(), out var offset);
-
-        while (!(offset >= 0 && rowOffsetPass))
-        {
-            System.Console.Write($"Invalid amount. Please enter a number from {int.MinValue} to {int.MaxValue}: ");
-            rowOffsetPass = int.TryParse(System.Console.ReadLine().StringFormat(), out offset);
-        }
-
-        return offset;
-    }
-
-    private static byte GetBonusMultiplier()
-    {
-        System.Console.Write("Please Enter Score Multiplier For Optional Column/s( Default: 2 ): ");
-        var bonusMultiplierPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out var multiplier);
-
-        while (!(multiplier > 0 && bonusMultiplierPass))
-        {
-            System.Console.Write($"Invalid amount. Please enter a number from 1 to 255: ");
-            bonusMultiplierPass = byte.TryParse(System.Console.ReadLine().StringFormat(), out multiplier);
-        }
-
-        return multiplier;
     }
 }
