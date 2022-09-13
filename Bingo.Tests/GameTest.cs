@@ -2,9 +2,8 @@ using Bingo.Library;
 
 namespace Bingo.Tests;
 
-public class GameTest
+public sealed class GameTest
 {
-
     [Fact]
     public void CalculatePlayerScoreTest_Max450()
     {
@@ -12,7 +11,7 @@ public class GameTest
         const string guess = "YYYYYYYYYYYY";
 
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var game = new Game(key,card );
+        var game = new Game(key, card);
 
         var result = game.CalculatePlayerScore(guess, true);
 
@@ -26,9 +25,9 @@ public class GameTest
         const string guess = "NNNNNNNNNNNN";
 
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var game = new Game(key,card);
+        var game = new Game(key, card);
 
-        var result = game.CalculatePlayerScore( guess, true );
+        var result = game.CalculatePlayerScore(guess, true);
 
         Assert.Equal(-450, result);
     }

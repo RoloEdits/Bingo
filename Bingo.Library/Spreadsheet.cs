@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Bingo.Library;
 
@@ -7,7 +6,7 @@ internal static class Spreadsheet
 {
     public static (List<Player>, int) Parse()
     {
-        // TODO - Error handling for if the file is already open.
+        // TODO - Error handling for if the file is already open. Will hold on error and  prompt to hit a key when the file is closed.
         try
         {
             using var workbook = new XLWorkbook(Game.Path);

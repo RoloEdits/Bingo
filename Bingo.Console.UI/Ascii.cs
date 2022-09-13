@@ -5,7 +5,7 @@ namespace Bingo.Console.UI;
 
 internal static class Ascii
 {
-    public const string Logo = @"
+    private const string Logo = @"
                                                            .,.
                                                         .,*****,,.                                  
                                                     .,,,.........,,,,.                              
