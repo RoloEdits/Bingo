@@ -2,9 +2,9 @@
 
 public interface ICard : IGrid
 {
-    public byte Columns { get; init; }
-    public byte Rows { get; init; }
-    public byte TotalSquares { get; init; }
+    public new byte Columns { get; init; }
+    public new byte Rows { get; init; }
+    public new byte TotalSquares { get; init; }
     public byte BaseSquareValue { get; init; }
     public int RowValueOffset { get; init; }
     public byte BonusColumns { get; init; }
