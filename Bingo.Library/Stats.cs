@@ -1,18 +1,19 @@
-﻿using DocumentFormat.OpenXml.Office2010.ExcelAc;
+﻿namespace Bingo.Library;
 
-namespace Bingo.Library;
-
-public class Stats
+public sealed class Stats
 {
+    // TODO - better handle stats so that when user decides to not track they dont get implemented and waste memory.
     public double ScoreCalculationTime { get; set; }
-    public IDictionary<int, uint> CorrectGuessesPerSquare { get; set; }
-    public List<double> CorrectGuessesPerSquareDouble { get; set; }
+    public IDictionary<int, uint>? CorrectGuessesPerSquare { get; init; }
+    public List<double>? CorrectGuessesPerSquareDouble { get; init; }
 
-    public List<string> CorrectGuessesPerSquareAsPercentageString => DoubleAsPercentage();
-    public int PlayerCount { get; set; }
+    public List<string>? CorrectGuessesPerSquareAsPercentageString => DoubleAsPercentage();
+    public int PlayerCount;
 
     public void GetCorrectGuessesPerSquarePercentage()
     {
+        if (CorrectGuessesPerSquare is null || CorrectGuessesPerSquareDouble is null) return;
+
         foreach (var guess in CorrectGuessesPerSquare)
         {
             var (_, count) = guess;
@@ -32,6 +33,8 @@ public class Stats
 
     private List<string> DoubleAsPercentage()
     {
+        if (CorrectGuessesPerSquareDouble is null) return new List<string>(0);
+
         var result = new List<string>(CorrectGuessesPerSquareDouble.Count);
 
         foreach (var percentage in CorrectGuessesPerSquareDouble)
