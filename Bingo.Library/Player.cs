@@ -1,6 +1,6 @@
 ﻿namespace Bingo.Library;
 
-public class Player : IPlayer
+public sealed class Player : IPlayer
 {
     public string Name { get; init; }
     public string Guess { get; init; }

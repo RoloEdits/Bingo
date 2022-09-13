@@ -1,6 +1,6 @@
 ﻿namespace Bingo.Library;
 
-public class Game : IGame
+public sealed class Game : IGame
 {
     // TODO - See about making a game settings class for things like whether user wants to track stats, or to include all same guessers
     public List<Player> Players { get; set; }
@@ -9,8 +9,8 @@ public class Game : IGame
     public List<InvalidGuesser> InvalidGuesses { get; } = new();
 
     // Settings
-    public static string? Path;
-    private bool WillLogStats { get; }
+    public static string Path;
+    public bool WillLogStats { get; }
     private bool WillCountAllSameGuessInStats { get; }
 
     // Stats information
@@ -24,19 +24,16 @@ public class Game : IGame
         WillLogStats = willLogStats;
         WillCountAllSameGuessInStats = willCountAllSameGuessInStats;
 
-        if (WillLogStats)
+        Stats = new Stats
         {
-            Stats = new Stats
-            {
-                CorrectGuessesPerSquareDouble = new List<double>(Card.TotalSquares),
-                CorrectGuessesPerSquare = new Dictionary<int, uint>(Card.TotalSquares),
-                ScoreCalculationTime = 0.0
-            };
+            CorrectGuessesPerSquareDouble = new List<double>(Card.TotalSquares),
+            CorrectGuessesPerSquare = new Dictionary<int, uint>(Card.TotalSquares),
+            ScoreCalculationTime = 0.0
+        };
 
-            for (var i = 0; i < Card.TotalSquares; i++)
-            {
-                Stats.CorrectGuessesPerSquare.Add(i, 0);
-            }
+        for (var i = 0; i < Card.TotalSquares; i++)
+        {
+            Stats.CorrectGuessesPerSquare.Add(i, 0);
         }
     }
 
@@ -69,6 +66,8 @@ public class Game : IGame
 
     private bool ThereArePlayersWithInvalidAmountOfSquares()
     {
+        if (Players is null) return true;
+
         for (var row = 0; row < Players.Count; row++)
         {
             var player = Players[row];
@@ -140,6 +139,8 @@ public class Game : IGame
 
         void AddCorrectGuess(int square)
         {
+            if (Stats.CorrectGuessesPerSquare is null) return;
+
             if (WillCountAllSameGuessInStats)
             {
                 Stats.CorrectGuessesPerSquare[square]++;

@@ -1,6 +1,6 @@
 ﻿namespace Bingo.Library;
 
-public class Card : ICard
+public sealed class Card : ICard
 {
     public byte Columns { get; init; }
     public byte Rows { get; init; }
@@ -11,7 +11,8 @@ public class Card : ICard
     public byte BonusMultiplier { get; init; }
     public char BonusSkipChar { get; init; }
 
-    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier)
+    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns,
+        byte bonusMultiplier)
     {
         Columns = columns;
         Rows = rows;
