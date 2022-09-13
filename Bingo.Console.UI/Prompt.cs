@@ -1,14 +1,14 @@
-﻿using Bingo.Library;
+﻿using System.Globalization;
+using Bingo.Library;
 using Spectre.Console;
 
 namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
-    // TODO - Implement Spectre prompts. 3x3min - 10x10max.
-    public static (Card, string, string) Input()
+    // TODO - Prompt user for the bonus skip char
+    public static (Card, string, string, bool, bool) Input()
     {
-        // TODO - prompt user if they want to have stats or not, and if they do whether to include those with all the same guess
         Ascii.Title();
 
         const string option1 = "Load Default Configuration";
@@ -33,6 +33,8 @@ internal static class Prompt
         Card card;
         string path;
         string key;
+        bool stats;
+        var allSame = false;
         switch (option)
         {
             case 0:
@@ -40,7 +42,13 @@ internal static class Prompt
                 card = new Card(4, 3, 10, 20, 1, 2);
                 path = GetFilePath();
                 key = GetKey(card.TotalSquares);
-                return (card, path, key);
+                stats = WillPrintStats();
+                if (stats)
+                {
+                    allSame = WillTrackAllSameGuessesInStats();
+                }
+
+                return (card, path, key, stats, allSame);
             case 1:
                 path = GetFilePath();
                 var columns = GetColumnAmount();
@@ -56,7 +64,13 @@ internal static class Prompt
 
                 card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
                 key = GetKey(card.TotalSquares);
-                return (card, path, key);
+                stats = WillPrintStats();
+                if (stats)
+                {
+                    allSame = WillTrackAllSameGuessesInStats();
+                }
+
+                return (card, path, key, stats, allSame);
         }
 
         throw new Exception("Unmanageable error handling prompts.");
@@ -67,17 +81,18 @@ internal static class Prompt
         var rule = new Rule("[white]Eg. home/user/spreadsheet.xlsx[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
-        var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path: [/]").Trim();
+        var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path:[/]").Trim();
 
         while (!File.Exists(path) || System.IO.Path.GetExtension(path) != ".xlsx")
         {
             if (!File.Exists(path))
             {
-                path = AnsiConsole.Ask<string>("[white]File does not exist. Please enter correct file path: [/]").Trim();
+                path = AnsiConsole.Ask<string>("[white]File does not exist. Please enter correct file path:[/]").Trim();
             }
             else if (System.IO.Path.GetExtension(path) != ".xlsx")
             {
-                path = AnsiConsole.Ask<string>("[white]Invalid file type. Please use a file type of '.xlsx': [/]").Trim();
+                path = AnsiConsole.Ask<string>("[white]Invalid file type. Please use a file type of '.xlsx':[/]")
+                    .Trim();
             }
         }
 
@@ -96,7 +111,7 @@ internal static class Prompt
                 .MoreChoicesText("[grey](Move up and down with arrow keys)[/]")
                 .AddChoices(new[]
                 {
-                    "3", "4", "5", "6", "7", "8", "9","10"
+                    "3", "4", "5", "6", "7", "8", "9", "10"
                 }));
 
         byte result = selection switch
@@ -153,7 +168,6 @@ internal static class Prompt
 
     private static byte GetBaseSquareValue()
     {
-
         var rule = new Rule("[white]1 to 255[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
@@ -193,6 +207,7 @@ internal static class Prompt
 
     private static byte GetBonusColumnAmount(byte columns)
     {
+        // TODO - make sure the selection colors match with the rest. white option, red selection.
         var rule = new Rule("[white]Bonus Column Amount[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
@@ -205,7 +220,7 @@ internal static class Prompt
         var choices = allChoices[..(columns + 1)].ToArray();
         choices[^1] = "[Red]All[/]";
 
-            var selection = AnsiConsole.Prompt(
+        var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
                 .Title("[Red]Select the number of bonus columns.[/]")
                 .HighlightStyle("red")
@@ -238,7 +253,6 @@ internal static class Prompt
 
     private static byte GetBonusMultiplier()
     {
-        // TODO - If user chose all columns as bonus, default to 1. and not prompt.
         var rule = new Rule("[white]1 to 100. 2 is 2x, etc.[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
         return (byte)AnsiConsole.Prompt(
@@ -262,23 +276,52 @@ internal static class Prompt
         var rule = new Rule("[white]Read Top to Bottom, Left to Right[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
-        var key = AnsiConsole.Ask<string>("[Red]Please Enter Key: [/]").StringFormat();
+        var key = AnsiConsole.Ask<string>("[Red]Please Enter Key:[/]").StringFormat();
 
         while (key.Length != (squares))
         {
-            AnsiConsole.MarkupLineInterpolated($"[white]Invalid key. Make sure you enter for {squares.ToString()} squares. You entered {key.Length.ToString()}[/]");
-            key = AnsiConsole.Ask<string>("[Red]Please Enter Key: [/]").StringFormat();
+            AnsiConsole.MarkupLineInterpolated(
+                $"[white]Invalid key. Make sure you enter for {squares.ToString()} squares. You entered {key.Length.ToString()}[/]");
+            key = AnsiConsole.Ask<string>("[Red]Please Enter Key:[/]").StringFormat();
         }
 
         return key;
     }
 
+    private static bool WillPrintStats()
+    {
+        var rule = new Rule("[white]Stats?[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        if (!AnsiConsole.Confirm("[red]Track stats?[/]"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool WillTrackAllSameGuessesInStats()
+    {
+        var rule = new Rule("[white]For Those with all of the same guess?[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        if (!AnsiConsole.Confirm("[red]Include those that guessed for all the same answer on each square?[/]"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public static void InvalidGuessers(Game game)
-    {// TODO - Make a table instead of just this text
+    {
+        // TODO - Make a table instead of just this text
         System.Console.Clear();
         Ascii.Title();
         AnsiConsole.MarkupLineInterpolated($"Detected: Players with incorrect amount of guesses!");
-        AnsiConsole.MarkupLineInterpolated($"Make sure each player has guessed for {game.Card.TotalSquares.ToString()} squares.");
+        AnsiConsole.MarkupLineInterpolated(
+            $"Make sure each player has guessed for {game.Card.TotalSquares.ToString()} squares.");
         foreach (var incorrectGuesser in game.InvalidGuesses)
         {
             AnsiConsole.MarkupLineInterpolated(
@@ -298,11 +341,9 @@ internal static class Prompt
         System.Console.Clear();
         Ascii.Title();
         AnsiConsole.MarkupLineInterpolated(
-            $"[red]Successfully finished scoring [/]{game.Card.TotalSquares.ToString()} [red]Squares for [/]{game.Players.Count.ToString()} [red]Players in [/]{game.Stats.ScoreCalculationTime.ToString()}[red] milliseconds.[/]");
+            $"[red]Successfully finished scoring [/]{game.Card.TotalSquares.ToString()} [red]Squares for [/]{game?.Players?.Count.ToString()} [red]Players in [/]{game?.Stats.ScoreCalculationTime.ToString(CultureInfo.InvariantCulture)}[red] milliseconds.[/]");
         AnsiConsole.MarkupLineInterpolated($"[red]Press any key to exit...[/]");
         System.Console.ReadKey(true);
-        System.Console.Write(Environment.NewLine);
-        System.Console.ResetColor();
         Environment.Exit(0);
     }
 }
