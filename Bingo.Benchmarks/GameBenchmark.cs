@@ -4,40 +4,41 @@ using Bingo.Library;
 namespace Bingo.Benchmarks;
 
 [MemoryDiagnoser]
-[Orderer(BenchmarkDotNet.Order.SummaryOrderPolicy.FastestToSlowest)]
 [RankColumn]
 public class GameBenchmark
 {
     // 4x3
-    private const string Key4x3 = "YYYYYYNYYYYY";
-    private static readonly Card Cardard4x3 = new Card(4, 3, 10, 20, 1, 2);
-    private static readonly Game Game4x3 = new Game(Key4x3, Cardard4x3);
+    private const string Key4X3 = "YYYYYYNYYYYY";
+    private static readonly Card Card4X3 = new Card(4, 3, 10, 20, 1, 2);
+    private static readonly Game Game4X3 = new Game(Key4X3, Card4X3, false);
 
     // 7x5
-    private const string Key7x5 = "YYYYYYYYYYYYYYYNYYYYYYYYYYYYYYYYYYY";
-    private static readonly Card Format7x5 = new Card(7, 5, 10, 20, 2, 2);
-    private static readonly Game Game7x5 = new Game(Key4x3, Format7x5);
+    private const string Key7X5 = "YYYYYYYYYYYYYYYNYYYYYYYYYYYYYYYYYYY";
+    private static readonly Card Format7X5 = new Card(7, 5, 10, 20, 2, 2);
+    private static readonly Game Game7X5 = new Game(Key7X5, Format7X5, false);
 
     // 10x10
-    private const string Key10x10 = "NYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
-    private static readonly Card Card10x10 = new Card(10, 10, 10, 20, 3, 2);
-    private static readonly Game Game10x10 = new Game( Key10x10, Card10x10);
+    private const string Key10X10 =
+        "NYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
+
+    private static readonly Card Card10X10 = new Card(10, 10, 10, 20, 3, 2);
+    private static readonly Game Game10X10 = new Game(Key10X10, Card10X10, false);
 
     [Benchmark]
-    public void CalculateScoreBenchmarkFor4x3()
+    public void CalculateScoreBenchmarkFor4X3()
     {
-        Game4x3.CalculatePlayerScore(Key4x3,false);
+        Game4X3.CalculatePlayerScore(Key4X3, false);
     }
 
     [Benchmark]
-    public void CalculateScoreBenchmarkFor7x5()
+    public void CalculateScoreBenchmarkFor7X5()
     {
-        Game7x5.CalculatePlayerScore(Key7x5, false);
+        Game7X5.CalculatePlayerScore(Key7X5, false);
     }
 
     [Benchmark]
-    public void CalculateScoreBenchmarkFor10x10()
+    public void CalculateScoreBenchmarkFor10X10()
     {
-        Game10x10.CalculatePlayerScore(Key10x10, false);
+        Game10X10.CalculatePlayerScore(Key10X10, false);
     }
 }
