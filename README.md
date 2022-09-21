@@ -374,3 +374,9 @@ From there press `CTRL` + `SHIFT` + `P` to bring up the command pallet. Type in 
 And with that you have a PNG image with that width you set.
 
 ![image](https://user-images.githubusercontent.com/12489689/173172260-cfdf1d18-fb7c-4015-ac8a-0e7937053ff7.png)
+
+## Credits
+
+Thanks to [JetBrains](https://www.jetbrains.com/) for the licenses as part of the All Products Pack and their continued support for open source projects
+
+[![JetBrains](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/)
