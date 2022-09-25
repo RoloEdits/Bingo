@@ -20,6 +20,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
         <ProjectReference Include="..\Bingo.Markdown\Bingo.Markdown.csproj" />
+        <ProjectReference Include="..\Bingo.Spreadsheet.Parser\Bingo.Spreadsheet.Parser.csproj" />
     </ItemGroup>
 
     <ItemGroup>

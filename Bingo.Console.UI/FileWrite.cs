@@ -5,9 +5,9 @@ namespace Bingo.Console.UI;
 
 internal static class FileWrite
 {
-    public static void WriteToFile(Game game)
+    public static void WriteToFile(Game game, string path)
     {
-        var fileName = GetFileName(Game.Path!);
+        var fileName = GetFileName(path);
 
         using TextWriter writer = new StreamWriter(fileName);
         var playersOrdered = game?.Players
@@ -22,7 +22,7 @@ internal static class FileWrite
             writer.Write(table.CreateDynamic("Key", key));
             writer.WriteLine();
 
-            if (game.WillLogStats)
+            if (game.Settings.WillLogStats)
             {
                 var percentages = game.Stats.CorrectGuessesPerSquareAsPercentageString;
                 writer.Write(table.CreateDynamic("Stats", percentages));
