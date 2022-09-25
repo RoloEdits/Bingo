@@ -1,12 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <ApplicationIcon>tog-bingo.ico</ApplicationIcon>
-        <LangVersion>11</LangVersion>
         <PublishTrimmed>true</PublishTrimmed>
         <PublishReadyToRun>true</PublishReadyToRun>
         <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
@@ -15,16 +14,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Content Include="tog-bingo.ico"/>
+        <Content Include="tog-bingo.ico" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj"/>
-        <ProjectReference Include="..\Bingo.Markdown\Bingo.Markdown.csproj"/>
+        <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+        <ProjectReference Include="..\Bingo.Markdown\Bingo.Markdown.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Spectre.Console" Version="0.45.0"/>
+        <PackageReference Include="Spectre.Console" Version="0.45.0" />
     </ItemGroup>
 
 </Project>
