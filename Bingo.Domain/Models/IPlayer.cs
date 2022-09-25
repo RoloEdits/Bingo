@@ -1,4 +1,4 @@
-﻿namespace Bingo.Library;
+﻿namespace Bingo.Domain.Models;
 
 public interface IPlayer
 {
@@ -6,4 +6,6 @@ public interface IPlayer
     public string Guess { get; init; }
     public long Score { get; set; }
     public bool IsAllSameGuess { get; init; }
+
+    public List<PlayerPerSquareResult> ResultPerSquare { get; init; }
 }

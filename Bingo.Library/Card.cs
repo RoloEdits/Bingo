@@ -1,4 +1,7 @@
-﻿namespace Bingo.Library;
+﻿using Bingo.Domain;
+using Bingo.Domain.Models;
+
+namespace Bingo.Library;
 
 public sealed class Card : ICard
 {
@@ -10,9 +13,10 @@ public sealed class Card : ICard
     public byte BonusColumns { get; init; }
     public byte BonusMultiplier { get; init; }
     public char BonusSkipChar { get; init; }
+    public List<string> RowLabels { get; init; }
+    public List<string> SquareLabels { get; init; }
 
-    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns,
-        byte bonusMultiplier)
+    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier, char bonusSkipChar = 'P')
     {
         Columns = columns;
         Rows = rows;
@@ -21,6 +25,8 @@ public sealed class Card : ICard
         BonusColumns = bonusColumns;
         BonusMultiplier = bonusMultiplier;
         TotalSquares = (byte)(columns * rows);
-        BonusSkipChar = 'P';
+        BonusSkipChar = bonusSkipChar;
+        RowLabels = Label.Rows(Rows);
+        SquareLabels = Label.Squares(Rows, Columns);
     }
 }

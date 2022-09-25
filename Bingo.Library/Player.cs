@@ -1,4 +1,6 @@
-﻿namespace Bingo.Library;
+﻿using Bingo.Domain.Models;
+
+namespace Bingo.Library;
 
 public sealed class Player : IPlayer
 {
@@ -6,12 +8,14 @@ public sealed class Player : IPlayer
     public string Guess { get; init; }
     public long Score { get; set; }
     public bool IsAllSameGuess { get; init; }
+    public List<PlayerPerSquareResult> ResultPerSquare { get; init; }
 
     public Player(string name, string guess)
     {
         Name = name;
         Guess = guess;
         IsAllSameGuess = IsAllSame(Guess);
+        ResultPerSquare = new List<PlayerPerSquareResult>(guess.Length);
 
         static bool IsAllSame(ReadOnlySpan<char> guess)
         {

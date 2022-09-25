@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Bingo.Library;
+namespace Bingo.Domain;
 
 public static class Utilities
 {

@@ -1,86 +1,71 @@
-﻿namespace Bingo.Library;
+﻿using Bingo.Domain.Errors;
+using Bingo.Domain.Models;
 
-public sealed class Game : IGame
+namespace Bingo.Library;
+
+public sealed class Game
 {
-    // TODO - See about making a game settings class for things like whether user wants to track stats, or to include all same guessers
-    public List<Player> Players { get; set; }
-    public ICard Card { get; init; }
-    public string Key { get; init; }
-    public List<InvalidGuesser> InvalidGuesses { get; } = new();
+    public List<IPlayer> Players { get; set; }
+    public ICard Card { get; set; }
+    public string Key { get; set; }
+    public ISettings Settings { get; set; }
+    public Stats Stats { get; set; }
 
-    // Settings
-    public static string Path;
-    public bool WillLogStats { get; }
-    private bool WillCountAllSameGuessInStats { get; }
-
-    // Stats information
-    public Stats Stats { get; }
-
-    // TODO - Sure up Player validation so that compiler knows it cant be null
-    public Game(string key, ICard card, bool willLogStats = true, bool willCountAllSameGuessInStats = false)
+    public Game(string key, ICard card, ISettings settings, IDictionary<string, string> players)
     {
         Key = key;
         Card = card;
-        WillLogStats = willLogStats;
-        WillCountAllSameGuessInStats = willCountAllSameGuessInStats;
+        Settings = settings;
+        Players = new();
 
-        Stats = new Stats
+        foreach (var player in players)
         {
-            CorrectGuessesPerSquareDouble = new List<double>(Card.TotalSquares),
-            CorrectGuessesPerSquare = new Dictionary<int, uint>(Card.TotalSquares),
-            ScoreCalculationTime = 0.0
-        };
+            Players.Add(new Player(player.Key, player.Value));
+        }
+
+        var invalidGuessers = CheckForInvalidGuessers();
+        if (invalidGuessers.Count > 0)
+        {
+            throw new InvalidUserGuessAmountException("Invalid Guesses!", invalidGuessers);
+        }
+
+        Stats = new Stats(Card.TotalSquares, Players.Count);
 
         for (var i = 0; i < Card.TotalSquares; i++)
         {
-            Stats.CorrectGuessesPerSquare.Add(i, 0);
+            Stats.CorrectGuessesPerSquare.Add(Card.SquareLabels[i], 0);
         }
     }
 
-    public bool Play()
+    public void Play()
     {
-        var (players, count) = Spreadsheet.Parse();
-
-        Players = players;
-        Stats.PlayerCount = count;
-
-        if (ThereArePlayersWithInvalidAmountOfSquares())
-        {
-            return true;
-        }
-
         var start = DateTime.UtcNow;
 
         foreach (var player in Players)
         {
-            player.Score = CalculatePlayerScore(player.Guess, player.IsAllSameGuess);
+            player.Score = CalculatePlayerScore(player);
         }
 
         var spent = DateTime.UtcNow - start;
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
         Stats.GetCorrectGuessesPerSquarePercentage();
-
-        return false;
     }
-
-    private bool ThereArePlayersWithInvalidAmountOfSquares()
+    // TODO: Move this to somewhere else
+    private List<InvalidGuesser> CheckForInvalidGuessers()
     {
-        if (Players is null) return true;
-
-        for (var row = 0; row < Players.Count; row++)
+        var invalidGuessers = new List<InvalidGuesser>();
+        foreach (var player in Players)
         {
-            var player = Players[row];
             if (player.Guess.Length != (Card.Columns * Card.Rows))
             {
-                InvalidGuesses.Add(new InvalidGuesser(row, player.Name, player.Guess.Length));
+                invalidGuessers.Add(new InvalidGuesser(player.Name, player.Guess.Length));
             }
         }
-
-        return InvalidGuesses.Count > 0;
+        return invalidGuessers;
     }
 
-    public long CalculatePlayerScore(string guess, bool isAllSameGuess)
+    public long CalculatePlayerScore(IPlayer player)
     {
         long score = 0;
 
@@ -104,28 +89,42 @@ public sealed class Game : IGame
             for (var current = holder; current < finalColumnOfRow; current++)
             {
                 var isBonus = (current + bonusAmount) >= finalColumnOfRow;
-                var isNotSkipChar = guess[current] != bonusChar;
+                var isNotSkipChar = player.Guess[current] != bonusChar;
 
-                if (isBonus && isNotSkipChar)
+                if (isBonus)
                 {
-                    if (guess[current] == Key[current])
+                    if (isNotSkipChar)
                     {
-                        score += (squareValue * bonusMultiplier);
-                        if (WillLogStats) AddCorrectGuess(current);
+                        if (player.Guess[current] == Key[current])
+                        {
+                            score += (squareValue * bonusMultiplier);
+                            if (Settings.WillLogStats) AddCorrectGuess(Card.SquareLabels[current]);
+                            player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 1));
+
+                        }
+                        else
+                        {
+                            score -= (squareValue * bonusMultiplier);
+                            player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], -1));
+                        }
                     }
                     else
                     {
-                        score -= (squareValue * bonusMultiplier);
+                        player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 0));
+                        // TODO: For player, make result 0 as they skipped a bonus.
                     }
+
                 }
-                else if (guess[current] == Key[current])
+                else if (player.Guess[current] == Key[current])
                 {
                     score += squareValue;
-                    if (WillLogStats) AddCorrectGuess(current);
+                    player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 1));
+                    if (Settings.WillLogStats) AddCorrectGuess(Card.SquareLabels[current]);
                 }
                 else
                 {
                     score -= squareValue;
+                    player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], -1));
                 }
 
                 holder = current + 1;
@@ -137,17 +136,17 @@ public sealed class Game : IGame
 
         return score;
 
-        void AddCorrectGuess(int square)
+        void AddCorrectGuess(string square)
         {
             if (Stats.CorrectGuessesPerSquare is null) return;
 
-            if (WillCountAllSameGuessInStats)
+            if (Settings.WillCountAllSameGuessersInStats)
             {
                 Stats.CorrectGuessesPerSquare[square]++;
                 return;
             }
 
-            if (!isAllSameGuess)
+            if (!player.IsAllSameGuess)
             {
                 Stats.CorrectGuessesPerSquare[square]++;
             }
