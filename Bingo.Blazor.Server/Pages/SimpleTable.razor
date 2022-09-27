@@ -1,0 +1,73 @@
+﻿@page "/table"
+
+<MudStack>
+    <MudGrid Spacing="1">
+        @* Columns Slider Block *@
+        <MudItem xs="12">
+            <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4">
+                <MudSlider @bind-Value="Columns" ValueLabel="true" Min="3" Max="7">
+                    <MudText Class="d-flex justify-center" Typo="Typo.h5">Columns</MudText>
+                </MudSlider>
+            </MudPaper>
+        </MudItem>
+        @* Next Block *@
+        @* Row Slider Block *@
+        <MudItem xs="1">
+            <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Height="100%" Class="pa-4 py-4">
+                <MudSlider @bind-Value="Rows" ValueLabel="true" Min="3" Max="7" Vertical="true">
+                    <MudText Class="d-flex justify-center" Typo="Typo.h5">Rows</MudText>
+                </MudSlider>
+            </MudPaper>
+        </MudItem>
+        @* Squares *@
+        <MudItem xs="11">
+            <MudPaper Height="1000px" Elevation="5">
+	            <MudItem Style="margin: 0; position: relative; top: 50%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
+		            @for (var row = 0; row < Rows; row++)
+		            {
+			            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4">
+				            @for (var column = 0; column < Columns; column++)
+				            {
+					            @if (Rows == 7 || Columns == 7)
+					            {
+						            <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+							            <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="120px" Height="120px" Elevation="5"></MudPaper>
+						            </MudStack>
+					            }
+					            else if (Rows == 6 || Columns == 6)
+					            {
+						            <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+							            <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="150px" Height="150px" Elevation="5"></MudPaper>
+						            </MudStack>
+					            }
+					            else if (Rows == 5 || Columns == 5)
+					            {
+						            <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+							            <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="170px" Height="170px" Elevation="5"></MudPaper>
+						            </MudStack>
+					            }
+					            else if (Rows == 4 || Columns == 4)
+					            {
+						            <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+							            <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="225px" Height="225px" Elevation="5"></MudPaper>
+						            </MudStack>
+					            }
+					            else
+					            {
+						            <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+							            <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="300px" Height="300px" Elevation="5"></MudPaper>
+						            </MudStack>
+					            }
+				            }
+			            </MudStack>
+		            }
+	            </MudItem>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>
+
+@code {
+    static int Rows { get; set; } = 3;
+	static int Columns { get; set; } = 3;
+}
