@@ -16,7 +16,7 @@ public sealed class Game
         Key = key;
         Card = card;
         Settings = settings;
-        Players = new();
+        Players = new(players.Count);
 
         foreach (var player in players)
         {
@@ -51,6 +51,7 @@ public sealed class Game
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
         Stats.GetCorrectGuessesPerSquarePercentage();
     }
+
     // TODO: Move this to somewhere else
     private List<InvalidGuesser> CheckForInvalidGuessers()
     {
@@ -62,6 +63,7 @@ public sealed class Game
                 invalidGuessers.Add(new InvalidGuesser(player.Name, player.Guess.Length));
             }
         }
+
         return invalidGuessers;
     }
 
@@ -98,33 +100,45 @@ public sealed class Game
                         if (player.Guess[current] == Key[current])
                         {
                             score += (squareValue * bonusMultiplier);
-                            if (Settings.WillLogStats) AddCorrectGuess(Card.SquareLabels[current]);
-                            player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 1));
-
+                            if (Settings.WillLogStats)
+                            {
+                                player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 1));
+                                AddCorrectGuess(Card.SquareLabels[current]);
+                            }
                         }
                         else
                         {
                             score -= (squareValue * bonusMultiplier);
-                            player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], -1));
+                            if (Settings.WillLogStats)
+                            {
+                                player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], -1));
+                            }
                         }
                     }
                     else
                     {
-                        player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 0));
-                        // TODO: For player, make result 0 as they skipped a bonus.
+                        if (Settings.WillLogStats)
+                        {
+                            player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 0));
+                        }
                     }
-
                 }
                 else if (player.Guess[current] == Key[current])
                 {
                     score += squareValue;
-                    player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], 1));
-                    if (Settings.WillLogStats) AddCorrectGuess(Card.SquareLabels[current]);
+                    if (Settings.WillLogStats)
+                    {
+                        player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 1));
+                        AddCorrectGuess(Card.SquareLabels[current]);
+                    }
                 }
                 else
                 {
                     score -= squareValue;
-                    player.ResultPerSquare.Add(new PlayerPerSquareResult(Card.SquareLabels[current], -1));
+                    if (Settings.WillLogStats)
+                    {
+                        player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], -1));
+                    }
                 }
 
                 holder = current + 1;
@@ -138,8 +152,6 @@ public sealed class Game
 
         void AddCorrectGuess(string square)
         {
-            if (Stats.CorrectGuessesPerSquare is null) return;
-
             if (Settings.WillCountAllSameGuessersInStats)
             {
                 Stats.CorrectGuessesPerSquare[square]++;
