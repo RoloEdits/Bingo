@@ -4,34 +4,15 @@ public static class Label
 {
     public static List<string> Rows(byte rows)
     {
-        var label = new List<string>();
-        if (rows < 27)
+        var label = new List<string>(rows);
+
+        for (var letter = 'A'; letter <= 'Z'; letter++)
         {
-            for (var ones = 'A'; ones <= 'Z'; ones++)
+            if (label.Count != rows)
             {
-                label.Add($"{ones}");
-            }
-
-            return label;
-        }
-
-        for (var ones = 'A'; ones <= 'Z'; ones++)
-        {
-            label.Add($"{ones}");
-        }
-
-        for (var tens = 'A'; tens <= 'Z'; tens++)
-        {
-            for (var ones = 'A'; ones <= 'Z'; ones++)
-            {
-                label.Add($"{tens}{ones}");
-                if (label.Count >= 64)
-                {
-                    return label;
-                }
+                label.Add($"{letter}");
             }
         }
-
         return label;
     }
 
@@ -44,7 +25,7 @@ public static class Label
         {
             for (var i = 0; i < columns; i++)
             {
-                result.Add($"{rowLabel}{(i + 1).ToString()}");
+                result.Add($"{rowLabel}{i + 1}");
             }
         }
 
