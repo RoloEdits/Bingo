@@ -7,38 +7,46 @@ namespace Bingo.Benchmarks;
 [RankColumn]
 public class GameBenchmark
 {
-    // 4x3
-    private const string Key4X3 = "YYYYYYNYYYYY";
-    private static readonly Card Card4X3 = new Card(4, 3, 10, 20, 1, 2);
-    private static readonly Game Game4X3 = new Game(Key4X3, Card4X3, false);
+    private static readonly Settings Settings = new()
+    {
+        WillLogStats = false,
+        WillCountAllSameGuessersInStats = false
+    };
 
-    // 7x5
-    private const string Key7X5 = "YYYYYYYYYYYYYYYNYYYYYYYYYYYYYYYYYYY";
-    private static readonly Card Format7X5 = new Card(7, 5, 10, 20, 2, 2);
-    private static readonly Game Game7X5 = new Game(Key7X5, Format7X5, false);
+    // 3x3
+    private const string Key3X3 = "YYYYYYYYY";
+    private static Dictionary<string, string> Players3X3 => new() { { "Rolo", Key3X3 } };
+    private static readonly Card Card3X3 = new(3, 3, 10, 0, 0, 1);
+    private static readonly Game Game3X3 = new(Key3X3, Card3X3, Settings, Players3X3);
 
-    // 10x10
-    private const string Key10X10 =
-        "NYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
+    // 5x5
+    private const string Key5X5 = "YYYYYYYYYYYYYYYYYYYYYYYYY";
+    private static Dictionary<string, string> Players5X5 => new() { { "Rolo", Key5X5 } };
+    private static readonly Card Card5X5 = new(5, 5, 10, 0, 0, 0);
+    private static readonly Game Game5X5 = new(Key5X5, Card5X5, Settings, Players5X5);
 
-    private static readonly Card Card10X10 = new Card(10, 10, 10, 20, 3, 2);
-    private static readonly Game Game10X10 = new Game(Key10X10, Card10X10, false);
+    // 7x7
+    private const string Key7X7 =
+        "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
+    private static Dictionary<string, string> Players7X7 => new() { { "Rolo", Key7X7 } };
+    private static readonly Card Card7X7 = new(7, 7, 10, 0, 0, 0);
+    private static readonly Game Game7X7 = new(Key7X7, Card7X7, Settings, Players7X7);
 
     [Benchmark]
-    public void CalculateScoreBenchmarkFor4X3()
+    public void CalculateScoreBenchmarkFor3X3()
     {
-        Game4X3.CalculatePlayerScore(Key4X3, false);
+        Game3X3.CalculatePlayerScore(Game3X3.Players[0]);
     }
 
-    [Benchmark]
-    public void CalculateScoreBenchmarkFor7X5()
+    //[Benchmark]
+    public void CalculateScoreBenchmarkFor5X5()
     {
-        Game7X5.CalculatePlayerScore(Key7X5, false);
+        Game5X5.CalculatePlayerScore(Game5X5.Players[0]);
     }
 
-    [Benchmark]
-    public void CalculateScoreBenchmarkFor10X10()
+    //[Benchmark]
+    public void CalculateScoreBenchmarkFor7X7()
     {
-        Game10X10.CalculatePlayerScore(Key10X10, false);
+        Game7X7.CalculatePlayerScore(Game7X7.Players[0]);
     }
 }
