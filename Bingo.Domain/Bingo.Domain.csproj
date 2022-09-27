@@ -13,7 +13,7 @@
 		<Compile Include="Models\InvalidGuesser.cs" />
 		<Compile Include="Models\IPlayer.cs" />
 		<Compile Include="Models\ISettings.cs" />
-		<Compile Include="Models\PlayerPerSquareResult.cs" />
+		<Compile Include="Models\SquareResult.cs" />
 	</ItemGroup>
 
 </Project>

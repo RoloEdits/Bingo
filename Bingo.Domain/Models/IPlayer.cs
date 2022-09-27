@@ -7,5 +7,5 @@ public interface IPlayer
     public long Score { get; set; }
     public bool IsAllSameGuess { get; init; }
 
-    public List<PlayerPerSquareResult> ResultPerSquare { get; init; }
+    public List<SquareResult> ResultPerSquare { get; init; }
 }
