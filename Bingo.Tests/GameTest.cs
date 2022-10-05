@@ -19,7 +19,9 @@ public sealed class GameTest
 
         var game = new Game(key, card, settings, player);
 
-        var result = game.CalculatePlayerScore(game.Players[0]);
+        game.CalculateScore(game.Players[0]);
+
+        var result = game.Players[0].Score;
 
         Assert.Equal(450, result);
     }
@@ -41,7 +43,9 @@ public sealed class GameTest
 
         var game = new Game(key, card, settings, player);
 
-        var result = game.CalculatePlayerScore(game.Players[0]);
+        game.CalculateScore(game.Players[0]);
+
+        var result = game.Players[0].Score;
 
         Assert.Equal(-450, result);
     }
