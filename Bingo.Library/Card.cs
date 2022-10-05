@@ -19,6 +19,7 @@ public sealed class Card : ICard
 
     public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier, char bonusSkipChar = 'P')
     {
+        // TODO: Add defaults so that when there is no bonus there is still the option to skip squares. Just that when there is a bonus, you can only skip on those squares.
         Columns = columns;
         Rows = rows;
         BaseSquareValue = baseSquareValue;
