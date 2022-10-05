@@ -37,15 +37,10 @@ public sealed class Game
     {
         var start = DateTime.UtcNow;
 
-        // var calculatePlayerScoresTask = new List<Task>();
-
         foreach (var player in Players)
         {
             CalculateScore(player);
-            // calculatePlayerScoresTask.Add(Task.Run(() => CalculatePlayerScore(player)));
         }
-
-        // await Task.WhenAll(calculatePlayerScoresTask);
 
         var spent = DateTime.UtcNow - start;
 
