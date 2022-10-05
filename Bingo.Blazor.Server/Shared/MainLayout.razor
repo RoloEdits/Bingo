@@ -1,8 +1,8 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider IsDarkMode="true" />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudThemeProvider IsDarkMode="true"/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 <MudLayout>
     @* <MudAppBar Elevation="0"> *@
@@ -11,11 +11,11 @@
     @*     <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" /> *@
     @*     <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
     @* </MudAppBar> *@
-    <MudDrawer  Fixed="false" Elevation="6" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
-        <NavMenu />
+    <MudDrawer Fixed="false" Elevation="6" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Height="100%">
+        <NavMenu/>
     </MudDrawer>
     <MudMainContent>
-        <MudContainer MaxWidth="MaxWidth.Large" Class="my-16 pt-16">
+        <MudContainer MaxWidth="MaxWidth.Large">
             @Body
         </MudContainer>
     </MudMainContent>
@@ -28,4 +28,5 @@
     {
         _drawerOpen = !_drawerOpen;
     }
+
 }
