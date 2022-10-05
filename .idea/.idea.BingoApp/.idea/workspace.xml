@@ -15,11 +15,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="94194940-aa44-4c8c-aa0e-480660f218a8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/ISettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Models/ISettings.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/SquareResult.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Library/Stats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Library/Stats.cs" afterDir="false" />
-    </list>
+    <list default="true" id="94194940-aa44-4c8c-aa0e-480660f218a8" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -214,7 +210,7 @@
       <workItem from="1664483800676" duration="2913000" />
       <workItem from="1664540547501" duration="4099000" />
       <workItem from="1664928370469" duration="3958000" />
-      <workItem from="1664980936037" duration="8132000" />
+      <workItem from="1664980936037" duration="8555000" />
     </task>
     <servers />
   </component>
