@@ -1,13 +1,14 @@
-﻿using Bingo.Library;
+﻿using Bingo.Domain;
+using Bingo.Library;
 using Bingo.Markdown;
 
 namespace Bingo.Console.UI;
 
 internal static class FileWrite
 {
-    public static void WriteToFile(Game game)
+    public static void WriteToFile(Game game, string path)
     {
-        var fileName = GetFileName(Game.Path!);
+        var fileName = GetFileName(path);
 
         using TextWriter writer = new StreamWriter(fileName);
         var playersOrdered = game?.Players
@@ -18,14 +19,13 @@ internal static class FileWrite
         {
             var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
 
-            var key = game.Key.ToList();
-            writer.Write(table.CreateDynamic("Key", key));
+            writer.Write(table.Create("Key", game.Key));
             writer.WriteLine();
 
-            if (game.WillLogStats)
+            if (game.Settings.WillLogStats)
             {
-                var percentages = game.Stats.CorrectGuessesPerSquareAsPercentageString;
-                writer.Write(table.CreateDynamic("Stats", percentages));
+                var percentages = game.Stats.PerSquareCorrectGuessesDouble;
+                writer.Write(table.Create("Stats", Utilities.ListTo2DArray(percentages, game.Card.Rows, game.Card.Columns)));
                 writer.WriteLine();
             }
 

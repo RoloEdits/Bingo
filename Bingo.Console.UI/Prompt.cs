@@ -1,4 +1,6 @@
 ﻿using System.Globalization;
+using Bingo.Domain;
+using Bingo.Domain.Models;
 using Bingo.Library;
 using Spectre.Console;
 
@@ -7,7 +9,7 @@ namespace Bingo.Console.UI;
 internal static class Prompt
 {
     // TODO - Prompt user for the bonus skip char
-    public static (Card, string, string, bool, bool) Input()
+    public static (Card, string, string, ISettings) Input()
     {
         Ascii.Title();
 
@@ -24,17 +26,18 @@ internal static class Prompt
                     {
                         option1, option2,
                     })) switch
-            {
-                option1 => 0,
-                option2 => 1,
-                _ => throw new Exception("Error handling configuration selection")
-            };
+        {
+            option1 => 0,
+            option2 => 1,
+            _ => throw new Exception("Error handling configuration selection")
+        };
 
         Card card;
         string path;
         string key;
         bool stats;
         var allSame = false;
+        var settings = new Settings();
         switch (option)
         {
             case 0:
@@ -48,7 +51,9 @@ internal static class Prompt
                     allSame = WillTrackAllSameGuessesInStats();
                 }
 
-                return (card, path, key, stats, allSame);
+                settings.WillLogStats = stats;
+                settings.WillCountAllSameGuessersInStats = allSame;
+                return (card, path, key, settings);
             case 1:
                 path = GetFilePath();
                 var columns = GetColumnAmount();
@@ -70,7 +75,9 @@ internal static class Prompt
                     allSame = WillTrackAllSameGuessesInStats();
                 }
 
-                return (card, path, key, stats, allSame);
+                settings.WillLogStats = stats;
+                settings.WillCountAllSameGuessersInStats = allSame;
+                return (card, path, key, settings);
         }
 
         throw new Exception("Unmanageable error handling prompts.");
@@ -314,7 +321,7 @@ internal static class Prompt
         return true;
     }
 
-    public static void InvalidGuessers(Game game)
+    public static void InvalidGuessers(List<InvalidGuesser> invalidGuessers, Game game)
     {
         // TODO - Make a table instead of just this text
         System.Console.Clear();
@@ -322,10 +329,10 @@ internal static class Prompt
         AnsiConsole.MarkupLineInterpolated($"Detected: Players with incorrect amount of guesses!");
         AnsiConsole.MarkupLineInterpolated(
             $"Make sure each player has guessed for {game.Card.TotalSquares.ToString()} squares.");
-        foreach (var incorrectGuesser in game.InvalidGuesses)
+        foreach (var incorrectGuesser in invalidGuessers)
         {
             AnsiConsole.MarkupLineInterpolated(
-                $"'{incorrectGuesser.Name}' in row {incorrectGuesser.Row.ToString()} guessed for {incorrectGuesser.GuessAmount.ToString()} squares");
+                $"'{incorrectGuesser.Name}' guessed for {incorrectGuesser.GuessAmount.ToString()} squares");
         }
 
         System.Console.WriteLine("Please resolve issue and try again.");

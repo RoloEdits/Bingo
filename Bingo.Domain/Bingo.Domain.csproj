@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="Models\**" />
+		<Compile Include="Models\Square.cs" />
+		<EmbeddedResource Remove="Models\**" />
+		<Compile Include="Models\ICard.cs" />
+		<Compile Include="Models\InvalidGuesser.cs" />
+		<Compile Include="Models\IPlayer.cs" />
+		<Compile Include="Models\ISettings.cs" />
+	</ItemGroup>
+
+</Project>

@@ -1,6 +1,4 @@
-using Bingo.Library;
-
-namespace Bingo.Tests;
+namespace Bingo.Library.Tests;
 
 public sealed class GameTest
 {
@@ -11,9 +9,19 @@ public sealed class GameTest
         const string guess = "YYYYYYYYYYYY";
 
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var game = new Game(key, card);
+        var settings = new Settings()
+        {
+            WillLogStats = true,
+            WillCountAllSameGuessersInStats = true
+        };
 
-        var result = game.CalculatePlayerScore(guess, true);
+        var player = new Dictionary<string, string>() { { "Rolo", guess } };
+
+        var game = new Game(key, card, settings, player);
+
+        game.CalculateScore(game.Players[0]);
+
+        var result = game.Players[0].Score;
 
         Assert.Equal(450, result);
     }
@@ -25,9 +33,19 @@ public sealed class GameTest
         const string guess = "NNNNNNNNNNNN";
 
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var game = new Game(key, card);
+        var settings = new Settings()
+        {
+            WillLogStats = true,
+            WillCountAllSameGuessersInStats = true
+        };
 
-        var result = game.CalculatePlayerScore(guess, true);
+        var player = new Dictionary<string, string>() { { "Rolo", guess } };
+
+        var game = new Game(key, card, settings, player);
+
+        game.CalculateScore(game.Players[0]);
+
+        var result = game.Players[0].Score;
 
         Assert.Equal(-450, result);
     }
