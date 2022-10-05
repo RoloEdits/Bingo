@@ -6,16 +6,16 @@ namespace Bingo.Library;
 
 public sealed class Card : ICard
 {
-    public byte Columns { get; init; }
-    public byte Rows { get; init; }
-    public byte TotalSquares { get; init; }
-    public byte BaseSquareValue { get; init; }
-    public int RowValueOffset { get; init; }
-    public byte BonusColumns { get; init; }
-    public byte BonusMultiplier { get; init; }
-    public char BonusSkipChar { get; init; }
+    public byte Columns { get; }
+    public byte Rows { get; }
+    public byte TotalSquares { get; }
+    public byte BaseSquareValue { get; }
+    public int RowValueOffset { get; }
+    public byte BonusColumns { get; }
+    public byte BonusMultiplier { get; }
+    public char BonusSkipChar { get; }
     public List<string> RowLabels { get; init; }
-    public Square[,] SquareLabels { get; init; }
+    public Square[,] SquareLabels { get; }
 
     public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier, char bonusSkipChar = 'P')
     {
