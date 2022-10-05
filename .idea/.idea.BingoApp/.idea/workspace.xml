@@ -16,45 +16,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="94194940-aa44-4c8c-aa0e-480660f218a8" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/DataGrid.razor" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Bingo.Domain/Models/Square.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BingoApp/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.BingoApp/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Benchmarks/Bingo.Benchmarks.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Benchmarks/Bingo.Benchmarks.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Benchmarks/GameBenchmark.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Benchmarks/GameBenchmark.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/App.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/App.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Bingo.Blazor.Server.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Bingo.Blazor.Server.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Data/WeatherForecast.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Data/WeatherForecast.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Data/WeatherForecastService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Data/WeatherForecastService.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Counter.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Counter.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Error.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Error.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Error.cshtml.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Error.cshtml.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/FetchData.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/FetchData.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Index.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Index.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/SimpleTable.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/SimpleTable.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Stats.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/Stats.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/_Host.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/_Host.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/_Layout.cshtml" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Pages/_Layout.cshtml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Shared/MainLayout.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Shared/MainLayout.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/Shared/NavMenu.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/Shared/NavMenu.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Blazor.Server/_Imports.razor" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Blazor.Server/_Imports.razor" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Console.UI/Bingo.Console.UI.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Console.UI/Bingo.Console.UI.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Console.UI/FileWrite.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Console.UI/FileWrite.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain.Tests/LabelTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain.Tests/LabelTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Bingo.Domain.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Bingo.Domain.csproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Label.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Label.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/ICard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Models/ICard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/IPlayer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Models/IPlayer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/ISettings.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Models/ISettings.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bingo.Domain/Models/SquareResult.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Domain/Utilities.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Domain/Utilities.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Library/Card.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Library/Card.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Library/Game.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Library/Game.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Library/Player.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Library/Player.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Bingo.Library/Stats.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Library/Stats.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Markdown/Table.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Markdown/Table.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Bingo.Tests/GameTest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Bingo.Tests/GameTest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BingoApp.sln" beforeDir="false" afterPath="$PROJECT_DIR$/BingoApp.sln" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -250,7 +214,7 @@
       <workItem from="1664483800676" duration="2913000" />
       <workItem from="1664540547501" duration="4099000" />
       <workItem from="1664928370469" duration="3958000" />
-      <workItem from="1664980936037" duration="7541000" />
+      <workItem from="1664980936037" duration="8132000" />
     </task>
     <servers />
   </component>
