@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MudBlazor" Version="6.0.17-dev.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+    </ItemGroup>
+
+</Project>

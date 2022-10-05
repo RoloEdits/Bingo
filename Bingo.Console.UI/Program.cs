@@ -1,5 +1,8 @@
 ﻿using Bingo.Library;
 using System.Runtime.InteropServices;
+using Bingo.Domain.Errors;
+using Bingo.Spreadsheet.Parser.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Bingo.Console.UI;
 
@@ -14,18 +17,27 @@ internal static class Program
             System.Console.WindowHeight = 32;
         }
 
-        var (card, path, key, stats, allGuesses) = Prompt.Input();
-        Game.Path = path;
-        var game = new Game(key, card, stats, allGuesses);
+        var (card, path, key, settings) = Prompt.Input();
 
-        var thereAreInvalidGuesses = game.Play();
-        if (thereAreInvalidGuesses)
+        try
         {
-            Prompt.InvalidGuessers(game);
+            var players = Spreadsheet.Parser.Excel.Spreadsheet.Parse(path);
+
+            var game = new Game(key, card, settings, players);
+
+            game.Play();
+
+            FileWrite.WriteToFile(game, path);
+
+            Prompt.End(game);
+        }
+        catch (Exception exception)
+        {
+            System.Console.WriteLine(exception);
+            throw;
         }
 
-        FileWrite.WriteToFile(game);
 
-        Prompt.End(game);
+
     }
 }

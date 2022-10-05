@@ -1,0 +1,123 @@
+﻿@page "/table"
+@using System.Security.Cryptography
+@using System.Net.NetworkInformation
+@using Bingo.Domain
+@using Bingo.Domain.Models
+@using System.Data.Common
+@using System.Reflection
+@using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
+
+<MudStack>
+    <MudGrid Spacing="1">
+        @* Controls Block *@
+        <MudItem xs="12">
+            <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4" Height="250px">
+                <MudStack Row="true">
+                    <MudStack>
+                        <MudNumericField @bind-Value="Columns" Label="Columns" Variant="Variant.Text" Min="3" Max="7" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.ViewColumn"/>
+                        <MudNumericField @bind-Value="Rows" Label="Rows" Variant="Variant.Text" Min="3" Max="7" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.TableRows"/>
+                    </MudStack>
+                    <MudDivider Vertical="true"/>
+                    <MudStack>
+                        <MudNumericField @bind-Value="BonusColumns" Label="Bonus Columns" Variant="Variant.Text" Min="0" Max="@Columns" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.Pause"/>
+                        <MudSwitch @bind-Checked="@LogAllSameGuesses" Color="Color.Primary" UnCheckedColor="Color.Error" Label="Include all same guessers in the stats"/>
+                    </MudStack>
+                </MudStack>
+                <MudStack>
+                    <MudTextField @bind-Value="Key" Label="Key" Variant="Variant.Filled" Margin="Margin.Dense" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.VpnKey"></MudTextField>
+
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+        @* Next Block *@
+        @* Squares *@
+        <MudItem xs="12">
+            <MudPaper Elevation="5" Height="1000px">
+                <MudItem>
+                    @for (var row = 0; row < Rows; row++)
+                    {
+                        var rowHolder = row;
+                        <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Style="position:relative; margin:auto;">
+                            @for (var column = 0; column < Columns; column++)
+                            {
+                                var columnHolder = column;
+                                var isBonus = (column + BonusColumns) >= Columns;
+
+                                if (Rows == 7 || Columns == 7)
+                                {
+                                    <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="120px" Height="120px" Elevation="@(isBonus ? 20 : 4)">
+                                            <MudText Typo="Typo.h1" Align="Align.Center">@Squares[rowHolder][columnHolder]</MudText>
+                                        </MudPaper>
+                                    </MudStack>
+                                }
+                                else if (Rows == 6 || Columns == 6)
+                                {
+                                    <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="150px" Height="150px" Elevation="@(isBonus ? 20 : 4)">
+                                            <MudText Typo="Typo.h1" Align="Align.Center">@Squares[rowHolder][columnHolder]</MudText>
+                                        </MudPaper>
+                                    </MudStack>
+                                }
+                                else if (Rows == 5 || Columns == 5)
+                                {
+                                    <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="170px" Height="170px" Elevation="@(isBonus ? 20 : 4)">
+                                            <MudText Typo="Typo.h1" Align="Align.Center">@Squares[rowHolder][columnHolder]</MudText>
+                                        </MudPaper>
+                                    </MudStack>
+                                }
+                                else if (Rows == 4 || Columns == 4)
+                                {
+                                    <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="225px" Height="225px" Elevation="@(isBonus ? 20 : 4)">
+                                            <MudText Typo="Typo.h1" Align="Align.Center">@Squares[rowHolder][columnHolder]</MudText>
+                                        </MudPaper>
+                                    </MudStack>
+                                }
+                                else
+                                {
+                                    <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+                                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="300px" Height="300px" Elevation="@(isBonus ? 20 : 4)">
+                                            <MudText Typo="Typo.h1" Align="Align.Center" Class="d-flex justify-center" >@Squares[rowHolder][columnHolder]</MudText>
+                                        </MudPaper>
+                                    </MudStack>
+                                }
+                            }
+                        </MudStack>
+                    }
+                </MudItem>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudStack>
+
+@code {
+    static int Rows { get; set; } = 3;
+    static int Columns { get; set; } = 3;
+    static int BonusColumns { get; set; } = 0;
+    public byte BaseSquareValue { get; set; }
+    public int RowValueOffset { get; set; }
+    public byte BonusMultiplier { get; set; }
+    public char BonusSkipChar { get; set; }
+    public string Key { get; set; }
+    bool LogAllSameGuesses { get; set; } = false;
+
+    static List<List<string>> Squares { get; set; } = new()
+    {
+        new List<string> { "A1", "A2", "A3", "A4", "A5", "A6", "A7" },
+        new List<string> { "B1", "B2", "B3", "B4", "B5", "B6", "B7" },
+        new List<string> { "C1", "C2", "C3", "C4", "C5", "C6", "C7" },
+        new List<string> { "D1", "D2", "D3", "D4", "D5", "D6", "D7" },
+        new List<string> { "E1", "E2", "E3", "E4", "E5", "E6", "E7" },
+        new List<string> { "F1", "F2", "F3", "F4", "F5", "F6", "F7" },
+        new List<string> { "G1", "G2", "G3", "G4", "G5", "G6", "G7" }
+    };
+
+}
+
+@code{
+
+    //TODO: Prepare for adding color outlines for the rows. Will have hard coded colors for the 7 rows. Bonus rows will be purple.
+
+}

@@ -1,155 +1,148 @@
-﻿namespace Bingo.Library;
+﻿using Bingo.Domain;
+using Bingo.Domain.Errors;
+using Bingo.Domain.Models;
 
-public sealed class Game : IGame
+namespace Bingo.Library;
+
+public sealed class Game
 {
-    // TODO - See about making a game settings class for things like whether user wants to track stats, or to include all same guessers
-    public List<Player> Players { get; set; }
-    public ICard Card { get; init; }
-    public string Key { get; init; }
-    public List<InvalidGuesser> InvalidGuesses { get; } = new();
-
-    // Settings
-    public static string Path;
-    public bool WillLogStats { get; }
-    private bool WillCountAllSameGuessInStats { get; }
-
-    // Stats information
+    public List<IPlayer> Players { get;}
+    public ICard Card { get; }
+    public char[,] Key { get; }
+    public ISettings Settings { get; }
     public Stats Stats { get; }
 
-    // TODO - Sure up Player validation so that compiler knows it cant be null
-    public Game(string key, ICard card, bool willLogStats = true, bool willCountAllSameGuessInStats = false)
+    public Game(string key, ICard card, ISettings settings, IDictionary<string, string> players)
     {
-        Key = key;
         Card = card;
-        WillLogStats = willLogStats;
-        WillCountAllSameGuessInStats = willCountAllSameGuessInStats;
+        Settings = settings;
+        Players = new List<IPlayer>(players.Count);
+        Key = Utilities.SpanTo2DArray<char>(key, Card.Rows, Card.Columns);
 
-        Stats = new Stats
+        foreach (var player in players)
         {
-            CorrectGuessesPerSquareDouble = new List<double>(Card.TotalSquares),
-            CorrectGuessesPerSquare = new Dictionary<int, uint>(Card.TotalSquares),
-            ScoreCalculationTime = 0.0
-        };
-
-        for (var i = 0; i < Card.TotalSquares; i++)
-        {
-            Stats.CorrectGuessesPerSquare.Add(i, 0);
+            Players.Add(new Player(player.Key, player.Value, Card.Rows, Card.Columns));
         }
+
+        var invalidGuessers = CheckForInvalidGuessers();
+        if (invalidGuessers.Count > 0)
+        {
+            throw new InvalidUserGuessAmountException("Invalid Guesses!", invalidGuessers);
+        }
+
+        Stats = new Stats(Card, Players.Count);
     }
 
-    public bool Play()
+    public void  Play()
     {
-        var (players, count) = Spreadsheet.Parse();
-
-        Players = players;
-        Stats.PlayerCount = count;
-
-        if (ThereArePlayersWithInvalidAmountOfSquares())
-        {
-            return true;
-        }
-
         var start = DateTime.UtcNow;
+
+        // var calculatePlayerScoresTask = new List<Task>();
 
         foreach (var player in Players)
         {
-            player.Score = CalculatePlayerScore(player.Guess, player.IsAllSameGuess);
+            CalculateScore(player);
+            // calculatePlayerScoresTask.Add(Task.Run(() => CalculatePlayerScore(player)));
         }
+
+        // await Task.WhenAll(calculatePlayerScoresTask);
 
         var spent = DateTime.UtcNow - start;
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
-        Stats.GetCorrectGuessesPerSquarePercentage();
-
-        return false;
+        Stats.AggregateResults(Players);
     }
 
-    private bool ThereArePlayersWithInvalidAmountOfSquares()
+    // TODO: Move this to somewhere else
+    private List<InvalidGuesser> CheckForInvalidGuessers()
     {
-        if (Players is null) return true;
-
-        for (var row = 0; row < Players.Count; row++)
+        var invalidGuessers = new List<InvalidGuesser>();
+        foreach (var player in Players)
         {
-            var player = Players[row];
             if (player.Guess.Length != (Card.Columns * Card.Rows))
             {
-                InvalidGuesses.Add(new InvalidGuesser(row, player.Name, player.Guess.Length));
+                invalidGuessers.Add(new InvalidGuesser(player.Name, player.Guess.Length));
             }
         }
 
-        return InvalidGuesses.Count > 0;
+        return invalidGuessers;
     }
 
-    public long CalculatePlayerScore(string guess, bool isAllSameGuess)
+    public void CalculateScore(IPlayer player)
     {
         long score = 0;
+        int squareValue = Card.BaseSquareValue;
 
-        var columns = Card.Columns;
-        var rows = Card.Rows;
-        var bonusAmount = Card.BonusColumns;
-        var bonusChar = Card.BonusSkipChar;
-        short finalColumnOfRow = Card.Columns;
-        long squareValue = Card.BaseSquareValue;
-        var bonusMultiplier = Card.BonusMultiplier;
-        var rowOffset = Card.RowValueOffset;
-
-        var holder = 0;
-
-        /* Data structure is effectively a Parallel Array.
-         * An index to index check is implemented for the key and player guess.
-         * Offers both simpler implementation compared to KV pairs or 2D jagged arrays and better or same performance.
-         */
-        for (short rowCounter = 0; rowCounter < rows; rowCounter++)
+        for (short row = 0; row < Card.Rows; row++)
         {
-            for (var current = holder; current < finalColumnOfRow; current++)
+            for (var column = 0; column < Card.Columns; column++)
             {
-                var isBonus = (current + bonusAmount) >= finalColumnOfRow;
-                var isNotSkipChar = guess[current] != bonusChar;
+                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns;
 
-                if (isBonus && isNotSkipChar)
+                if (isBonusColumn)
                 {
-                    if (guess[current] == Key[current])
+                    var isNotSkipChar = player.Guess[row, column] != Card.BonusSkipChar;
+
+                    if (isNotSkipChar)
                     {
-                        score += (squareValue * bonusMultiplier);
-                        if (WillLogStats) AddCorrectGuess(current);
+                        if (player.Guess[row, column] == Key[row, column])
+                        {
+                            score += (squareValue * Card.BonusMultiplier);
+                            if (Settings.WillLogStats)
+                            {
+                                CollectResult(Card.SquareLabels[row, column].Label, 1);
+                            }
+                        }
+                        else
+                        {
+                            score -= (squareValue * Card.BonusMultiplier);
+                            if (Settings.WillLogStats)
+                            {
+                                CollectResult(Card.SquareLabels[row, column].Label, -1);
+                            }
+                        }
                     }
                     else
                     {
-                        score -= (squareValue * bonusMultiplier);
+                        if (Settings.WillLogStats)
+                        {
+                            CollectResult(Card.SquareLabels[row, column].Label, 0);
+                        }
                     }
                 }
-                else if (guess[current] == Key[current])
+                else if (player.Guess[row, column] == Key[row, column])
                 {
                     score += squareValue;
-                    if (WillLogStats) AddCorrectGuess(current);
+                    if (Settings.WillLogStats)
+                    {
+                        CollectResult(Card.SquareLabels[row, column].Label, 1);
+                    }
                 }
                 else
                 {
                     score -= squareValue;
+                    if (Settings.WillLogStats)
+                    {
+                        CollectResult(Card.SquareLabels[row, column].Label, -1);
+                    }
                 }
-
-                holder = current + 1;
             }
-
-            squareValue += rowOffset;
-            finalColumnOfRow += columns;
+            squareValue += Card.RowValueOffset;
         }
 
-        return score;
+        player.Score = score;
 
-        void AddCorrectGuess(int square)
+        void CollectResult(string square, short result)
         {
-            if (Stats.CorrectGuessesPerSquare is null) return;
-
-            if (WillCountAllSameGuessInStats)
+            if (Settings.WillCountAllSameGuessersInStats)
             {
-                Stats.CorrectGuessesPerSquare[square]++;
+                player.ResultPerSquare.Add(square, result);
                 return;
             }
 
-            if (!isAllSameGuess)
+            if (!player.IsAllSameGuess)
             {
-                Stats.CorrectGuessesPerSquare[square]++;
+                player.ResultPerSquare.Add(square, result);
             }
         }
     }
