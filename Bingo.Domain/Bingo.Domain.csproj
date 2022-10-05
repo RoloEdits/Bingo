@@ -8,12 +8,12 @@
 
 	<ItemGroup>
 		<Compile Remove="Models\**" />
+		<Compile Include="Models\Square.cs" />
 		<EmbeddedResource Remove="Models\**" />
 		<Compile Include="Models\ICard.cs" />
 		<Compile Include="Models\InvalidGuesser.cs" />
 		<Compile Include="Models\IPlayer.cs" />
 		<Compile Include="Models\ISettings.cs" />
-		<Compile Include="Models\SquareResult.cs" />
 	</ItemGroup>
 
 </Project>
