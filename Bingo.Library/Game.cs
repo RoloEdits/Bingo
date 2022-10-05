@@ -1,26 +1,27 @@
-﻿using Bingo.Domain.Errors;
+﻿using Bingo.Domain;
+using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
 
 namespace Bingo.Library;
 
 public sealed class Game
 {
-    public List<IPlayer> Players { get; set; }
-    public ICard Card { get; set; }
-    public string Key { get; set; }
-    public ISettings Settings { get; set; }
-    public Stats Stats { get; set; }
+    public List<IPlayer> Players { get;}
+    public ICard Card { get; }
+    public char[,] Key { get; }
+    public ISettings Settings { get; }
+    public Stats Stats { get; }
 
     public Game(string key, ICard card, ISettings settings, IDictionary<string, string> players)
     {
-        Key = key;
         Card = card;
         Settings = settings;
-        Players = new(players.Count);
+        Players = new List<IPlayer>(players.Count);
+        Key = Utilities.SpanTo2DArray<char>(key, Card.Rows, Card.Columns);
 
         foreach (var player in players)
         {
-            Players.Add(new Player(player.Key, player.Value));
+            Players.Add(new Player(player.Key, player.Value, Card.Rows, Card.Columns));
         }
 
         var invalidGuessers = CheckForInvalidGuessers();
@@ -29,27 +30,27 @@ public sealed class Game
             throw new InvalidUserGuessAmountException("Invalid Guesses!", invalidGuessers);
         }
 
-        Stats = new Stats(Card.TotalSquares, Players.Count);
-
-        for (var i = 0; i < Card.TotalSquares; i++)
-        {
-            Stats.CorrectGuessesPerSquare.Add(Card.SquareLabels[i], 0);
-        }
+        Stats = new Stats(Card, Players.Count);
     }
 
-    public void Play()
+    public void  Play()
     {
         var start = DateTime.UtcNow;
 
+        // var calculatePlayerScoresTask = new List<Task>();
+
         foreach (var player in Players)
         {
-            player.Score = CalculatePlayerScore(player);
+            CalculateScore(player);
+            // calculatePlayerScoresTask.Add(Task.Run(() => CalculatePlayerScore(player)));
         }
+
+        // await Task.WhenAll(calculatePlayerScoresTask);
 
         var spent = DateTime.UtcNow - start;
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
-        Stats.GetCorrectGuessesPerSquarePercentage();
+        Stats.AggregateResults(Players);
     }
 
     // TODO: Move this to somewhere else
@@ -67,51 +68,37 @@ public sealed class Game
         return invalidGuessers;
     }
 
-    public long CalculatePlayerScore(IPlayer player)
+    public void CalculateScore(IPlayer player)
     {
         long score = 0;
+        int squareValue = Card.BaseSquareValue;
 
-        var columns = Card.Columns;
-        var rows = Card.Rows;
-        var bonusAmount = Card.BonusColumns;
-        var bonusChar = Card.BonusSkipChar;
-        short finalColumnOfRow = Card.Columns;
-        long squareValue = Card.BaseSquareValue;
-        var bonusMultiplier = Card.BonusMultiplier;
-        var rowOffset = Card.RowValueOffset;
-
-        var holder = 0;
-
-        /* Data structure is effectively a Parallel Array.
-         * An index to index check is implemented for the key and player guess.
-         * Offers both simpler implementation compared to KV pairs or 2D jagged arrays and better or same performance.
-         */
-        for (short rowCounter = 0; rowCounter < rows; rowCounter++)
+        for (short row = 0; row < Card.Rows; row++)
         {
-            for (var current = holder; current < finalColumnOfRow; current++)
+            for (var column = 0; column < Card.Columns; column++)
             {
-                var isBonus = (current + bonusAmount) >= finalColumnOfRow;
-                var isNotSkipChar = player.Guess[current] != bonusChar;
+                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns;
 
-                if (isBonus)
+                if (isBonusColumn)
                 {
+                    var isNotSkipChar = player.Guess[row, column] != Card.BonusSkipChar;
+
                     if (isNotSkipChar)
                     {
-                        if (player.Guess[current] == Key[current])
+                        if (player.Guess[row, column] == Key[row, column])
                         {
-                            score += (squareValue * bonusMultiplier);
+                            score += (squareValue * Card.BonusMultiplier);
                             if (Settings.WillLogStats)
                             {
-                                player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 1));
-                                AddCorrectGuess(Card.SquareLabels[current]);
+                                CollectResult(Card.SquareLabels[row, column].Label, 1);
                             }
                         }
                         else
                         {
-                            score -= (squareValue * bonusMultiplier);
+                            score -= (squareValue * Card.BonusMultiplier);
                             if (Settings.WillLogStats)
                             {
-                                player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], -1));
+                                CollectResult(Card.SquareLabels[row, column].Label, -1);
                             }
                         }
                     }
@@ -119,17 +106,16 @@ public sealed class Game
                     {
                         if (Settings.WillLogStats)
                         {
-                            player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 0));
+                            CollectResult(Card.SquareLabels[row, column].Label, 0);
                         }
                     }
                 }
-                else if (player.Guess[current] == Key[current])
+                else if (player.Guess[row, column] == Key[row, column])
                 {
                     score += squareValue;
                     if (Settings.WillLogStats)
                     {
-                        player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], 1));
-                        AddCorrectGuess(Card.SquareLabels[current]);
+                        CollectResult(Card.SquareLabels[row, column].Label, 1);
                     }
                 }
                 else
@@ -137,30 +123,26 @@ public sealed class Game
                     score -= squareValue;
                     if (Settings.WillLogStats)
                     {
-                        player.ResultPerSquare.Add(new SquareResult(Card.SquareLabels[current], -1));
+                        CollectResult(Card.SquareLabels[row, column].Label, -1);
                     }
                 }
-
-                holder = current + 1;
             }
-
-            squareValue += rowOffset;
-            finalColumnOfRow += columns;
+            squareValue += Card.RowValueOffset;
         }
 
-        return score;
+        player.Score = score;
 
-        void AddCorrectGuess(string square)
+        void CollectResult(string square, short result)
         {
             if (Settings.WillCountAllSameGuessersInStats)
             {
-                Stats.CorrectGuessesPerSquare[square]++;
+                player.ResultPerSquare.Add(square, result);
                 return;
             }
 
             if (!player.IsAllSameGuess)
             {
-                Stats.CorrectGuessesPerSquare[square]++;
+                player.ResultPerSquare.Add(square, result);
             }
         }
     }

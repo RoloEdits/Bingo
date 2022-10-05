@@ -1,4 +1,6 @@
-﻿namespace Bingo.Domain;
+﻿using Bingo.Domain.Models;
+
+namespace Bingo.Domain;
 
 public static class Label
 {
@@ -15,20 +17,19 @@ public static class Label
         }
         return label;
     }
-
-    public static List<string> Squares(byte rows, byte columns)
+    public static Square[,] Squares(byte rows, byte columns, byte bonusColumns)
     {
         var rowLabels = Rows(rows);
-        var result = new List<string>(rows * columns);
+        var result = new Square[rows, columns];
 
-        foreach (var rowLabel in rowLabels)
+        for (var row = 0; row < rows; row++)
         {
-            for (var i = 0; i < columns; i++)
+            for (var column = 0; column < columns; column++)
             {
-                result.Add($"{rowLabel}{i + 1}");
+                var isBonus = (column + bonusColumns) >= columns;
+                result[row, column] = new Square($"{rowLabels[row]}{column + 1}", isBonus);
             }
         }
-
         return result;
     }
 }

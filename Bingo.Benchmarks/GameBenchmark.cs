@@ -17,6 +17,19 @@ public class GameBenchmark
     private const string Key3X3 = "YYYYYYYYY";
     private static Dictionary<string, string> Players3X3 => new() { { "Rolo", Key3X3 } };
     private static readonly Card Card3X3 = new(3, 3, 10, 0, 0, 1);
+    private static List<Player> PlayersList3X3 => new()
+    {
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+    };
     private static readonly Game Game3X3 = new(Key3X3, Card3X3, Settings, Players3X3);
 
     // 5x5
@@ -35,18 +48,34 @@ public class GameBenchmark
     [Benchmark]
     public void CalculateScoreBenchmarkFor3X3()
     {
-        Game3X3.CalculatePlayerScore(Game3X3.Players[0]);
+        foreach (var player in PlayersList3X3)
+        {
+            Game3X3.CalculateScore(player);
+        }
+
     }
 
-    //[Benchmark]
+    // [Benchmark]
     public void CalculateScoreBenchmarkFor5X5()
     {
-        Game5X5.CalculatePlayerScore(Game5X5.Players[0]);
+        Game5X5.CalculateScore(Game5X5.Players[0]);
     }
 
-    //[Benchmark]
+    // [Benchmark]
     public void CalculateScoreBenchmarkFor7X7()
     {
-        Game7X7.CalculatePlayerScore(Game7X7.Players[0]);
+        Game7X7.CalculateScore(Game7X7.Players[0]);
+    }
+
+    [Benchmark]
+    public async Task CalculateScoreBenchmarkFor3X3Async()
+    {
+        var task = new List<Task>();
+        foreach (var player in PlayersList3X3)
+        {
+            task.Add(Task.Run(() => Game3X3.CalculateScore(player)));
+        }
+
+        await Task.WhenAll(task);
     }
 }

@@ -26,32 +26,32 @@ public class LabelTest
         var match = new List<string>() { "A", "B", "C", "D", "E", "F", "G" };
         var result = Label.Rows(rows);
 
-        for (int i = 0; i < rows; i++)
+        for (var i = 0; i < rows; i++)
         {
             Assert.Equal(match[i], result[i]);
         }
     }
 
     [Theory]
-    [InlineData(3, 3)]
-    [InlineData(4, 4)]
-    [InlineData(5, 5)]
-    [InlineData(6, 6)]
-    [InlineData(7, 7)]
-    public void SquareLabelCreating_ShouldStopAtPassedValue(byte rows, byte columns)
+    [InlineData(3, 3, 0)]
+    [InlineData(4, 4, 1)]
+    [InlineData(5, 5, 2)]
+    [InlineData(6, 6, 2)]
+    [InlineData(7, 7, 3)]
+    public void SquareLabelCreating_ShouldStopAtPassedValue(byte rows, byte columns, byte bonus)
     {
-        var result = Label.Squares(rows, columns);
+        var result = Label.Squares(rows, columns, bonus);
 
-        Assert.Equal(rows * columns, result.Count);
+        Assert.Equal(rows * columns, result.Length);
     }
 
     [Theory]
-    [InlineData(3, 3)]
-    [InlineData(4, 4)]
-    [InlineData(5, 5)]
-    [InlineData(6, 6)]
-    [InlineData(7, 7)]
-    public void SquareLabelCreating_ShouldContainExpectedValues(byte rows, byte columns)
+    [InlineData(3, 3, 0)]
+    [InlineData(4, 4, 1)]
+    [InlineData(5, 5, 2)]
+    [InlineData(6, 6, 2)]
+    [InlineData(7, 7, 3)]
+    public void SquareLabelCreating_ShouldContainExpectedValues(byte rows, byte columns, byte bonus)
     {
         var match = new List<List<string>>()
         {
@@ -64,15 +64,13 @@ public class LabelTest
             new List<string>{"G1", "G2","G3","G4","G5","G6","G7"}
         };
 
-        var result = Label.Squares(rows, columns);
+        var result = Label.Squares(rows, columns, bonus);
 
-        var count = 0;
-        for (int i = 0; i < rows; i++)
+        for (var row = 0; row < rows; row++)
         {
-            for (int j = 0; j < columns; j++)
+            for (var column = 0; column < columns; column++)
             {
-                Assert.Equal(match[i][j], result[count]);
-                count++;
+                Assert.Equal(match[row][column], result[row, column].Label);
             }
         }
     }

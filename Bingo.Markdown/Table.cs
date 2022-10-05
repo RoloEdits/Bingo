@@ -1,13 +1,14 @@
-﻿using System.Text;
+﻿using System.Runtime.CompilerServices;
+using System.Text;
 using Bingo.Domain;
 
 namespace Bingo.Markdown;
 
 public sealed class Table
 {
-    public byte Columns { get; init; }
-    public byte Rows { get; init; }
-    public byte TotalSquares { get; init; }
+    public byte Columns { get; }
+    public byte Rows { get; }
+    public byte TotalSquares { get; }
     private short BonusColumns { get; }
 
     public Table(byte columns, byte rows, byte bonus)
@@ -17,8 +18,7 @@ public sealed class Table
         TotalSquares = (byte)(Columns * Rows);
         BonusColumns = (short)(Columns - bonus);
     }
-
-    public string CreateDynamic<T>(string corner, List<T> data)
+    public string Create<T>(string corner, T[,] data)
     {
         var table = this;
         var builder = new StringBuilder();
@@ -29,7 +29,6 @@ public sealed class Table
 
         return builder.ToString();
     }
-
     private static void Build(Table table, StringBuilder header, string corner)
     {
         header.Append($"| {corner} |");
@@ -48,7 +47,6 @@ public sealed class Table
 
         header.Append(Environment.NewLine);
     }
-
     private static void WriteDivider(Table table, StringBuilder divider)
     {
         divider.Append(" :---: |");
@@ -60,30 +58,26 @@ public sealed class Table
 
         divider.Append(Environment.NewLine);
     }
-
-    private static void WriteRows<T>(Table table, StringBuilder rows, IReadOnlyList<T> data)
+    private static void WriteRows<T>(Table table, StringBuilder rows, T[,] data)
     {
-        var absolute = 0;
-        // That rows final column square
-        short finalColumn = table.Columns;
-
         var labels = Label.Rows(table.Rows);
 
         for (var row = 0; row < table.Rows; row++)
         {
-            // Writes out row label.
+            // Row label.
             rows.Append($"| **{labels[row]}** |");
-            // Writes out each row.
-            for (var current = absolute; current < finalColumn; current++)
+            // Row data.
+            for (var column = 0; column < table.Columns; column++)
             {
-                // Writes out each square's value.
-                rows.Append($" {data[current]} |");
-
-                absolute = current + 1;
+                if (data is double[,] percentage)
+                {
+                    rows.Append($" {percentage[row, column].ToString("P2")} |");
+                }
+                else
+                {
+                    rows.Append($" {data[row, column]} |");
+                }
             }
-
-            finalColumn += table.Columns;
-            // Goes to next row.
             rows.Append(Environment.NewLine);
         }
     }
