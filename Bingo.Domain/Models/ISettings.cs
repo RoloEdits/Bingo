@@ -2,6 +2,6 @@
 
 public interface ISettings
 {
-    public bool WillLogStats { get; set; }
-    public bool WillCountAllSameGuessersInStats { get; set; }
+    public bool WillLogStats { get; }
+    public bool WillCountAllSameGuessersInStats { get; }
 }
