@@ -122,7 +122,12 @@ public sealed class Game
                     }
                 }
             }
-            squareValue += Card.RowValueOffset;
+
+            if (Card.RowValueOffset != 0)
+            {
+                squareValue += Card.RowValueOffset;
+            }
+
         }
 
         player.Score = score;
