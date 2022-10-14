@@ -8,6 +8,8 @@
 
 	<ItemGroup>
 		<Compile Remove="Models\**" />
+		<Compile Include="Models\Label.cs" />
+		<Compile Include="Models\Result.cs" />
 		<Compile Include="Models\Square.cs" />
 		<EmbeddedResource Remove="Models\**" />
 		<Compile Include="Models\ICard.cs" />
