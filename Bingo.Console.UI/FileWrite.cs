@@ -19,13 +19,13 @@ internal static class FileWrite
         {
             var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
 
-            writer.Write(table.Create("Key", game.Key));
+            writer.Write(table.Create<char>("Key", game.Key));
             writer.WriteLine();
 
             if (game.Settings.WillLogStats)
             {
                 var percentages = game.Stats.PerSquareCorrectGuessesDouble;
-                writer.Write(table.Create("Stats", Utilities.ListTo2DArray(percentages, game.Card.Rows, game.Card.Columns)));
+                writer.Write(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
                 writer.WriteLine();
             }
 
