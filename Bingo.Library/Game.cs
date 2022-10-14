@@ -1,6 +1,6 @@
-﻿using Bingo.Domain;
-using Bingo.Domain.Errors;
+﻿using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
+using Bingo.Domain.ValueObjects;
 
 namespace Bingo.Library;
 
@@ -8,7 +8,7 @@ public sealed class Game
 {
     public List<IPlayer> Players { get;}
     public ICard Card { get; }
-    public char[,] Key { get; }
+    public Key Key { get; }
     public ISettings Settings { get; }
     public Stats Stats { get; }
 
@@ -17,17 +17,25 @@ public sealed class Game
         Card = card;
         Settings = settings;
         Players = new List<IPlayer>(players.Count);
-        Key = Utilities.SpanTo2DArray<char>(key, Card.Rows, Card.Columns);
+        Key = new Key(key, Card.Rows, Card.Columns);
 
+        var invalidGuessers = new List<InvalidGuesser>();
         foreach (var player in players)
         {
-            Players.Add(new Player(player.Key, player.Value, Card.Rows, Card.Columns));
+            try
+            {
+                Players.Add(new Player(player.Key, new Guess(player.Value, Card.Rows, Card.Columns)));
+            }
+            catch (InvalidSquareAmountException ex)
+            {
+                invalidGuessers.Add(new InvalidGuesser(player.Key, player.Value.Length));
+            }
+            // TODO: Add rest of the Exceptions
         }
 
-        var invalidGuessers = CheckForInvalidGuessers();
         if (invalidGuessers.Count > 0)
         {
-            throw new InvalidUserGuessAmountException("Invalid Guesses!", invalidGuessers);
+            // TODO: Implement a way to warn bingo manager of all the bad guessers in a way that is UI agnostic.
         }
 
         Stats = new Stats(Card, Players.Count);
@@ -46,21 +54,6 @@ public sealed class Game
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
         Stats.AggregateResults(Players);
-    }
-
-    // TODO: Move this to somewhere else
-    private List<InvalidGuesser> CheckForInvalidGuessers()
-    {
-        var invalidGuessers = new List<InvalidGuesser>();
-        foreach (var player in Players)
-        {
-            if (player.Guess.Length != (Card.Columns * Card.Rows))
-            {
-                invalidGuessers.Add(new InvalidGuesser(player.Name, player.Guess.Length));
-            }
-        }
-
-        return invalidGuessers;
     }
 
     public void CalculateScore(IPlayer player)
@@ -85,7 +78,7 @@ public sealed class Game
                             score += (squareValue * Card.BonusMultiplier);
                             if (Settings.WillLogStats)
                             {
-                                CollectResult(Card.SquareLabels[row, column].Label, 1);
+                                CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
                             }
                         }
                         else
@@ -93,7 +86,7 @@ public sealed class Game
                             score -= (squareValue * Card.BonusMultiplier);
                             if (Settings.WillLogStats)
                             {
-                                CollectResult(Card.SquareLabels[row, column].Label, -1);
+                                CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
                             }
                         }
                     }
@@ -101,7 +94,7 @@ public sealed class Game
                     {
                         if (Settings.WillLogStats)
                         {
-                            CollectResult(Card.SquareLabels[row, column].Label, 0);
+                            CollectResult(Card.SquareLabels[row, column].Label, Result.Skipped);
                         }
                     }
                 }
@@ -110,7 +103,7 @@ public sealed class Game
                     score += squareValue;
                     if (Settings.WillLogStats)
                     {
-                        CollectResult(Card.SquareLabels[row, column].Label, 1);
+                        CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
                     }
                 }
                 else
@@ -118,7 +111,7 @@ public sealed class Game
                     score -= squareValue;
                     if (Settings.WillLogStats)
                     {
-                        CollectResult(Card.SquareLabels[row, column].Label, -1);
+                        CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
                     }
                 }
             }
@@ -132,7 +125,7 @@ public sealed class Game
 
         player.Score = score;
 
-        void CollectResult(string square, short result)
+        void CollectResult(string square, Result result)
         {
             if (Settings.WillCountAllSameGuessersInStats)
             {
@@ -140,7 +133,7 @@ public sealed class Game
                 return;
             }
 
-            if (!player.IsAllSameGuess)
+            if (!player.Guess.IsAllSame)
             {
                 player.ResultPerSquare.Add(square, result);
             }
