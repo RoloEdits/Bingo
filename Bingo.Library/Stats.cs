@@ -1,4 +1,5 @@
-﻿using Bingo.Domain.Models;
+﻿using Bingo.Domain;
+using Bingo.Domain.Models;
 
 namespace Bingo.Library;
 
@@ -10,7 +11,7 @@ public sealed class Stats
     public Dictionary<string, List<string>> PerSquareIncorrectGuesses { get; }
     public Dictionary<string, List<string>> SkippedBonus { get; }
     public List<double> PerSquareCorrectGuessesDouble { get; }
-    public int PlayerCount { get; }
+    private int PlayerCount { get; }
 
     public Stats(ICard card, int playerCount)
     {
@@ -49,15 +50,17 @@ public sealed class Stats
             {
                 switch (result.Value)
                 {
-                    case 1:
+                    case Result.Correct:
                         PerSquareCorrectGuesses[result.Key].Add(player.Name);
                         break;
-                    case -1:
+                    case Result.Incorrect:
                         PerSquareIncorrectGuesses[result.Key].Add(player.Name);
                         break;
-                    case 0:
+                    case Result.Skipped:
                         SkippedBonus[result.Key].Add(player.Name);
                         break;
+                    // TODO: Make custom exception
+                    default: throw new Exception("Error processing player results");
                 }
             }
         }
