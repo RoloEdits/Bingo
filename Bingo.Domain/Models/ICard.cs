@@ -12,6 +12,6 @@ public interface ICard
     public byte BonusColumns { get; }
     public byte BonusMultiplier { get;}
     public char BonusSkipChar { get; }
-    public List<string> RowLabels { get;}
+    public char[] RowLabels { get;}
     public Square[,] SquareLabels { get; }
 }

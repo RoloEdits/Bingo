@@ -14,7 +14,7 @@ public sealed class Card : ICard
     public byte BonusColumns { get; }
     public byte BonusMultiplier { get; }
     public char BonusSkipChar { get; }
-    public List<string> RowLabels { get; init; }
+    public char[] RowLabels { get; }
     public Square[,] SquareLabels { get; }
 
     public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier, char bonusSkipChar = 'P')
@@ -28,7 +28,7 @@ public sealed class Card : ICard
         BonusMultiplier = bonusMultiplier;
         TotalSquares = (byte)(columns * rows);
         BonusSkipChar = bonusSkipChar;
-        RowLabels = Label.Rows(Rows);
-        SquareLabels = Label.Squares(Rows, Columns, BonusColumns);
+        RowLabels = Label.Rows[..rows];
+        SquareLabels = Label.SquareGenerator(rows, columns, bonusColumns);
     }
 }
