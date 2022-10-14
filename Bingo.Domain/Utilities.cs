@@ -23,9 +23,9 @@ public static class Utilities
         return builder.Replace(" ", "").ToString();
     }
 
-    public static T[,] SpanTo2DArray<T>(ReadOnlySpan<T> list, byte rows, byte columns)
+    public static T[,] SpanTo2DArray<T>(this ReadOnlySpan<T> span, byte rows, byte columns)
     {
-        if (list.Length != columns * rows)
+        if (span.Length != columns * rows)
         {
             // TODO: create new Invalid2DArrayConversionException
             throw new Exception("The total elements from input is not the same as the desired output size.");
@@ -37,7 +37,7 @@ public static class Utilities
         {
             for (var column = 0; column < columns; column++)
             {
-                array[row, column] = list[listIndex];
+                array[row, column] = span[listIndex];
                 listIndex++;
             }
         }
@@ -45,7 +45,7 @@ public static class Utilities
         return array;
     }
 
-    public static T[,] ListTo2DArray<T>(IList<T> list, byte rows, byte columns)
+    public static T[,] ListTo2DArray<T>(this IList<T> list, byte rows, byte columns)
     {
         if (list.Count != columns * rows)
         {
@@ -66,5 +66,4 @@ public static class Utilities
 
         return array;
     }
-
 }
