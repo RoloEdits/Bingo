@@ -1,6 +1,5 @@
-﻿using System.Runtime.CompilerServices;
-using System.Text;
-using Bingo.Domain;
+﻿using System.Text;
+using Bingo.Domain.Models;
 
 namespace Bingo.Markdown;
 
@@ -20,65 +19,62 @@ public sealed class Table
     }
     public string Create<T>(string corner, T[,] data)
     {
-        var table = this;
         var builder = new StringBuilder();
 
-        Build(table, builder, corner);
-        WriteDivider(table, builder);
-        WriteRows(table, builder, data);
+        BuildHeader(builder, corner);
+        BuildDivider(builder);
+        BuildRows(builder, data);
 
         return builder.ToString();
     }
-    private static void Build(Table table, StringBuilder header, string corner)
+    private void BuildHeader(StringBuilder builder, string corner)
     {
-        header.Append($"| {corner} |");
+        builder.Append($"| {corner} |");
 
-        for (var headerColumn = 0; headerColumn < table.Columns; headerColumn++)
+        for (var headerColumn = 0; headerColumn < Columns; headerColumn++)
         {
-            if (headerColumn >= table.BonusColumns && table.BonusColumns != 0)
+            if (headerColumn >= BonusColumns && BonusColumns != 0)
             {
-                header.Append(" Bonus |");
+                builder.Append(" Bonus |");
             }
             else
             {
-                header.Append($" {headerColumn + 1} |");
+                builder.Append($" {headerColumn + 1} |");
             }
         }
 
-        header.Append(Environment.NewLine);
+        builder.Append(Environment.NewLine);
     }
-    private static void WriteDivider(Table table, StringBuilder divider)
+    private void BuildDivider(StringBuilder builder)
     {
-        divider.Append(" :---: |");
+        builder.Append(" :---: |");
 
-        for (var i = 0; i < table.Columns; i++)
+        for (var i = 0; i < Columns; i++)
         {
-            divider.Append(" :---: |");
+            builder.Append(" :---: |");
         }
 
-        divider.Append(Environment.NewLine);
+        builder.Append(Environment.NewLine);
     }
-    private static void WriteRows<T>(Table table, StringBuilder rows, T[,] data)
+    private void BuildRows<T>(StringBuilder builder, T[,] data)
     {
-        var labels = Label.Rows(table.Rows);
-
-        for (var row = 0; row < table.Rows; row++)
+        for (var row = 0; row < Rows; row++)
         {
             // Row label.
-            rows.Append($"| **{labels[row]}** |");
+            builder.Append($"| **{Label.Rows[row]}** |");
             // Row data.
-            for (var column = 0; column < table.Columns; column++)
+            for (var column = 0; column < Columns; column++)
             {
                 if (data is double[,] percentage)
                 {
-                    rows.Append($" {percentage[row, column].ToString("P2")} |");
+                    builder.Append($" {percentage[row, column].ToString("P2")} |");
                 }
                 else
                 {
-                    rows.Append($" {data[row, column]} |");
+                    builder.Append($" {data[row, column]} |");
                 }
             }
-            rows.Append(Environment.NewLine);
+            builder.Append(Environment.NewLine);
         }
     }
 }
