@@ -1,4 +1,5 @@
 ﻿using BenchmarkDotNet.Attributes;
+using Bingo.Domain.ValueObjects;
 using Bingo.Library;
 
 namespace Bingo.Benchmarks;
@@ -17,19 +18,23 @@ public class GameBenchmark
     private const string Key3X3 = "YYYYYYYYY";
     private static Dictionary<string, string> Players3X3 => new() { { "Rolo", Key3X3 } };
     private static readonly Card Card3X3 = new(3, 3, 10, 0, 0, 1);
+
+    private static readonly Guess _guess = new Guess(Key3X3, Card3X3.Rows, Card3X3.Columns);
+
     private static List<Player> PlayersList3X3 => new()
     {
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
-        new Player("Rolo", Key3X3, Card3X3.Rows, Card3X3.Columns),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
+        new Player("Rolo", _guess),
     };
+
     private static readonly Game Game3X3 = new(Key3X3, Card3X3, Settings, Players3X3);
 
     // 5x5
