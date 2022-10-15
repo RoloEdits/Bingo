@@ -24,7 +24,7 @@ internal static class FileWrite
 
             if (game.Settings.WillLogStats)
             {
-                var percentages = game.Stats.PerSquareCorrectGuessesDouble;
+                var percentages = game.Stats.CorrectGuessesPercentage;
                 writer.Write(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
                 writer.WriteLine();
             }
