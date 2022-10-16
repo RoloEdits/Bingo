@@ -18,6 +18,7 @@ public sealed class Stats
     // TODO: Might not need this, but will have to be sure how I want to consume it
     public Dictionary<long, uint> FullScoreFrequency { get; }
     public Dictionary<long, uint> PlayerScoreFrequency { get; }
+    public List<long> PlayerScores { get; }
 
     public Stats(ICard card, int playerCount)
     {
@@ -29,6 +30,7 @@ public sealed class Stats
         PlayerCount = playerCount;
         FullScoreFrequency = new Dictionary<long, uint>();
         PlayerScoreFrequency = new Dictionary<long, uint>();
+        PlayerScores = new List<long>();
 
         // Pre-populate labels and new List
         foreach (var square in card.SquareLabels)
@@ -54,8 +56,18 @@ public sealed class Stats
 
         GetScoreFrequency(game.Players);
 
+        GetPlayerScores(game.Players);
+
         // Must be after FilterResults method
         GetCorrectGuessesPercentage();
+    }
+
+    private void GetPlayerScores(List<IPlayer> players)
+    {
+        foreach (var player in players)
+        {
+            PlayerScores.Add(player.Score);
+        }
     }
 
     private void GetScoreFrequency(List<IPlayer> players)
