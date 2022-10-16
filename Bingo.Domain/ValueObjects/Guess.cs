@@ -39,6 +39,12 @@ public sealed record Guess
         return converted;
     }
 
+    private static void IsValidGuess(string guess, byte rows, byte columns)
+    {
+        GuessIsValidAmount(guess, rows, columns);
+        GuessHasValidAmountOfUniqueChars(guess);
+    }
+
     private static bool CheckIsAllSame(string guess)
     {
         foreach (var square in guess)
@@ -49,12 +55,6 @@ public sealed record Guess
             }
         }
         return true;
-    }
-
-    private static void IsValidGuess(string guess, byte rows, byte columns)
-    {
-        GuessIsValidAmount(guess, rows, columns);
-        GuessHasValidAmountOfUniqueChars(guess);
     }
 
     private static void GuessIsValidAmount(string guess, byte rows, byte columns)
