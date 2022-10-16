@@ -39,6 +39,7 @@ public sealed class Game
         }
 
         Stats = new Stats(Card, Players.Count);
+        Stats.MaxScorePossible = Stats.GetMaxScore(Key, Key, Card);
     }
 
     public void  Play()
@@ -53,7 +54,7 @@ public sealed class Game
         var spent = DateTime.UtcNow - start;
 
         Stats.ScoreCalculationTime = (double)spent.Ticks / 10_000;
-        Stats.AggregateResults(Players);
+        Stats.AggregateResults(this);
     }
 
     public void CalculateScore(IPlayer player)

@@ -1,5 +1,7 @@
-﻿using Bingo.Domain;
+﻿using System.Resources;
+using Bingo.Domain;
 using Bingo.Domain.Models;
+using Bingo.Domain.ValueObjects;
 
 namespace Bingo.Library;
 
@@ -8,10 +10,14 @@ public sealed class Stats
     // TODO - better handle stats so that when user decides to not track they dont get implemented and waste memory.
     public double ScoreCalculationTime { get; set; }
     private int PlayerCount { get; }
+    public long MaxScorePossible { get; set; }
     public Dictionary<string, List<string>> CorrectGuesses { get; }
     public Dictionary<string, List<string>> IncorrectGuesses { get; }
     public Dictionary<string, List<string>> SkippedBonus { get; }
     public List<double> CorrectGuessesPercentage { get; }
+    // TODO: Might not need this, but will have to be sure how I want to consume it
+    public Dictionary<long, uint> FullScoreFrequency { get; }
+    public Dictionary<long, uint> PlayerScoreFrequency { get; }
 
     public Stats(ICard card, int playerCount)
     {
@@ -21,7 +27,10 @@ public sealed class Stats
         SkippedBonus = new Dictionary<string, List<string>>(card.Rows * card.BonusColumns);
         ScoreCalculationTime = 0.0;
         PlayerCount = playerCount;
+        FullScoreFrequency = new Dictionary<long, uint>();
+        PlayerScoreFrequency = new Dictionary<long, uint>();
 
+        // Pre-populate labels and new List
         foreach (var square in card.SquareLabels)
         {
             CorrectGuesses.Add(square.Label, new List<string>());
@@ -31,18 +40,42 @@ public sealed class Stats
                 SkippedBonus.Add(square.Label, new List<string>());
             }
         }
-    }
 
-    // TODO: Temp solution, once there is properly implemented option delete.
-    private void GetCorrectGuessesPercentage()
-    {
-        foreach (var square in CorrectGuesses.OrderBy(label => label.Key))
+        // Pre-populate ScoreFrequency dictionary with every score bin
+        for (var score = -MaxScorePossible; score <= MaxScorePossible; score++)
         {
-            CorrectGuessesPercentage.Add((double)square.Value.Count / PlayerCount);
+            FullScoreFrequency.Add(score, 0);
         }
     }
 
-    public void AggregateResults(List<IPlayer> players)
+    public void AggregateResults(Game game)
+    {
+        FilterResults(game.Players);
+
+        GetScoreFrequency(game.Players);
+
+        // Must be after FilterResults method
+        GetCorrectGuessesPercentage();
+    }
+
+    private void GetScoreFrequency(List<IPlayer> players)
+    {
+        foreach (var player in players)
+        {
+            FullScoreFrequency[player.Score]++;
+
+            if (PlayerScoreFrequency.ContainsKey(player.Score))
+            {
+                PlayerScoreFrequency[player.Score]++;
+            }
+            else
+            {
+                PlayerScoreFrequency.Add(player.Score, 1);
+            }
+        }
+    }
+
+    private void FilterResults(List<IPlayer> players)
     {
         foreach (var player in players)
         {
@@ -64,8 +97,59 @@ public sealed class Stats
                 }
             }
         }
+    }
 
-        // TODO: Find proper place to call.
-        GetCorrectGuessesPercentage();
+    private void GetCorrectGuessesPercentage()
+    {
+        foreach (var square in CorrectGuesses.OrderBy(label => label.Key))
+        {
+            CorrectGuessesPercentage.Add((double)square.Value.Count / PlayerCount);
+        }
+    }
+
+    public static long GetMaxScore(Key key, Key guess, ICard card)
+    {
+        return CalculateMaxScore(key, guess, card);
+    }
+
+    private static long CalculateMaxScore(Key key, Key guess, ICard card)
+    {
+        long score = 0;
+        int squareValue = card.BaseSquareValue;
+
+        for (short row = 0; row < card.Rows; row++)
+        {
+            for (var column = 0; column < card.Columns; column++)
+            {
+                var isBonusColumn = (column + card.BonusColumns) >= card.Columns;
+
+                if (isBonusColumn)
+                {
+                    if (guess[row, column] == key[row, column])
+                    {
+                        score += (squareValue * card.BonusMultiplier);
+                    }
+                    else
+                    {
+                        score -= (squareValue * card.BonusMultiplier);
+                    }
+                }
+                else if (guess[row, column] == key[row, column])
+                {
+                    score += squareValue;
+                }
+                else
+                {
+                    score -= squareValue;
+                }
+            }
+
+            if (card.RowValueOffset != 0)
+            {
+                squareValue += card.RowValueOffset;
+            }
+        }
+
+        return score;
     }
 }
