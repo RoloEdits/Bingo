@@ -4,16 +4,17 @@
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
-<MudLayout>
-    @* <MudAppBar Elevation="0"> *@
-    @*     <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" /> *@
-    @*     <MudSpacer /> *@
-    @*     <MudIconButton Icon="@Icons.Custom.Brands.MudBlazor" Color="Color.Inherit" Link="https://mudblazor.com/" Target="_blank" /> *@
-    @*     <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" Link="https://github.com/MudBlazor/MudBlazor/" Target="_blank" /> *@
-    @* </MudAppBar> *@
-    <MudDrawer Fixed="false" Elevation="6" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true" Height="100%">
-        <NavMenu/>
-    </MudDrawer>
+<MudLayout Class="d-flex">
+        <MudDrawerContainer Class="mud-height-full">
+            <MudDrawer @bind-Open="@open" Fixed="false" Elevation="1" Variant="@DrawerVariant.Mini" OpenMiniOnHover="true">
+                <MudNavMenu>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.GridOn" Href="/">Configure</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.BarChart">Stats</MudNavLink>
+                    <MudNavLink Match="NavLinkMatch.All" Icon="@Icons.Filled.AddCircle" Href="/counter">Counter</MudNavLink>
+                </MudNavMenu>
+            </MudDrawer>
+            <div class="d-flex justify-center align-center mud-height-full"></div>
+        </MudDrawerContainer>
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.Large">
             @Body
@@ -21,12 +22,12 @@
     </MudMainContent>
 </MudLayout>
 
-@code {
-    bool _drawerOpen = false;
+@code
+{
+    bool open = false;
 
-    void DrawerToggle()
+    void ToggleDrawer()
     {
-        _drawerOpen = !_drawerOpen;
+        open = !open;
     }
-
 }
