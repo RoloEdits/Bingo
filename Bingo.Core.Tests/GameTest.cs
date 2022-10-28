@@ -1,5 +1,3 @@
-using Bingo.Core;
-
 namespace Bingo.Core.Tests;
 
 public sealed class GameTest
