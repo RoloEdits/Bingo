@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Core", "Bingo.Core\Bi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Markdown", "Bingo.Markdown\Bingo.Markdown.csproj", "{22F4FE1D-0226-47E5-91BE-80BA3B70C72E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Library.Tests", "Bingo.Tests\Bingo.Library.Tests.csproj", "{CC721912-B601-4B34-A99A-77223D88C17E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Core.Tests", "Bingo.Tests\Bingo.Core.Tests.csproj", "{CC721912-B601-4B34-A99A-77223D88C17E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4F6329B8-9F00-4FA4-A7E5-0DBA3D47953A}"
 EndProject

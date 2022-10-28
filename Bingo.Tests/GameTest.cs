@@ -1,6 +1,6 @@
 using Bingo.Core;
 
-namespace Bingo.Library.Tests;
+namespace Bingo.Core.Tests;
 
 public sealed class GameTest
 {
