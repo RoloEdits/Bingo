@@ -2,7 +2,7 @@
 using Bingo.Domain;
 using Bingo.Domain.Models;
 
-namespace Bingo.Library;
+namespace Bingo.Core;
 
 public sealed class Card : ICard
 {

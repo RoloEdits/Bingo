@@ -1,4 +1,4 @@
-﻿using Bingo.Library;
+﻿using Bingo.Core;
 using System.Runtime.InteropServices;
 using Bingo.Domain.Errors;
 using Bingo.Spreadsheet.Parser.Excel;

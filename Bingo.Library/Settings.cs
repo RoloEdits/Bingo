@@ -1,6 +1,6 @@
 ﻿using Bingo.Domain.Models;
 
-namespace Bingo.Library;
+namespace Bingo.Core;
 
 public class Settings : ISettings
 {

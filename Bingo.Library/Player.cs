@@ -1,7 +1,7 @@
 ﻿using Bingo.Domain.Models;
 using Bingo.Domain.ValueObjects;
 
-namespace Bingo.Library;
+namespace Bingo.Core;
 
 public sealed class Player : IPlayer
 {

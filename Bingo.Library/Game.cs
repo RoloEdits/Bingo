@@ -1,8 +1,9 @@
 ﻿using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
 using Bingo.Domain.ValueObjects;
+using Bingo.Domain;
 
-namespace Bingo.Library;
+namespace Bingo.Core;
 
 public sealed class Game
 {

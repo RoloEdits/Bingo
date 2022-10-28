@@ -1,5 +1,5 @@
 ﻿using Bingo.Domain;
-using Bingo.Library;
+using Bingo.Core;
 using Bingo.Markdown;
 
 namespace Bingo.Console.UI;

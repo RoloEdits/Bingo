@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using Bingo.Domain;
 using Bingo.Domain.Models;
-using Bingo.Library;
+using Bingo.Core;
 using Spectre.Console;
 
 namespace Bingo.Console.UI;

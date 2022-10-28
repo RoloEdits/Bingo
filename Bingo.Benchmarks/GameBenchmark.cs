@@ -1,6 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
 using Bingo.Domain.ValueObjects;
-using Bingo.Library;
+using Bingo.Core;
 
 namespace Bingo.Benchmarks;
 

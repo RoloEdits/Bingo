@@ -23,7 +23,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Bingo.Library\Bingo.Library.csproj" />
+        <ProjectReference Include="..\Bingo.Core\Bingo.Core.csproj" />
     </ItemGroup>
 
 </Project>
