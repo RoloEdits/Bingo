@@ -1,6 +1,3 @@
-using NuGet.Frameworks;
-using Xunit.Sdk;
-
 namespace Bingo.Core.Tests;
 
 public sealed class StatsTest
