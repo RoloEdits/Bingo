@@ -7,9 +7,7 @@
 @using System.Reflection
 @using System.Text
 @using Bingo.Domain.ValueObjects
-@using Bingo.Spreadsheet.Parser.Excel
 @using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
-@using Spreadsheet.Parser
 
 <MudStack Spacing="3" AlignItems="AlignItems.Center" Justify="Justify.Center">
     @* Controls Block *@
@@ -113,16 +111,9 @@
 
     ISettings _settings = new Settings();
 
-    Dictionary<string, string> _parsedPlayers;
-
     private void BuildGame()
     {
-        var game = new Game(Key, _card, _settings, _parsedPlayers);
-    }
-
-    private void ParseSpreadsheet()
-    {
-        _parsedPlayers = Spreadsheet.Parse(_fileStream);
+        var game = new Game(Key, _card, _settings);
     }
 
     private static string KeyMask()
