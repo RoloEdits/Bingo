@@ -1,10 +1,9 @@
-﻿using Bingo.Domain;
-using Bingo.Core;
-using Bingo.Markdown;
+﻿using Bingo.Core;
+using Bingo.Domain;
 
-namespace Bingo.Console.UI;
+namespace Bingo.Markdown;
 
-internal static class FileWrite
+public static class FileWrite
 {
     public static void WriteToFile(Game game, string path)
     {
@@ -22,12 +21,10 @@ internal static class FileWrite
             writer.Write(table.Create<char>("Key", game.Key));
             writer.WriteLine();
 
-            if (game.Settings.WillLogStats)
-            {
-                var percentages = game.Stats.CorrectGuessesPercentage;
-                writer.Write(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
-                writer.WriteLine();
-            }
+            var percentages = game.Stats.CorrectGuessesPercentage;
+            writer.Write(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
+            writer.WriteLine();
+
 
             writer.WriteLine("| Names | Scores |");
             writer.WriteLine("|---|---|");
