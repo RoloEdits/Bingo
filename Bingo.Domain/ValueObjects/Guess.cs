@@ -1,12 +1,13 @@
+using System.Collections;
 using Bingo.Domain.Errors;
 
 namespace Bingo.Domain.ValueObjects;
 
-public sealed record Guess
+public sealed record Guess : IEnumerable<char>
 {
     private readonly char[,] _guess;
-    private readonly byte _rows;
-    private readonly byte _columns;
+    public readonly byte Rows;
+    public readonly byte Columns;
 
     public readonly bool IsAllSame;
     public readonly byte Length;
@@ -17,8 +18,8 @@ public sealed record Guess
         IsValidGuess(guess, rows, columns);
 
         _guess = Utilities.SpanTo2DArray<char>(guess, rows, columns);
-        _rows = rows;
-        _columns = columns;
+        Rows = rows;
+        Columns = columns;
         Length = (byte)guess.Length;
 
         IsAllSame = CheckIsAllSame(guess);
@@ -26,11 +27,11 @@ public sealed record Guess
 
     public static implicit operator char[,](Guess guess)
     {
-        var converted = new char[guess._rows, guess._columns];
+        var converted = new char[guess.Rows, guess.Columns];
 
-        for (var row = 0; row < guess._rows; row++)
+        for (var row = 0; row < guess.Rows; row++)
         {
-            for (var column = 0; column < guess._columns; column++)
+            for (var column = 0; column < guess.Columns; column++)
             {
                 converted[row, column] = guess[row, column];
             }
@@ -54,6 +55,7 @@ public sealed record Guess
                 return false;
             }
         }
+
         return true;
     }
 
@@ -73,7 +75,6 @@ public sealed record Guess
 
         for (var square = 1; square < guess.Length; square++)
         {
-
             if (uniqueThree is not null)
             {
                 if (guess[square] != uniqueOne && guess[square] != uniqueTwo && guess[square] != uniqueThree)
@@ -98,5 +99,21 @@ public sealed record Guess
                 }
             }
         }
+    }
+
+    public IEnumerator<char> GetEnumerator()
+    {
+        for (int row = 0; row < Rows; row++)
+        {
+            for (int column = 0; column < Columns; column++)
+            {
+                yield return _guess[row, column];
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 };

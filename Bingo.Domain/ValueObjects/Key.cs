@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Net.Http.Headers;
 using System.Transactions;
 using System.Xml;
@@ -5,12 +6,13 @@ using Bingo.Domain.Errors;
 
 namespace Bingo.Domain.ValueObjects;
 
-public sealed record Key
+public sealed record Key : IEnumerable<char>
 {
     private readonly char[,] _key;
 
-    private readonly byte _rows;
-    private readonly byte _columns;
+    public readonly byte Rows;
+    public readonly byte Columns;
+    public readonly int Length;
     public char this[int row, int column] => _key[row, column];
 
     public Key(string key, byte rows, byte columns)
@@ -18,17 +20,18 @@ public sealed record Key
         IsValidKey(key, rows, columns);
 
         _key = Utilities.SpanTo2DArray<char>(key, rows, columns);
-        _rows = rows;
-        _columns = columns;
+        Rows = rows;
+        Columns = columns;
+        Length = Rows * Columns;
     }
 
     public static implicit operator char[,](Key key)
     {
-        var converted = new char[key._rows, key._columns];
+        var converted = new char[key.Rows, key.Columns];
 
-        for (var row = 0; row < key._rows; row++)
+        for (var row = 0; row < key.Rows; row++)
         {
-            for (var column = 0; column < key._columns; column++)
+            for (var column = 0; column < key.Columns; column++)
             {
                 converted[row, column] = key[row, column];
             }
@@ -74,5 +77,21 @@ public sealed record Key
                 }
             }
         }
+    }
+
+    public IEnumerator<char> GetEnumerator()
+    {
+        for (int row = 0; row < Rows; row++)
+        {
+            for (int column = 0; column < Columns; column++)
+            {
+                yield return _key[row, column];
+            }
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
     }
 }
