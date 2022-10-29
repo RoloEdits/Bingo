@@ -9,7 +9,7 @@ public sealed class Stats
 {
     public double ScoreCalculationTime { get; set; }
     public int PlayerCount { get; set; }
-    public long MaxScorePossible { get; set; }
+    public long MaxScorePossible { get; init; }
     public Dictionary<string, List<string>> CorrectGuesses { get; }
     public Dictionary<string, List<string>> IncorrectGuesses { get; }
     public Dictionary<string, List<string>> Skipped { get; }

@@ -72,7 +72,7 @@ public sealed class Game
             {
                 // If game has no bonus columns and they allow skipping, then this is always set to true. This allows the same structure to be used for scoring.
                 // Only the bonus path is taken and the multiplier is always 1.
-                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns || Settings.AllowSkippingWhenThereIsNoBonus;
+                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns || (Settings.AllowSkippingWhenThereIsNoBonus && Card.BonusMultiplier == 1);
 
                 if (isBonusColumn)
                 {
