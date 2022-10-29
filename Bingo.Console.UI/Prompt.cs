@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using Bingo.Domain;
+using Bingo.Domain.ValueObjects;
 using Bingo.Domain.Models;
 using Bingo.Core;
 using Spectre.Console;
@@ -26,16 +27,16 @@ internal static class Prompt
                     {
                         option1, option2,
                     })) switch
-        {
-            option1 => 0,
-            option2 => 1,
-            _ => throw new Exception("Error handling configuration selection")
-        };
+            {
+                option1 => 0,
+                option2 => 1,
+                _ => throw new Exception("Error handling configuration selection")
+            };
 
         Card card;
         string path;
         string key;
-        bool stats;
+        bool noBonusSkipping;
         var allSame = false;
         var settings = new Settings();
         switch (option)
@@ -44,15 +45,13 @@ internal static class Prompt
                 AnsiConsole.MarkupLineInterpolated($"[Red]Loaded Default Configuration....[/]");
                 card = new Card(4, 3, 10, 20, 1, 2);
                 path = GetFilePath();
+                noBonusSkipping = AllowSkippingWhenThereIsNoBonus();
+                allSame = WillTrackAllSameGuessesInStats();
                 key = GetKey(card.TotalSquares);
-                stats = WillPrintStats();
-                if (stats)
-                {
-                    allSame = WillTrackAllSameGuessesInStats();
-                }
 
-                settings.WillLogStats = stats;
                 settings.WillCountAllSameGuessersInStats = allSame;
+                settings.AllowSkippingWhenThereIsNoBonus = noBonusSkipping;
+
                 return (card, path, key, settings);
             case 1:
                 path = GetFilePath();
@@ -67,16 +66,15 @@ internal static class Prompt
                     bonusMultiplier = GetBonusMultiplier();
                 }
 
+                noBonusSkipping = AllowSkippingWhenThereIsNoBonus();
+                allSame = WillTrackAllSameGuessesInStats();
+
+                settings.WillCountAllSameGuessersInStats = allSame;
+                settings.AllowSkippingWhenThereIsNoBonus = noBonusSkipping;
+
                 card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
                 key = GetKey(card.TotalSquares);
-                stats = WillPrintStats();
-                if (stats)
-                {
-                    allSame = WillTrackAllSameGuessesInStats();
-                }
 
-                settings.WillLogStats = stats;
-                settings.WillCountAllSameGuessersInStats = allSame;
                 return (card, path, key, settings);
         }
 
@@ -280,6 +278,7 @@ internal static class Prompt
     private static string GetKey(int squares)
     {
         // TODO - See about prompting per row and have them be entered individually
+        // TODO: Try to set up validation here so prompts can happen without exiting and entering input all over again
         var rule = new Rule("[white]Read Top to Bottom, Left to Right[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
@@ -295,22 +294,9 @@ internal static class Prompt
         return key;
     }
 
-    private static bool WillPrintStats()
-    {
-        var rule = new Rule("[white]Stats?[/]").RuleStyle("red").LeftAligned();
-        AnsiConsole.Write(rule);
-
-        if (!AnsiConsole.Confirm("[red]Track stats?[/]"))
-        {
-            return false;
-        }
-
-        return true;
-    }
-
     private static bool WillTrackAllSameGuessesInStats()
     {
-        var rule = new Rule("[white]For Those with all of the same guess?[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Stat Tracking[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
         if (!AnsiConsole.Confirm("[red]Include those that guessed for all the same answer on each square?[/]"))
@@ -321,9 +307,21 @@ internal static class Prompt
         return true;
     }
 
+    private static bool AllowSkippingWhenThereIsNoBonus()
+    {
+        var rule = new Rule("[white]Allow Skips[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        if (!AnsiConsole.Confirm("[red]Allow the option of skipping when any squares even when there is no Bonus?[/]"))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     public static void InvalidGuessers(List<InvalidGuesser> invalidGuessers, Game game)
     {
-        // TODO - Make a table instead of just this text
         System.Console.Clear();
         Ascii.Title();
         AnsiConsole.MarkupLineInterpolated($"Detected: Players with incorrect amount of guesses!");
@@ -341,6 +339,27 @@ internal static class Prompt
         System.Console.WriteLine(Environment.NewLine);
         System.Console.ResetColor();
         Environment.Exit(5);
+    }
+
+    public static void CannotOpenFile(Exception exception)
+    {
+        System.Console.Clear();
+        System.Console.WriteLine($"Error: {exception.Message}");
+        Environment.Exit(6);
+    }
+
+    public static void NoPlayers(Exception exception)
+    {
+        System.Console.Clear();
+        System.Console.WriteLine($"Error: {exception.Message}");
+        Environment.Exit(7);
+    }
+
+    public static void MultipleGuessesOfSamePlayer(Exception exception)
+    {
+        System.Console.Clear();
+        System.Console.WriteLine($"Error: {exception.Message}");
+        Environment.Exit(8);
     }
 
     public static void End(Game game)
