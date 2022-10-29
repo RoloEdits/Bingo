@@ -8,12 +8,10 @@ public static class Spreadsheet
 {
     public static Dictionary<string, string> Parse(string path)
     {
-        // TODO - Error handling for if the file is already open. Will hold on error and  prompt to hit a key when the file is closed.
-
+        // TODO: Might break this up to just get a name and guess return and move player validation out
         try
         {
             using var wb = new XLWorkbook(path);
-
         }
         catch (Exception)
         {
@@ -46,11 +44,12 @@ public static class Spreadsheet
 
             if (!players.TryAdd(name, guess))
             {
-                throw new GuessedMoreThanOnceException("Players can only guess once!", name);
+                throw new GuessedMoreThanOnceException($"Players can only guess once! {name} guess multiple times!");
             }
 
             currentRow++;
         }
+
         return players;
     }
 }
