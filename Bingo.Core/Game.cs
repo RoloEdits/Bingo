@@ -1,24 +1,34 @@
 ﻿using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
 using Bingo.Domain.ValueObjects;
-using Bingo.Domain;
 
 namespace Bingo.Core;
 
 public sealed class Game
 {
-    public List<IPlayer> Players { get;}
+    public List<IPlayer> Players { get; private set; }
     public ICard Card { get; }
     public Key Key { get; }
-    public ISettings Settings { get; }
+    private ISettings Settings { get; }
     public Stats Stats { get; }
 
-    public Game(string key, ICard card, ISettings settings, IDictionary<string, string> players)
+    public Game(string key, ICard card, ISettings settings)
     {
         Card = card;
         Settings = settings;
-        Players = new List<IPlayer>(players.Count);
+        Stats = new Stats(Card, Settings)
+        {
+            MaxScorePossible = Stats.GetMaxScore(Card)
+        };
+
         Key = new Key(key, Card.Rows, Card.Columns);
+    }
+
+    public List<InvalidGuesser> AddPlayers(in IDictionary<string, string> players)
+    {
+        Stats.PlayerCount = players.Count;
+
+        Players = new List<IPlayer>(players.Count);
 
         var invalidGuessers = new List<InvalidGuesser>();
         foreach (var player in players)
@@ -27,23 +37,16 @@ public sealed class Game
             {
                 Players.Add(new Player(player.Key, new Guess(player.Value, Card.Rows, Card.Columns)));
             }
-            catch (InvalidSquareAmountException ex)
+            catch (InvalidSquareAmountException)
             {
                 invalidGuessers.Add(new InvalidGuesser(player.Key, player.Value.Length));
             }
-            // TODO: Add rest of the Exceptions
         }
 
-        if (invalidGuessers.Count > 0)
-        {
-            // TODO: Implement a way to warn bingo manager of all the bad guessers in a way that is UI agnostic.
-        }
-
-        Stats = new Stats(Card, Players.Count);
-        Stats.MaxScorePossible = Stats.GetMaxScore(Key, Key, Card);
+        return invalidGuessers;
     }
 
-    public void  Play()
+    public void Play()
     {
         var start = DateTime.UtcNow;
 
@@ -58,7 +61,7 @@ public sealed class Game
         Stats.AggregateResults(this);
     }
 
-    public void CalculateScore(IPlayer player)
+    private void CalculateScore(IPlayer player)
     {
         long score = 0;
         int squareValue = Card.BaseSquareValue;
@@ -67,7 +70,9 @@ public sealed class Game
         {
             for (var column = 0; column < Card.Columns; column++)
             {
-                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns;
+                // If game has no bonus columns and they allow skipping, then this is always set to true. This allows the same structure to be used for scoring.
+                // Only the bonus path is taken and the multiplier is always 1.
+                var isBonusColumn = (column + Card.BonusColumns) >= Card.Columns || Settings.AllowSkippingWhenThereIsNoBonus;
 
                 if (isBonusColumn)
                 {
@@ -78,43 +83,28 @@ public sealed class Game
                         if (player.Guess[row, column] == Key[row, column])
                         {
                             score += (squareValue * Card.BonusMultiplier);
-                            if (Settings.WillLogStats)
-                            {
-                                CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
-                            }
+                            CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
                         }
                         else
                         {
                             score -= (squareValue * Card.BonusMultiplier);
-                            if (Settings.WillLogStats)
-                            {
-                                CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
-                            }
+                            CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
                         }
                     }
                     else
                     {
-                        if (Settings.WillLogStats)
-                        {
-                            CollectResult(Card.SquareLabels[row, column].Label, Result.Skipped);
-                        }
+                        CollectResult(Card.SquareLabels[row, column].Label, Result.Skipped);
                     }
                 }
                 else if (player.Guess[row, column] == Key[row, column])
                 {
                     score += squareValue;
-                    if (Settings.WillLogStats)
-                    {
-                        CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
-                    }
+                    CollectResult(Card.SquareLabels[row, column].Label, Result.Correct);
                 }
                 else
                 {
                     score -= squareValue;
-                    if (Settings.WillLogStats)
-                    {
-                        CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
-                    }
+                    CollectResult(Card.SquareLabels[row, column].Label, Result.Incorrect);
                 }
             }
 
@@ -122,7 +112,6 @@ public sealed class Game
             {
                 squareValue += Card.RowValueOffset;
             }
-
         }
 
         player.Score = score;
