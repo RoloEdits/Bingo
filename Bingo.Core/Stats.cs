@@ -7,27 +7,24 @@ namespace Bingo.Core;
 
 public sealed class Stats
 {
-    // TODO - better handle stats so that when user decides to not track they dont get implemented and waste memory.
     public double ScoreCalculationTime { get; set; }
-    private int PlayerCount { get; }
+    public int PlayerCount { get; set; }
     public long MaxScorePossible { get; set; }
     public Dictionary<string, List<string>> CorrectGuesses { get; }
     public Dictionary<string, List<string>> IncorrectGuesses { get; }
-    public Dictionary<string, List<string>> SkippedBonus { get; }
+    public Dictionary<string, List<string>> Skipped { get; }
     public List<double> CorrectGuessesPercentage { get; }
-    // TODO: Might not need this, but will have to be sure how I want to consume it
     public Dictionary<long, uint> FullScoreFrequency { get; }
     public Dictionary<long, uint> PlayerScoreFrequency { get; }
     public List<long> PlayerScores { get; }
 
-    public Stats(ICard card, int playerCount)
+    public Stats(ICard card, ISettings settings)
     {
         CorrectGuesses = new Dictionary<string, List<string>>(card.TotalSquares);
         CorrectGuessesPercentage = new List<double>(card.TotalSquares);
         IncorrectGuesses = new Dictionary<string, List<string>>(card.TotalSquares);
-        SkippedBonus = new Dictionary<string, List<string>>(card.Rows * card.BonusColumns);
+        Skipped = new Dictionary<string, List<string>>(card.Rows * card.BonusColumns);
         ScoreCalculationTime = 0.0;
-        PlayerCount = playerCount;
         FullScoreFrequency = new Dictionary<long, uint>();
         PlayerScoreFrequency = new Dictionary<long, uint>();
         PlayerScores = new List<long>();
@@ -37,9 +34,17 @@ public sealed class Stats
         {
             CorrectGuesses.Add(square.Label, new List<string>());
             IncorrectGuesses.Add(square.Label, new List<string>());
-            if (square.IsBonus)
+
+            if (settings.AllowSkippingWhenThereIsNoBonus && card.BonusColumns == 0)
             {
-                SkippedBonus.Add(square.Label, new List<string>());
+                Skipped.Add(square.Label, new List<string>());
+            }
+            else
+            {
+                if (square.IsBonus)
+                {
+                    Skipped.Add(square.Label, new List<string>());
+                }
             }
         }
 
@@ -50,7 +55,7 @@ public sealed class Stats
         }
     }
 
-    public void AggregateResults(Game game)
+    internal void AggregateResults(Game game)
     {
         FilterResults(game.Players);
 
@@ -74,7 +79,15 @@ public sealed class Stats
     {
         foreach (var player in players)
         {
-            FullScoreFrequency[player.Score]++;
+            if (FullScoreFrequency.ContainsKey(player.Score))
+            {
+                FullScoreFrequency[player.Score]++;
+            }
+            else
+            {
+                FullScoreFrequency.Add(player.Score, 1);
+            }
+
 
             if (PlayerScoreFrequency.ContainsKey(player.Score))
             {
@@ -102,9 +115,8 @@ public sealed class Stats
                         IncorrectGuesses[result.Key].Add(player.Name);
                         break;
                     case Result.Skipped:
-                        SkippedBonus[result.Key].Add(player.Name);
+                        Skipped[result.Key].Add(player.Name);
                         break;
-                    // TODO: Make custom exception
                     default: throw new Exception("Error processing player results");
                 }
             }
@@ -119,12 +131,12 @@ public sealed class Stats
         }
     }
 
-    public static long GetMaxScore(Key key, Key guess, ICard card)
+    public static long GetMaxScore(ICard card)
     {
-        return CalculateMaxScore(key, guess, card);
+        return CalculateMaxScore(card);
     }
 
-    private static long CalculateMaxScore(Key key, Key guess, ICard card)
+    private static long CalculateMaxScore(ICard card)
     {
         long score = 0;
         int squareValue = card.BaseSquareValue;
@@ -137,22 +149,11 @@ public sealed class Stats
 
                 if (isBonusColumn)
                 {
-                    if (guess[row, column] == key[row, column])
-                    {
-                        score += (squareValue * card.BonusMultiplier);
-                    }
-                    else
-                    {
-                        score -= (squareValue * card.BonusMultiplier);
-                    }
-                }
-                else if (guess[row, column] == key[row, column])
-                {
-                    score += squareValue;
+                    score += (squareValue * card.BonusMultiplier);
                 }
                 else
                 {
-                    score -= squareValue;
+                    score += squareValue;
                 }
             }
 

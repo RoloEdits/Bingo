@@ -4,7 +4,6 @@ namespace Bingo.Core;
 
 public class Settings : ISettings
 {
-    public bool WillLogStats { get; set; } = true;
-    public bool WillCountAllSameGuessersInStats { get; set; } = false;
-    public bool AllowSkippingWhenThereIsNoBonus { get; } = true;
+    public bool WillCountAllSameGuessersInStats { get; set; }
+    public bool AllowSkippingWhenThereIsNoBonus { get; set; } = true;
 }
