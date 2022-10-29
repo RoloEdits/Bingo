@@ -10,8 +10,8 @@ public interface ICard
     public byte BaseSquareValue { get; }
     public int RowValueOffset { get; }
     public byte BonusColumns { get; }
-    public byte BonusMultiplier { get;}
+    public byte BonusMultiplier { get; }
     public char BonusSkipChar { get; }
-    public char[] RowLabels { get;}
+    public char[] RowLabels { get; }
     public Square[,] SquareLabels { get; }
 }

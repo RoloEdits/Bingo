@@ -3,7 +3,6 @@
 [Serializable]
 public class NoPlayersException : Exception
 {
-
     public NoPlayersException()
     {
     }
