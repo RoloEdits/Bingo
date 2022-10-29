@@ -5,9 +5,9 @@ namespace Bingo.Markdown;
 
 public sealed class Table
 {
-    public byte Columns { get; }
-    public byte Rows { get; }
-    public byte TotalSquares { get; }
+    private byte Columns { get; }
+    private byte Rows { get; }
+    private byte TotalSquares { get; }
     private short BonusColumns { get; }
 
     public Table(byte columns, byte rows, byte bonus)
@@ -17,6 +17,7 @@ public sealed class Table
         TotalSquares = (byte)(Columns * Rows);
         BonusColumns = (short)(Columns - bonus);
     }
+
     public string Create<T>(string corner, T[,] data)
     {
         var builder = new StringBuilder();
@@ -27,6 +28,7 @@ public sealed class Table
 
         return builder.ToString();
     }
+
     private void BuildHeader(StringBuilder builder, string corner)
     {
         builder.Append($"| {corner} |");
@@ -45,6 +47,7 @@ public sealed class Table
 
         builder.Append(Environment.NewLine);
     }
+
     private void BuildDivider(StringBuilder builder)
     {
         builder.Append(" :---: |");
@@ -56,6 +59,7 @@ public sealed class Table
 
         builder.Append(Environment.NewLine);
     }
+
     private void BuildRows<T>(StringBuilder builder, T[,] data)
     {
         for (var row = 0; row < Rows; row++)
@@ -74,6 +78,7 @@ public sealed class Table
                     builder.Append($" {data[row, column]} |");
                 }
             }
+
             builder.Append(Environment.NewLine);
         }
     }
