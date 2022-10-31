@@ -32,4 +32,20 @@ public class UnitTest1
         // Assert
         Assert.Equal(2, set.Count);
     }
+
+    [Fact]
+    public void ObjectsShouldBeEqual()
+    {
+        // Arrange
+        var data1 = new SpreadsheetData(1, "Rolo", "YYYYYYYYY");
+        var data2 = new SpreadsheetData(1, "Rolo", "YYYYYYYYY");
+        var data3 = new SpreadsheetData(2, "Rolo", "NNNNNNNNN");
+        var data4 = new SpreadsheetData(2, "Rick", "NNNNNNNNN");
+        var set = new HashSet<SpreadsheetData>(2);
+
+        // Assert
+        Assert.Equal(data1, data2);
+        Assert.Equal(data1, data3);
+        Assert.NotEqual(data1, data4);
+    }
 }
