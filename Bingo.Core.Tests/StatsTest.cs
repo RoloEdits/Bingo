@@ -127,6 +127,29 @@ public sealed class StatsTest
     }
 
     [Fact]
+    public void PercentageShouldBe50Percent()
+    {
+        // Arrange
+        const string input = "YYYYYYYYYYYY";
+        var card = new Card(4, 3, 10, 20, 1, 2);
+        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var player = new Dictionary<string, string>() { { "Rolo", "NNNNNNNNNNNN" }, {"Jon", input}};
+
+        var game = new Game(input, card, settings);
+
+        // Act
+        game.AddPlayers(player);
+        game.Play();
+
+        // Assert
+        foreach (var percentage in game.Stats.CorrectGuessesPercentage)
+        {
+            Assert.Equal(0.5, percentage);
+            Assert.Equal("50.00%", $"{percentage:P2}");
+        }
+    }
+
+    [Fact]
     public void ShouldBeAllSkips()
     {
         // Arrange
