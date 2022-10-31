@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using Bingo.Domain;
-using Bingo.Domain.ValueObjects;
 using Bingo.Domain.Models;
 using Bingo.Core;
 using Spectre.Console;
@@ -79,7 +78,6 @@ internal static class Prompt
 
         throw new Exception("Unmanageable error handling prompts.");
     }
-
 
     private static string GetFilePath()
     {
@@ -212,18 +210,26 @@ internal static class Prompt
 
     private static byte GetBonusColumnAmount(byte columns)
     {
-        // TODO - make sure the selection colors match with the rest. white option, red selection.
         var rule = new Rule("[white]Bonus Column Amount[/]").RuleStyle("red").LeftAligned();
         AnsiConsole.Write(rule);
 
         var allChoices = new[]
         {
-            "[Red]None[/]", "[Red]1[/]", "[Red]2[/]", "[Red]3[/]", "[Red]4[/]", "[Red]5[/]", "[Red]6[/]",
-            "[Red]7[/]", "[Red]8[/]", "[Red]9[/]", "[Red]10[/]"
+            "[white]None[/]",
+            "[white]1[/]",
+            "[white]2[/]",
+            "[white]3[/]",
+            "[white]4[/]",
+            "[white]5[/]",
+            "[white]6[/]",
+            "[white]7[/]",
+            "[white]8[/]",
+            "[white]9[/]",
+            "[white]10[/]"
         };
 
         var choices = allChoices[..(columns + 1)].ToArray();
-        choices[^1] = "[Red]All[/]";
+        choices[^1] = "[white]All[/]";
 
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -236,18 +242,18 @@ internal static class Prompt
 
         byte result = selection switch
         {
-            "[Red]None[/]" => 0,
-            "[Red]1[/]" => 1,
-            "[Red]2[/]" => 2,
-            "[Red]3[/]" => 3,
-            "[Red]4[/]" => 4,
-            "[Red]5[/]" => 5,
-            "[Red]6[/]" => 6,
-            "[Red]7[/]" => 7,
-            "[Red]8[/]" => 8,
-            "[Red]9[/]" => 9,
-            "[Red]10[/]" => 10,
-            "[Red]All[/]" => columns,
+            "[white]None[/]" => 0,
+            "[white]1[/]" => 1,
+            "[white]2[/]" => 2,
+            "[white]3[/]" => 3,
+            "[white]4[/]" => 4,
+            "[white]5[/]" => 5,
+            "[white]6[/]" => 6,
+            "[white]7[/]" => 7,
+            "[white]8[/]" => 8,
+            "[white]9[/]" => 9,
+            "[white]10[/]" => 10,
+            "[white]All[/]" => columns,
             _ => throw new Exception("Problem occured selecting the amount of bonus columns.")
         };
 
@@ -360,21 +366,27 @@ internal static class Prompt
     public static void CannotOpenFile(Exception exception)
     {
         System.Console.Clear();
-        System.Console.WriteLine($"Error: {exception.Message}");
+        Ascii.Title();
+        AnsiConsole.MarkupLineInterpolated( $"[red]Error: {exception.Message}[/]");
+        System.Console.ReadKey(true);
         Environment.Exit(6);
     }
 
     public static void NoPlayers(Exception exception)
     {
         System.Console.Clear();
-        System.Console.WriteLine($"Error: {exception.Message}");
+        Ascii.Title();
+        AnsiConsole.MarkupLineInterpolated( $"[red]Error: {exception.Message}[/]");
+        System.Console.ReadKey(true);
         Environment.Exit(7);
     }
 
     public static void MultipleGuessesOfSamePlayer(Exception exception)
     {
         System.Console.Clear();
-        System.Console.WriteLine($"Error: {exception.Message}");
+        Ascii.Title();
+        AnsiConsole.MarkupLineInterpolated( $"[red]Error: {exception.Message}[/]");
+        System.Console.ReadKey(true);
         Environment.Exit(8);
     }
 
