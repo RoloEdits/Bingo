@@ -127,7 +127,7 @@ public sealed class StatsTest
     }
 
     [Fact]
-    public void Have12Skips()
+    public void ShouldBeAllSkips()
     {
         // Arrange
         const string input = "YYYYYYYYYYYY";
@@ -171,6 +171,30 @@ public sealed class StatsTest
             var wrong = data.Value.Count;
 
             Assert.Equal(1, wrong);
+        }
+    }
+
+    [Fact]
+    public void ShouldBeAllRight()
+    {
+        // Arrange
+        const string input = "YYYYYYYYYYYY";
+        var card = new Card(4, 3, 10, 20, 4, 2);
+        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var player = new Dictionary<string, string>() { { "Rolo", input } };
+
+        var game = new Game(input, card, settings);
+
+        // Act
+        game.AddPlayers(player);
+        game.Play();
+
+        // Assert
+        foreach (var data in game.Stats.CorrectGuesses)
+        {
+            var right = data.Value.Count;
+
+            Assert.Equal(1, right);
         }
     }
 }
