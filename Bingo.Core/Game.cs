@@ -1,6 +1,7 @@
 ﻿using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
 using Bingo.Domain.ValueObjects;
+using Bingo.Spreadsheet;
 
 namespace Bingo.Core;
 
@@ -24,7 +25,7 @@ public sealed class Game
         Key = new Key(key, Card.Rows, Card.Columns);
     }
 
-    public List<InvalidGuesser> AddPlayers(in IDictionary<string, string> players)
+    public List<InvalidGuesser> AddPlayers(in HashSet<SpreadsheetData> players)
     {
         Stats.PlayerCount = players.Count;
 
@@ -35,11 +36,11 @@ public sealed class Game
         {
             try
             {
-                Players.Add(new Player(player.Key, new Guess(player.Value, Card.Rows, Card.Columns)));
+                Players.Add(new Player(player.Name, new Guess(player.Guess, Card.Rows, Card.Columns)));
             }
             catch (InvalidSquareAmountException)
             {
-                invalidGuessers.Add(new InvalidGuesser(player.Key, player.Value.Length));
+                invalidGuessers.Add(new InvalidGuesser(player.Row,player.Name, player.Guess.Length));
             }
         }
 

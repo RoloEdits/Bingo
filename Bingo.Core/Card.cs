@@ -17,8 +17,7 @@ public sealed class Card : ICard
     public char[] RowLabels { get; }
     public Square[,] SquareLabels { get; }
 
-    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns,
-        byte bonusMultiplier = 1, char bonusSkipChar = 'P')
+    public Card(byte columns, byte rows, byte baseSquareValue, int rowOffsetValue, byte bonusColumns, byte bonusMultiplier = 1, char bonusSkipChar = 'P')
     {
         Columns = columns;
         Rows = rows;

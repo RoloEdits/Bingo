@@ -1,12 +1,12 @@
-﻿using ClosedXML.Excel;
+﻿using Bingo.Domain;
 using Bingo.Domain.Errors;
-using Bingo.Domain;
+using ClosedXML.Excel;
 
-namespace Bingo.Spreadsheet.Parser.Excel;
+namespace Bingo.Spreadsheet;
 
-public static class Spreadsheet
+public static class Parser
 {
-    public static Dictionary<string, string> Parse(string path)
+    public static HashSet<SpreadsheetData> Parse(string path)
     {
         // TODO: Might break this up to just get a name and guess return and move player validation out
         try
@@ -21,30 +21,30 @@ public static class Spreadsheet
         using var workbook = new XLWorkbook(path);
         var worksheet = workbook.Worksheet(1);
 
-        var playerCount = 0;
+        var count = 0;
         var row = 1;
         while (!worksheet.Cell(row, 1).IsEmpty())
         {
-            playerCount++;
+            count++;
             row++;
         }
 
-        if (playerCount == 0)
+        if (count == 0)
         {
             throw new NoPlayersException("No players found!");
         }
 
-        var players = new Dictionary<string, string>(playerCount);
+        var players = new HashSet<SpreadsheetData>(count);
 
-        short currentRow = 1;
-        while (!worksheet.Cell(currentRow, 1).IsEmpty())
+        ushort currentRow = 1;
+        while (currentRow != count)
         {
             var name = worksheet.Cell(currentRow, 1).GetString().Trim();
             var guess = worksheet.Cell(currentRow, 2).GetString().StringFormat();
 
-            if (!players.TryAdd(name, guess))
+            if (!players.Add(new SpreadsheetData(currentRow, name, guess)))
             {
-                throw new GuessedMoreThanOnceException($"Players can only guess once! {name} guess multiple times!");
+                throw new GuessedMoreThanOnceException($"{name} on row {currentRow} was input more than once, please check to make sure the correct guess is used.");
             }
 
             currentRow++;

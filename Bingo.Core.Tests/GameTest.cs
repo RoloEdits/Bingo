@@ -1,3 +1,5 @@
+
+
 namespace Bingo.Core.Tests;
 
 public sealed class GameTest
@@ -9,7 +11,7 @@ public sealed class GameTest
         var input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
         var settings = new Settings();
-        var player = new Dictionary<string, string>() { { "Rolo", input } };
+        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
 
@@ -30,7 +32,7 @@ public sealed class GameTest
 
         var card = new Card(4, 3, 10, 20, 1, 2);
         var settings = new Settings();
-        var player = new Dictionary<string, string>() { { "Rolo", guess } };
+        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", guess ) };
         var game = new Game(key, card, settings);
 
         // Act
@@ -53,7 +55,7 @@ public sealed class GameTest
         {
             AllowSkippingWhenThereIsNoBonus = true,
         };
-        var player = new Dictionary<string, string>() { { "Rolo", guess } };
+        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", guess ) };
         var game = new Game(key, card, settings);
 
         // Act

@@ -17,13 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{2581BE6C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Blazor.Server", "Bingo.Blazor.Server\Bingo.Blazor.Server.csproj", "{C5FA597A-7423-4BDA-90A1-F0DFAC16E214}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Spreadsheet.Parser", "Bingo.Spreadsheet.Parser\Bingo.Spreadsheet.Parser.csproj", "{F3BE7EFA-7FBB-4EE9-AD1E-B57E51538893}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Spreadsheet", "Bingo.Spreadsheet\Bingo.Spreadsheet.csproj", "{F3BE7EFA-7FBB-4EE9-AD1E-B57E51538893}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Domain", "Bingo.Domain\Bingo.Domain.csproj", "{65AEBEA7-18B4-42D0-83A7-7518CE8AF56F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Domain.Tests", "Bingo.Domain.Tests\Bingo.Domain.Tests.csproj", "{DD744276-744A-4AD5-B909-71CCE2AADAE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Spreadsheet.Parser.Tests", "Bingo.Spreadsheet.Parser.Tests\Bingo.Spreadsheet.Parser.Tests.csproj", "{D0ABA48C-4073-4FD4-9FBF-EADA0F23BB4D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Spreadsheet.Tests", "Bingo.Spreadsheet.Tests\Bingo.Spreadsheet.Tests.csproj", "{D0ABA48C-4073-4FD4-9FBF-EADA0F23BB4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Markdown.Tests", "Bingo.Markdown.Tests\Bingo.Markdown.Tests.csproj", "{4B1451AD-5BB6-475F-A4E7-334A818965F0}"
 EndProject

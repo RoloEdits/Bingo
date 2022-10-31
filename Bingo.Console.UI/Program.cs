@@ -3,6 +3,7 @@ using Bingo.Core;
 using System.Runtime.InteropServices;
 using Bingo.Domain.Errors;
 using Bingo.Markdown;
+using Bingo.Spreadsheet;
 
 namespace Bingo.Console.UI;
 
@@ -20,10 +21,10 @@ internal static class Program
         var (card, path, key, settings) = Prompt.Input();
         var game = new Game(key, card, settings);
 
-        Dictionary<string, string>? players = null;
+        var players = new HashSet<SpreadsheetData>();
         try
         {
-            players = Spreadsheet.Parser.Excel.Spreadsheet.Parse(path);
+            players = Parser.Parse(path);
         }
         catch (Exception exception)
         {
