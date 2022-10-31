@@ -8,7 +8,6 @@ public static class Parser
 {
     public static HashSet<SpreadsheetData> Parse(string path)
     {
-        // TODO: Might break this up to just get a name and guess return and move player validation out
         try
         {
             using var wb = new XLWorkbook(path);
@@ -37,7 +36,7 @@ public static class Parser
         var players = new HashSet<SpreadsheetData>(count);
 
         ushort currentRow = 1;
-        while (currentRow != count)
+        while (currentRow != row)
         {
             var name = worksheet.Cell(currentRow, 1).GetString().Trim();
             var guess = worksheet.Cell(currentRow, 2).GetString().StringFormat();
