@@ -9,7 +9,6 @@ namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
-    // TODO - Prompt user for the bonus skip char
     public static (Card, string, string, ISettings) Input()
     {
         Ascii.Title();
@@ -36,21 +35,18 @@ internal static class Prompt
         Card card;
         string path;
         string key;
-        bool noBonusSkipping;
         var allSame = false;
+        var noBonusSkipping = false;
         var settings = new Settings();
         switch (option)
         {
             case 0:
-                AnsiConsole.MarkupLineInterpolated($"[Red]Loaded Default Configuration....[/]");
+                AnsiConsole.MarkupLineInterpolated($"[Red]Loaded Default Tower of God Configuration....[/]");
                 card = new Card(4, 3, 10, 20, 1, 2);
                 path = GetFilePath();
-                noBonusSkipping = AllowSkippingWhenThereIsNoBonus();
                 allSame = WillTrackAllSameGuessesInStats();
                 key = GetKey(card.TotalSquares);
-
                 settings.WillCountAllSameGuessersInStats = allSame;
-                settings.AllowSkippingWhenThereIsNoBonus = noBonusSkipping;
 
                 return (card, path, key, settings);
             case 1:
@@ -65,14 +61,17 @@ internal static class Prompt
                 {
                     bonusMultiplier = GetBonusMultiplier();
                 }
+                else if (bonusColumns == 0)
+                {
+                    noBonusSkipping = AllowSkippingWhenThereIsNoBonus();
+                }
 
-                noBonusSkipping = AllowSkippingWhenThereIsNoBonus();
+                var skipCharacter = GetSkipCharacter();
+
                 allSame = WillTrackAllSameGuessesInStats();
-
                 settings.WillCountAllSameGuessersInStats = allSame;
                 settings.AllowSkippingWhenThereIsNoBonus = noBonusSkipping;
-
-                card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier);
+                card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier, skipCharacter);
                 key = GetKey(card.TotalSquares);
 
                 return (card, path, key, settings);
@@ -80,6 +79,7 @@ internal static class Prompt
 
         throw new Exception("Unmanageable error handling prompts.");
     }
+
 
     private static string GetFilePath()
     {
@@ -273,6 +273,22 @@ internal static class Prompt
                         _ => ValidationResult.Success(),
                     };
                 }));
+    }
+
+    private static char GetSkipCharacter()
+    {
+        var rule = new Rule("[white]Single Characters Only[/]").RuleStyle("red").LeftAligned();
+        AnsiConsole.Write(rule);
+
+        var holder = AnsiConsole.Ask<string>("[Red]Please Enter Designated Skip Character:[/]").StringFormat();
+
+        while (holder.Length > 1)
+        {
+            AnsiConsole.MarkupLineInterpolated( $"[white]Invalid Input. Make sure you only enter a single character. You entered {holder.Length.ToString()}.[/]");
+            holder = AnsiConsole.Ask<string>("[Red]Please Enter Designated Skip Character:[/]").StringFormat();
+        }
+
+        return holder.ToUpper()[0];
     }
 
     private static string GetKey(int squares)
