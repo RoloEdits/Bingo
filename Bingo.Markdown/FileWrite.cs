@@ -1,5 +1,9 @@
-﻿using Bingo.Core;
+﻿using System.Text;
+using Bingo.Core;
 using Bingo.Domain;
+using Bingo.Domain.Models;
+using DocumentFormat.OpenXml.Drawing;
+using Path = System.IO.Path;
 
 namespace Bingo.Markdown;
 
@@ -10,34 +14,39 @@ public static class FileWrite
         var fileName = GetFileName(path);
 
         using TextWriter writer = new StreamWriter(fileName);
-        var playersOrdered = game?.Players
-            ?.OrderByDescending(player => player.Score)
-            ?.ThenBy(player => player.Name).ToList();
+        var playersOrdered = game.Players
+            .OrderByDescending(player => player.Score)
+            .ThenBy(player => player.Name).ToList();
 
-        if (game is not null && playersOrdered is not null)
-        {
-            var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
+        var table = new Table(game.Card.Columns, game.Card.Rows, game.Card.BonusColumns);
 
-            writer.Write(table.Create<char>("Key", game.Key));
-            writer.WriteLine();
+        writer.WriteLine(table.Create<char>("Key", game.Key));
 
-            var percentages = game.Stats.CorrectGuessesPercentage;
-            writer.Write(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
-            writer.WriteLine();
+        var percentages = game.Stats.CorrectGuessesPercentage;
+        writer.WriteLine(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
 
+        writer.WriteLine(BuildScoreTable(playersOrdered));
 
-            writer.WriteLine("| Names | Scores |");
-            writer.WriteLine("|---|---|");
-            foreach (var player in playersOrdered)
-            {
-                // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
-                writer.WriteLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
-            }
-        }
     }
 
     private static string GetFileName(string filepath)
     {
         return Path.ChangeExtension(filepath, "md");
+    }
+
+    private static string BuildScoreTable(List<IPlayer> players)
+    {
+        var builder = new StringBuilder();
+
+        builder.AppendLine("| Names | Scores |");
+        builder.AppendLine("|---|---|");
+
+        foreach (var player in players!)
+        {
+            // Replaces all pipes with an escaped version so that the Markdown Table wont be broken.
+            builder.AppendLine($"| {player.Name.Replace("|", "\\|")} | {player.Score} |");
+        }
+
+        return builder.ToString();
     }
 }

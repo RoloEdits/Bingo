@@ -8,14 +8,14 @@ public sealed class Table
     private byte Columns { get; }
     private byte Rows { get; }
     private byte TotalSquares { get; }
-    private short BonusColumns { get; }
+    private byte BonusColumns { get; }
 
     public Table(byte columns, byte rows, byte bonus)
     {
         Columns = columns;
         Rows = rows;
         TotalSquares = (byte)(Columns * Rows);
-        BonusColumns = (short)(Columns - bonus);
+        BonusColumns = (byte)(Columns - bonus);
     }
 
     public string Create<T>(string corner, T[,] data)
