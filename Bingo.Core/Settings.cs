@@ -2,8 +2,14 @@
 
 namespace Bingo.Core;
 
-public class Settings : ISettings
+public record Settings : ISettings
 {
-    public bool WillCountAllSameGuessersInStats { get; set; }
-    public bool AllowSkippingWhenThereIsNoBonus { get; set; } = true;
+    public bool WillCountAllSameGuessersInStats { get; }
+    public bool AllowSkippingWhenThereIsNoBonus { get; }
+
+    public Settings(bool willCountAllSameGuessersInStats, bool allowSkippingWhenThereIsNoBonus = true)
+    {
+        WillCountAllSameGuessersInStats = willCountAllSameGuessersInStats;
+        AllowSkippingWhenThereIsNoBonus = allowSkippingWhenThereIsNoBonus;
+    }
 }

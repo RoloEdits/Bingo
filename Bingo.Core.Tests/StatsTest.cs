@@ -8,7 +8,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
@@ -27,7 +27,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
@@ -46,7 +46,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
@@ -66,7 +66,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
@@ -86,7 +86,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
 
@@ -110,7 +110,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
 
         var game = new Game(input, card, settings);
@@ -133,7 +133,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ), new SpreadsheetData(2, "Jon", input) };
 
         var game = new Game(input, card, settings);
@@ -156,7 +156,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 4, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "PPPPPPPPPPPP" ) };
 
         var game = new Game(input, card, settings);
@@ -180,7 +180,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 4, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
 
         var game = new Game(input, card, settings);
@@ -204,7 +204,7 @@ public sealed class StatsTest
         // Arrange
         const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 4, 2);
-        var settings = new Settings(){ WillCountAllSameGuessersInStats = true};
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input ) };
 
         var game = new Game(input, card, settings);

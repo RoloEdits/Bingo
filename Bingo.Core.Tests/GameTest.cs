@@ -10,7 +10,7 @@ public sealed class GameTest
         // Arrange
         var input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
 
         var game = new Game(input, card, settings);
@@ -31,7 +31,7 @@ public sealed class GameTest
         const string guess = "NNNNNNNNNNNN";
 
         var card = new Card(4, 3, 10, 20, 1, 2);
-        var settings = new Settings();
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", guess ) };
         var game = new Game(key, card, settings);
 
@@ -51,10 +51,7 @@ public sealed class GameTest
         const string guess = "PPPPPPPPPPPPYPPPPPPPPPPPP";
 
         var card = new Card(5, 5, 10, 0, 0);
-        var settings = new Settings()
-        {
-            AllowSkippingWhenThereIsNoBonus = true,
-        };
+        var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", guess ) };
         var game = new Game(key, card, settings);
 

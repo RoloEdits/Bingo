@@ -14,7 +14,7 @@ public class GameBenchmark
         const string input = "YYYYYYYYY";
         var card = new Card(3, 3, 10, 0, 0, 1);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings());
+        var game = new Game(input, card, new Settings(true, false));
 
         game.AddPlayers(player);
         game.Play();
@@ -26,7 +26,7 @@ public class GameBenchmark
         const string input = "YYYYYYYYYYYYYYYYYYYYYYYYY";
         var card = new Card(5, 5, 10, 0, 0, 1);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings());
+        var game = new Game(input, card, new Settings(true, false));
 
         game.AddPlayers(player);
         game.Play();
@@ -38,7 +38,7 @@ public class GameBenchmark
         const string input = "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
         var card = new Card(7, 7, 10, 0, 0, 1);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings());
+        var game = new Game(input, card, new Settings(true, false));
 
         game.AddPlayers(player);
         game.Play();

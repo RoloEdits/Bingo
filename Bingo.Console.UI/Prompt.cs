@@ -36,7 +36,7 @@ internal static class Prompt
         string key;
         var allSame = false;
         var noBonusSkipping = false;
-        var settings = new Settings();
+        Settings settings;
         switch (option)
         {
             case 0:
@@ -45,7 +45,7 @@ internal static class Prompt
                 path = GetFilePath();
                 allSame = WillTrackAllSameGuessesInStats();
                 key = GetKey(card.TotalSquares);
-                settings.WillCountAllSameGuessersInStats = allSame;
+                settings = new Settings(allSame, false);
 
                 return (card, path, key, settings);
             case 1:
@@ -68,8 +68,7 @@ internal static class Prompt
                 var skipCharacter = GetSkipCharacter();
 
                 allSame = WillTrackAllSameGuessesInStats();
-                settings.WillCountAllSameGuessersInStats = allSame;
-                settings.AllowSkippingWhenThereIsNoBonus = noBonusSkipping;
+                settings = new Settings(allSame, noBonusSkipping);
                 card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier, skipCharacter);
                 key = GetKey(card.TotalSquares);
 

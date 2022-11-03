@@ -4,7 +4,7 @@ using Bingo.Domain.Models;
 
 namespace Bingo.Core;
 
-public sealed class Card : ICard
+public sealed record Card : ICard
 {
     public byte Columns { get; }
     public byte Rows { get; }
