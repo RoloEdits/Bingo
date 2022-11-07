@@ -23,11 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Domain", "Bingo.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Domain.Tests", "Bingo.Domain.Tests\Bingo.Domain.Tests.csproj", "{DD744276-744A-4AD5-B909-71CCE2AADAE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Spreadsheet.Tests", "Bingo.Spreadsheet.Tests\Bingo.Spreadsheet.Tests.csproj", "{D0ABA48C-4073-4FD4-9FBF-EADA0F23BB4D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Spreadsheet.Tests", "Bingo.Spreadsheet.Tests\Bingo.Spreadsheet.Tests.csproj", "{D0ABA48C-4073-4FD4-9FBF-EADA0F23BB4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Markdown.Tests", "Bingo.Markdown.Tests\Bingo.Markdown.Tests.csproj", "{4B1451AD-5BB6-475F-A4E7-334A818965F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Markdown.Tests", "Bingo.Markdown.Tests\Bingo.Markdown.Tests.csproj", "{4B1451AD-5BB6-475F-A4E7-334A818965F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bingo.Core.Tests", "Bingo.Core.Tests\Bingo.Core.Tests.csproj", "{A6B35C81-D46F-4C77-B553-B65FDCC7A5F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Core.Tests", "Bingo.Core.Tests\Bingo.Core.Tests.csproj", "{A6B35C81-D46F-4C77-B553-B65FDCC7A5F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,3 +1,4 @@
+using Bingo.Blazor.Server;
 using Bingo.Blazor.Server.Data;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -13,6 +14,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddMudServices();
+builder.Services.AddScoped<GameCache>();
 
 var app = builder.Build();
 

@@ -1,62 +1,25 @@
 ﻿@page "/table"
-@using System.Security.Cryptography
-@using System.Net.NetworkInformation
 @using Bingo.Domain
 @using Bingo.Domain.Models
-@using System.Data.Common
-@using System.Reflection
-@using System.Text
 @using Bingo.Domain.ValueObjects
-@using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http
+@using Bingo.Spreadsheet
+@using System.Text
+
+@inject GameCache Cache
 
 <MudStack Spacing="3" AlignItems="AlignItems.Center" Justify="Justify.Center">
-    @* Controls Block *@
-    <MudStack Row="true">
-        @* Top Left *@
-        <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4" Height="150px" Width="800px">
-            <MudStack Row="true" Justify="Justify.Center">
-                <MudStack>
-                    <MudNumericField @bind-Value="Columns" Label="Columns" Variant="Variant.Text" Min="3" Max="7" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.ViewColumn"/>
-                    <MudNumericField @bind-Value="Rows" Label="Rows" Variant="Variant.Text" Min="3" Max="7" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.TableRows"/>
-                </MudStack>
-                <MudDivider Vertical="true" FlexItem="true"/>
-                <MudStack>
-                    <MudNumericField @bind-Value="BonusColumns" Label="Bonus Columns" Variant="Variant.Text" Min="0" Max="@Columns" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.Pause"/>
-                    <MudNumericField @bind-Value="BonusMultiplier" Label="Bonus Multiplier" Variant="Variant.Text" Min="1" Max="10" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.Close"/>
-                </MudStack>
-                <MudDivider Vertical="true" FlexItem="true"/>
-                <MudStack>
-                    <MudNumericField @bind-Value="BaseSquareValue" Label="Base Square Value" Variant="Variant.Text" Min="1" Max="100" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.Numbers"/>
-                    <MudNumericField @bind-Value="RowValueOffset" Label="Row Value Offset" Variant="Variant.Text" Min="0" Max="100" Step="1" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.CompareArrows"/>
-                </MudStack>
-            </MudStack>
-        </MudPaper>
-        @* Top Right *@
-        <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4" Height="150px" Width="75px">
-            <MudStack>
-                <MudTooltip Text="Include all same guessers in the stats" Placement="Placement.Right" Arrow="true">
-                    <MudSwitch @bind-Checked="@LogAllSameGuesses" Color="Color.Primary" UnCheckedColor="Color.Error"/>
-                </MudTooltip>
-                @if (BonusColumns > 0)
-                {
-                    AllowSkippingWhenBonusColumnsAreZero = false;
-                }
-                    <MudTooltip Text="Allow for skipping when Bonus Columns are 0" Placement="Placement.Right" Arrow="true">
-                        <MudSwitch @bind-Checked="@(AllowSkippingWhenBonusColumnsAreZero)" Color="Color.Primary" UnCheckedColor="Color.Error" Disabled="@(BonusColumns > 0)"/>
-                    </MudTooltip>
-            </MudStack>
-        </MudPaper>
-    </MudStack>
-    @* Key Input*@
-    <MudStack Row="true">
-        <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4" Height="85px" Width="705px">
-            <MudTextField @bind-Value="Key" Label="Key" Mask="@(new PatternMask(keyMask))" Clearable Variant="Variant.Filled" Margin="Margin.Dense" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.VpnKey"></MudTextField>
-        </MudPaper>
-        @* Key Skip Char *@
-        <MudPaper Elevation="5" Style="color: #c3c3c5; background: #27272f" Class="pa-4 py-4" Height="85px" Width="170px">
-            <MudTextField @bind-Value="BonusSkipChar" Label="Skip Character" Mask="@(new PatternMask("a"))" Variant="Variant.Filled" Margin="Margin.Dense" Adornment="Adornment.Start" AdornmentIcon="@Icons.Filled.SortByAlpha"></MudTextField>
-        </MudPaper>
-    </MudStack>
+    <GameInput Rows="Rows"
+               Columns="Columns"
+               BonusColumns="BonusColumns"
+               BaseSquareValue="BaseSquareValue"
+               RowValueOffset="RowValueOffset"
+               BonusMultiplier="BonusMultiplier"
+               BonusSkipChar="BonusSkipChar"
+               LogAllSameGuesses="LogAllSameGuesses"
+               AllowSkippingWhenBonusColumnsAreZero="AllowSkippingWhenBonusColumnsAreZero"
+               Key="GameKey"
+               Mask="Mask">
+    </GameInput>
     @* Squares *@
     <MudPaper Elevation="5" Height="850px" Width="890px">
         @for (var row = 0; row < Rows; row++)
@@ -78,51 +41,69 @@
         }
     </MudPaper>
 </MudStack>
+<MudButton FullWidth="true" Color="Color.Success" Variant="Variant.Filled" @onclick="PlayGame">Score Game</MudButton>
 
 @code {
 
-    static int Rows { get; set; } = 3;
-    static int Columns { get; set; } = 3;
-    static int BonusColumns { get; set; } = 0;
-    static int BaseSquareValue { get; set; } = 1;
-    static int RowValueOffset { get; set; } = 0;
-    static int BonusMultiplier { get; set; } = 1;
+    static int Rows { get; set; }
+    static int Columns { get; set; }
+    static int BonusColumns { get; set; }
+    static int BaseSquareValue { get; set; }
+    static int RowValueOffset { get; set; }
+    static int BonusMultiplier { get; set; }
     static char BonusSkipChar { get; set; }
-    static string Key { get; set; }
-    static bool LogAllSameGuesses { get; set; } = false;
-    static bool AllowSkippingWhenBonusColumnsAreZero { get; set; } = false;
-
-    static string keyMask => KeyMask();
-
     static int TotalSquares { get; set; } = Rows * Columns;
+
+    static bool LogAllSameGuesses { get; set; }
+    static bool AllowSkippingWhenBonusColumnsAreZero { get; set; }
+
+    static string GameKey { get; set; }
+    static string Mask => KeyMask();
 
     string _fileStream;
 
-    ICard _card = new Card(
-        (byte)Columns,
-        (byte)Rows,
-        (byte)BaseSquareValue,
-        RowValueOffset,
-        (byte)BonusColumns,
-        (byte)BonusMultiplier,
-        BonusSkipChar
-        );
-
-    ISettings _settings = new Settings();
-
-    private void BuildGame()
+    protected override void OnInitialized()
     {
-        var game = new Game(Key, _card, _settings);
+        Rows = 3;
+        Columns = 3;
+        BonusColumns = 0;
+        BonusMultiplier = 1;
+        BonusSkipChar = 'P';
+        LogAllSameGuesses = false;
+        AllowSkippingWhenBonusColumnsAreZero = false;
+        GameKey = string.Empty;
+    }
+
+    private void PlayGame()
+    {
+        var card = new Card((byte)Columns, (byte)Rows, (byte)BaseSquareValue,RowValueOffset,(byte)BonusColumns,(byte)BonusMultiplier,BonusSkipChar.CharToUpper());
+        var settings = new Settings(AllowSkippingWhenBonusColumnsAreZero, LogAllSameGuesses);
+        var game = new Game(GameKey.StringFormat(), card, settings);
+
+        var players = ParseFileStream();
+        game.AddPlayers(players);
+
+        game.Play();
+
+        Cache.Game = game;
+    }
+
+    private HashSet<SpreadsheetData> ParseFileStream()
+    {
+        // var result = Parser.Parse(_fileStream);
+        var tempPlayers = new HashSet<SpreadsheetData>() {new SpreadsheetData(1, "Rolo", "YYNYNNNYNNNY")};
+        return tempPlayers;
+        // return result;
     }
 
     private static string KeyMask()
     {
         var builder = new StringBuilder();
-        var a = "a";
+        const string a = "a";
 
-        for (int row = 0; row < Rows; row++)
+        for (var row = 0; row < Rows; row++)
         {
-            for (int column = 0; column < Columns; column++)
+            for (var column = 0; column < Columns; column++)
             {
                 builder.Append(a);
             }
@@ -132,5 +113,4 @@
 
         return builder.ToString();
     }
-
 }
