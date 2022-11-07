@@ -50,7 +50,7 @@ public sealed record Key : IEnumerable<char>
     {
         if (key.Length != rows * columns)
         {
-            throw new InvalidSquareAmountException();
+            throw new InvalidSquareAmountException($"Entered {key.Length}, needed {rows * columns}");
         }
     }
 
