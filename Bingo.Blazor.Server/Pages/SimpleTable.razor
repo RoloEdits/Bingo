@@ -1,4 +1,4 @@
-﻿@page "/table"
+﻿@page "/table/solver"
 @using Bingo.Domain
 @using Bingo.Domain.Models
 @using Bingo.Domain.ValueObjects
@@ -32,7 +32,7 @@
                     var isBonus = (column + BonusColumns) >= Columns;
 
                     <MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
-                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="100px" Height="100px" Elevation="@(isBonus ? 20 : 4)">
+                        <MudPaper Class="mud-width-full" Style="color: #c3c3c5; background: #27272f" Width="38px" Height="38px" Elevation="@(isBonus ? 20 : 4)">
                             <MudText Typo="Typo.h5"  Align="Align.Center">@Label.Squares[rowHolder, columnHolder]</MudText>
                         </MudPaper>
                     </MudStack>

@@ -1,0 +1,40 @@
+﻿@using DocumentFormat.OpenXml.Office.Excel
+
+<MudItem>
+	<MudStack Row="true">
+		<MudNumericField @bind-Value="Rows" Margin="Margin.Dense" Label="Rows" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="Columns" Margin="Margin.Dense" Label="Columns" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" />
+	</MudStack>
+	<MudStack Row="true">
+		<MudNumericField @bind-Value="Bonus" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="BonusMultiplier" Margin="Margin.Dense" Label="Bonus Multiplier" Variant="Variant.Outlined" Step="1" Min="1" Max="10" Required="true" Immediate="true" />
+	</MudStack>
+	<MudStack Row="true">
+		<MudNumericField @bind-Value="BaseValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Max="@Columns" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="OffsetValue" Margin="Margin.Dense" Label="Row Offset" Variant="Variant.Outlined" Step="1" Min="0" Max="10" Required="true" Immediate="true" />
+	</MudStack>
+	<MudStack Row="true">
+		<MudTextField @bind-Value="Key" Label="Key" Variant="Variant.Outlined" Margin="Margin.Dense" Counter="@(Columns * Rows)" Immediate="true" MaxLength="@(Columns * Rows)"></MudTextField>
+		<MudTextField @bind-Value="SkipChar" Label="Skip Character" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1"></MudTextField>
+	</MudStack>
+</MudItem>
+
+@code {
+	[Parameter]
+	public int Rows { get; set; }
+	[Parameter]
+	public int Columns { get; set; }
+	[Parameter]
+	public int Bonus { get; set; }
+	[Parameter]
+	public int BonusMultiplier { get; set; }
+	[Parameter]
+	public int BaseValue { get; set; }
+	[Parameter]
+	public int OffsetValue { get; set; }
+	[Parameter]
+	public string? Key { get; set; }
+	[Parameter]
+	public string? SkipChar { get; set; }
+
+}

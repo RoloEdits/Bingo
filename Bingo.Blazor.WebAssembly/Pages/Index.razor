@@ -1,7 +1,31 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Bingo · Home</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Hello, world!</MudText>
-<MudText Class="mb-8">Welcome to your new app, powered by MudBlazor!</MudText>
-<MudAlert Severity="Severity.Normal">You can find documentation and examples on our website here: <MudLink Href="https://mudblazor.com" Typo="Typo.body2" Color="Color.Inherit"><b>www.mudblazor.com</b></MudLink></MudAlert>
+<MudText Style="font-weight: bold;" Align="Align.Center" Typo="Typo.h2" GutterBottom="true">Bingo Solver</MudText>
+<MudText Align="Align.Center" Class="mb-16">Easy Stats and Charts For Everyone</MudText>
+
+<MudGrid Justify="Justify.Center">
+	<MudItem xs="6">
+		<HomePageInputFields Rows="Rows" Columns="Columns" Bonus="Bonus" BonusMultiplier="BonusMultiplier"/>
+	</MudItem>
+	<MudItem xs="6">
+		<HomePageGrid Rows="Rows" Columns="Columns" Bonus="Bonus"/>
+	</MudItem>
+</MudGrid>
+	
+@code {
+
+	private int Rows { get; set; }
+	private int Columns { get; set; }
+	private int Bonus { get; set; }
+	private int BonusMultiplier { get; set; }
+
+	protected override void OnInitialized()
+	{
+		Rows = 7;
+		Columns = 7;
+		Bonus = 2;
+	}
+
+}

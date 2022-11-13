@@ -1,0 +1,29 @@
+﻿
+@for (var row = 0; row < Rows; row++)
+{
+	var _row = row;
+
+	<MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Spacing="4" Style="position:relative; margin:auto;">
+		@for (var column = 0; column < Columns; column++)
+		{
+			var _column = column;
+			var isBonus = (column + Bonus) >= Columns;
+
+			<MudStack Class="py-2" AlignItems="AlignItems.Center" Justify="Justify.Center">
+				<MudPaper Class="mud-width-full" Style="@(isBonus ? "background : #F72585" : $"background : #{rowColors[_row]}" )" Width="38px" Height="38px"></MudPaper>
+			</MudStack>
+		}
+	</MudStack>
+}
+
+@code {
+
+	[Parameter]
+	public int Rows { get; set; }
+	[Parameter]
+	public int Columns { get; set; }
+	[Parameter]
+	public int Bonus { get; set; }
+
+	private string[] rowColors = { "4CC9F0", "4895EF", "4361EE", "3F37C9", "3A0CA3", "560BAD", "7209B7" };
+}
