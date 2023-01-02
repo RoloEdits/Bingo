@@ -1,31 +1,159 @@
 ﻿@page "/"
+@using Bingo.Core
+@using System.Text
+@using Bingo.Spreadsheet
+
+@inject GameStateSaveService GameStateSaveService
 
 <PageTitle>Bingo · Home</PageTitle>
+
+
 
 <MudText Style="font-weight: bold;" Align="Align.Center" Typo="Typo.h2" GutterBottom="true">Bingo Solver</MudText>
 <MudText Align="Align.Center" Class="mb-16">Easy Stats and Charts For Everyone</MudText>
 
-<MudGrid Justify="Justify.Center">
-	<MudItem xs="6">
-		<HomePageInputFields Rows="Rows" Columns="Columns" Bonus="Bonus" BonusMultiplier="BonusMultiplier"/>
-	</MudItem>
-	<MudItem xs="6">
-		<HomePageGrid Rows="Rows" Columns="Columns" Bonus="Bonus"/>
-	</MudItem>
-</MudGrid>
-	
+<MudItem Class="flex d-flex align-center">
+    <MudItem xs="6">
+        <MudItem>
+            <MudStack Row="true">
+                <MudNumericField @bind-Value="Rows" Margin="Margin.Dense" Label="Rows" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" Style="border-radius: 18px"/>
+                <MudNumericField @bind-Value="Columns" Margin="Margin.Dense" Label="Columns" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" Style="border-radius: 18px"/>
+            </MudStack>
+            <MudStack Row="true">
+                <MudNumericField @bind-Value="Bonus" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" Style="border-radius: 18px"/>
+                <MudNumericField @bind-Value="BonusMultiplier" Margin="Margin.Dense" Label="Bonus Multiplier" Variant="Variant.Outlined" Step="1" Min="1" Max="10" Required="true" Immediate="true" Style="border-radius: 18px"/>
+            </MudStack>
+            <MudStack Row="true">
+                <MudNumericField @bind-Value="SquareValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Required="true" Immediate="true" Style="border-radius: 18px"/>
+                <MudNumericField @bind-Value="RowOffset" Margin="Margin.Dense" Label="Row Offset" Variant="Variant.Outlined" Step="1" Min="0" Required="true" Immediate="true" Style="border-radius: 18px"/>
+            </MudStack>
+            <MudStack Row="true">
+                <MudTextField @bind-Value="Key" Mask="@Mask" HelperText="Key" Variant="Variant.Outlined" Margin="Margin.Dense" Counter="@(Columns * Rows)" Immediate="true" MaxLength="@(Columns * Rows)" Style="width: 535px"></MudTextField>
+                <MudTextField @bind-Value="SkipChar" HelperText="Skip" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1" Style="border-radius: 18px"></MudTextField>
+            </MudStack>
+        </MudItem>
+    </MudItem>
+    <MudItem xs="6" Style="min-height: 378px; align-items: center; display: grid; align-content: center;">
+        @for (var row = 0; row < Rows; row++)
+        {
+            var _row = row;
+
+            <MudStack Row="true" Justify="Justify.Center" Spacing="4">
+                @for (var column = 0; column < Columns; column++)
+                {
+                    var _column = column;
+                    var isBonus = (column + Bonus) >= Columns;
+
+                    <MudStack Class="py-2" Justify="Justify.Center">
+                        <MudPaper Class="mud-width-full" Style="@(isBonus ? "background : #B5179E" : $"background : #{rowColors[_row]}")" Width="38px" Height="38px"></MudPaper>
+                    </MudStack>
+                }
+            </MudStack>
+        }
+    </MudItem>
+</MudItem>
+
 @code {
 
-	private int Rows { get; set; }
-	private int Columns { get; set; }
-	private int Bonus { get; set; }
-	private int BonusMultiplier { get; set; }
+    private int Rows { get; set; }
+    private int Columns { get; set; }
+    private int Bonus { get; set; }
+    private int BonusMultiplier { get; set; }
+    private int SquareValue { get; set; }
+    private int RowOffset { get; set; }
 
-	protected override void OnInitialized()
-	{
-		Rows = 7;
-		Columns = 7;
-		Bonus = 2;
-	}
+    private string Key { get; set; } = "";
+    private string SkipChar { get; set; } = "";
+
+    private bool WillLogAllSameGuessers { get; set; }
+    private bool AllowSkippingWhenNoBonus { get; set; }
+
+    private readonly string[] rowColors = { "4CC9F0", "4895EF", "4361EE", "3F37C9", "3A0CA3", "560BAD", "7209B7" };
+
+    protected override void OnInitialized()
+    {
+        Rows = 3;
+        Columns = 4;
+        Bonus = 1;
+        BonusMultiplier = 2;
+        SquareValue = 10;
+        RowOffset = 20;
+
+        Key = "YYYYYYYYYYYY";
+        SkipChar = "P";
+
+        PlayGame();
+    }
+
+    private HashSet<SpreadsheetData> _players { get; set; } = new HashSet<SpreadsheetData>()
+    {
+        new SpreadsheetData(1, "Rolo", "YYNYNNNYNNNY"),
+        new SpreadsheetData(2, "Baron", "YYYYYYYYYYYY")
+    };
+
+    private void PlayGame()
+    {
+        var card = new Card(Columns, Rows, SquareValue, RowOffset, Bonus, BonusMultiplier, SkipChar[0]);
+        var settings = new Settings(WillLogAllSameGuessers, AllowSkippingWhenNoBonus);
+
+        var game = new Game(Key, card, settings);
+
+        var invalidGuessers = game.AddPlayers(_players);
+
+        if (invalidGuessers.Count > 0)
+        {
+            foreach (var guesser in invalidGuessers)
+            {
+                Console.WriteLine(guesser);
+            }
+
+        }
+
+        game.Play();
+
+        GameStateSaveService.SaveGameState(game);
+
+        var gameJSON = game.ToJson();
+        Console.WriteLine(gameJSON);
+    }
+
+    private static HashSet<SpreadsheetData> ParseFileStream()
+    {
+    // var result = Parser.Parse(_fileStream);
+        var tempPlayers = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "YYNYNNNYNNNY") };
+        return tempPlayers;
+    // return result;
+    }
+
+    PatternMask Mask => new PatternMask(KeyMaskBuilder())
+    {
+        CleanDelimiters = true,
+        Transformation = AllUpperCase
+    };
+
+    private string KeyMaskBuilder()
+    {
+        var builder = new StringBuilder();
+        const string a = "a";
+
+        for (var row = 0; row < Rows; row++)
+        {
+            for (var column = 0; column < Columns; column++)
+            {
+                builder.Append(a);
+            }
+
+            if (row + 1 == Rows)
+            {
+                break;
+            }
+
+            builder.Append(" ");
+        }
+
+        return builder.ToString();
+    }
+
+    private static char AllUpperCase(char c) => c.ToString().ToUpperInvariant()[0];
 
 }

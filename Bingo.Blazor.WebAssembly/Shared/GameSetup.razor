@@ -2,10 +2,9 @@
 @using Bingo.Domain.Models
 @using Bingo.Spreadsheet
 @using System.Text
-@using Bingo.Blazor.WebAssembly.Services
 @using Bingo.Core
 
-@inject GameService GameService
+@inject GameStateSaveService GameStateSaveService
 
 <MudStack Spacing="3" AlignItems="AlignItems.Center" Justify="Justify.Center">
     @* Controls Block *@
@@ -118,10 +117,10 @@
 
         game.Play();
 
-        GameService.AddGameReference(game);
+        GameStateSaveService.SaveGameState(game);
     }
 
-    private HashSet<SpreadsheetData> ParseFileStream()
+    private static HashSet<SpreadsheetData> ParseFileStream()
     {
         // var result = Parser.Parse(_fileStream);
         var tempPlayers = new HashSet<SpreadsheetData>() {new SpreadsheetData(1, "Rolo", "YYNYNNNYNNNY")};

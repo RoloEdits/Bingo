@@ -1,21 +1,22 @@
 ﻿@using DocumentFormat.OpenXml.Office.Excel
+@using System.Text
 
 <MudItem>
 	<MudStack Row="true">
-		<MudNumericField @bind-Value="Rows" Margin="Margin.Dense" Label="Rows" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" />
-		<MudNumericField @bind-Value="Columns" Margin="Margin.Dense" Label="Columns" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="Rows" Margin="Margin.Dense" Label="Rows" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" Style="border-radius: 18px" />
+		<MudNumericField @bind-Value="Columns" Margin="Margin.Dense" Label="Columns" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" Style="border-radius: 18px" />
 	</MudStack>
 	<MudStack Row="true">
-		<MudNumericField @bind-Value="Bonus" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" />
-		<MudNumericField @bind-Value="BonusMultiplier" Margin="Margin.Dense" Label="Bonus Multiplier" Variant="Variant.Outlined" Step="1" Min="1" Max="10" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="Bonus" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" Style="border-radius: 18px" />
+		<MudNumericField @bind-Value="BonusMultiplier" Margin="Margin.Dense" Label="Bonus Multiplier" Variant="Variant.Outlined" Step="1" Min="1" Max="10" Required="true" Immediate="true" Style="border-radius: 18px" />
 	</MudStack>
 	<MudStack Row="true">
-		<MudNumericField @bind-Value="BaseValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Max="@Columns" Required="true" Immediate="true" />
-		<MudNumericField @bind-Value="OffsetValue" Margin="Margin.Dense" Label="Row Offset" Variant="Variant.Outlined" Step="1" Min="0" Max="10" Required="true" Immediate="true" />
+		<MudNumericField @bind-Value="BaseValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Max="@Columns" Required="true" Immediate="true" Style="border-radius: 18px" />
+		<MudNumericField @bind-Value="OffsetValue" Margin="Margin.Dense" Label="Row Offset" Variant="Variant.Outlined" Step="1" Min="0" Max="10" Required="true" Immediate="true" Style="border-radius: 18px" />
 	</MudStack>
 	<MudStack Row="true">
-		<MudTextField @bind-Value="Key" Label="Key" Variant="Variant.Outlined" Margin="Margin.Dense" Counter="@(Columns * Rows)" Immediate="true" MaxLength="@(Columns * Rows)"></MudTextField>
-		<MudTextField @bind-Value="SkipChar" Label="Skip Character" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1"></MudTextField>
+		<MudTextField @bind-Value="Key" Mask="@(new PatternMask(Mask))" Label="Key" Variant="Variant.Outlined" Margin="Margin.Dense" Counter="@(Columns * Rows)" Immediate="true" MaxLength="@(Columns * Rows)" Style="border-radius: 18px"></MudTextField>
+		<MudTextField @bind-Value="SkipChar" Label="Skip Character" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1" Style="border-radius: 18px"></MudTextField>
 	</MudStack>
 </MudItem>
 
@@ -36,5 +37,25 @@
 	public string? Key { get; set; }
 	[Parameter]
 	public string? SkipChar { get; set; }
+
+	string Mask => KeyMask();
+
+	private string KeyMask()
+	{
+		var builder = new StringBuilder();
+		const string a = "a";
+
+		for (var row = 0; row < Rows; row++)
+		{
+			for (var column = 0; column < Columns; column++)
+			{
+				builder.Append(a);
+			}
+
+			builder.Append(" ");
+		}
+
+		return builder.ToString();
+	}
 
 }
