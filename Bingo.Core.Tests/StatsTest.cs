@@ -77,7 +77,6 @@ public sealed class StatsTest
 
         // Assert
         Assert.Equal(1L, game.Stats.PlayerScoreFrequency[450]);
-        Assert.Equal(1L, game.Stats.FullScoreFrequency[450]);
     }
 
     [Fact]

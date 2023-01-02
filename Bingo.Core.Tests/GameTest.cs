@@ -8,7 +8,7 @@ public sealed class GameTest
     public void CalculatePlayerScoreTest_Max450()
     {
         // Arrange
-        var input = "YYYYYYYYYYYY";
+        const string input = "YYYYYYYYYYYY";
         var card = new Card(4, 3, 10, 20, 1, 2);
         var settings = new Settings(true, false);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
@@ -51,7 +51,7 @@ public sealed class GameTest
         const string guess = "PPPPPPPPPPPPYPPPPPPPPPPPP";
 
         var card = new Card(5, 5, 10, 0, 0);
-        var settings = new Settings(true, false);
+        var settings = new Settings(true, true);
         var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", guess ) };
         var game = new Game(key, card, settings);
 
