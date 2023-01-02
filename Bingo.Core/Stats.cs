@@ -1,7 +1,4 @@
-﻿using System.Resources;
-using Bingo.Domain;
-using Bingo.Domain.Models;
-using Bingo.Domain.ValueObjects;
+﻿using Bingo.Domain.Models;
 
 namespace Bingo.Core;
 
@@ -13,19 +10,18 @@ public sealed class Stats
     public Dictionary<string, List<string>> CorrectGuesses { get; }
     public Dictionary<string, List<string>> IncorrectGuesses { get; }
     public Dictionary<string, List<string>> Skipped { get; }
-    public List<double> CorrectGuessesPercentage { get; }
-    public Dictionary<long, uint> FullScoreFrequency { get; }
+    public double[,] CorrectGuessesPercentage { get; }
+    public int[,] CorrectGuessersPerSquare { get; }
     public Dictionary<long, uint> PlayerScoreFrequency { get; }
     public List<long> PlayerScores { get; }
 
-    public Stats(ICard card, ISettings settings)
+    public Stats(Card card, Settings settings)
     {
         CorrectGuesses = new Dictionary<string, List<string>>(card.TotalSquares);
-        CorrectGuessesPercentage = new List<double>(card.TotalSquares);
+        CorrectGuessesPercentage = new double[card.Rows, card.Columns];
         IncorrectGuesses = new Dictionary<string, List<string>>(card.TotalSquares);
         Skipped = new Dictionary<string, List<string>>(card.Rows * card.BonusColumns);
         ScoreCalculationTime = 0.0;
-        FullScoreFrequency = new Dictionary<long, uint>();
         PlayerScoreFrequency = new Dictionary<long, uint>();
         PlayerScores = new List<long>();
 
@@ -48,11 +44,8 @@ public sealed class Stats
             }
         }
 
-        // Pre-populate ScoreFrequency dictionary with every score bin
-        for (var score = -MaxScorePossible; score <= MaxScorePossible; score++)
-        {
-            FullScoreFrequency.Add(score, 0);
-        }
+        // Pre-populate CorrectGuessersPerSquare dimensions
+        CorrectGuessersPerSquare = new int[card.Rows, card.Columns];
     }
 
     internal void AggregateResults(Game game)
@@ -65,42 +58,32 @@ public sealed class Stats
 
         // Must be after FilterResults method
         GetCorrectGuessesPercentage();
-    }
 
-    private void GetPlayerScores(List<IPlayer> players)
+        GetCorrectGuessersPerSquare();
+
+    }
+    private void GetPlayerScores(List<Player> players)
     {
         foreach (var player in players)
         {
             PlayerScores.Add(player.Score);
         }
     }
-
-    private void GetScoreFrequency(List<IPlayer> players)
+    private void GetScoreFrequency(IEnumerable<Player> players)
     {
-        foreach (var player in players)
+        foreach (var score in players.Select(player => player.Score))
         {
-            if (FullScoreFrequency.ContainsKey(player.Score))
+            if (PlayerScoreFrequency.TryGetValue(score, out var value))
             {
-                FullScoreFrequency[player.Score]++;
+                value++;
             }
             else
             {
-                FullScoreFrequency.Add(player.Score, 1);
-            }
-
-
-            if (PlayerScoreFrequency.ContainsKey(player.Score))
-            {
-                PlayerScoreFrequency[player.Score]++;
-            }
-            else
-            {
-                PlayerScoreFrequency.Add(player.Score, 1);
+                PlayerScoreFrequency.Add(score, 1);
             }
         }
     }
-
-    private void FilterResults(List<IPlayer> players)
+    private void FilterResults(List<Player> players)
     {
         foreach (var player in players)
         {
@@ -117,29 +100,44 @@ public sealed class Stats
                     case Result.Skipped:
                         Skipped[result.Key].Add(player.Name);
                         break;
-                    default: throw new Exception("Error processing player results");
                 }
             }
         }
     }
-
     private void GetCorrectGuessesPercentage()
     {
         foreach (var square in CorrectGuesses.OrderBy(label => label.Key))
         {
-            CorrectGuessesPercentage.Add((double)square.Value.Count / PlayerCount);
+
+            var list = IterateSquaresForCorrectGuessers();
+            var count = 0;
+            for (var i = 0; i < CorrectGuessersPerSquare.GetLength(0); i++)
+            {
+                for (var j = 0; j < CorrectGuessersPerSquare.GetLength(1); j++)
+                {
+                    CorrectGuessesPercentage[i, j] = (double)list[count] / PlayerCount;
+                    count++;
+                }
+            }
         }
     }
-
-    public static long GetMaxScore(ICard card)
+    private void GetCorrectGuessersPerSquare()
     {
-        return CalculateMaxScore(card);
+        var list = IterateSquaresForCorrectGuessers();
+        var count = 0;
+        for (var i = 0; i < CorrectGuessersPerSquare.GetLength(0); i++)
+        {
+            for (var j = 0; j < CorrectGuessersPerSquare.GetLength(1); j++)
+            {
+                CorrectGuessersPerSquare[i, j] = list[count];
+                count++;
+            }
+        }
     }
-
-    private static long CalculateMaxScore(ICard card)
+    public static long GetMaxScore(Card card)
     {
         long score = 0;
-        int squareValue = card.BaseSquareValue;
+        var squareValue = card.BaseSquareValue;
 
         for (short row = 0; row < card.Rows; row++)
         {
@@ -165,4 +163,9 @@ public sealed class Stats
 
         return score;
     }
+    private List<int> IterateSquaresForCorrectGuessers()
+    {
+        return CorrectGuesses.OrderBy(label => label.Key).Select(square => square.Value.Count).ToList();
+    }
+
 }
