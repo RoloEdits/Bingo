@@ -61,29 +61,23 @@ public sealed record Key : IEnumerable<char>
 
         foreach (var square in key)
         {
-            if (uniqueTwo is not null)
+            if (uniqueTwo is not null && square != uniqueOne && square != uniqueTwo)
             {
-                if (square != uniqueOne && square != uniqueTwo)
-                {
-                    throw new InvalidUniqueCharAmountException();
-                }
+                throw new InvalidUniqueCharAmountException();
             }
 
-            if (uniqueTwo is null)
+            if (uniqueTwo is null && square != uniqueOne)
             {
-                if (square != uniqueOne)
-                {
-                    uniqueTwo = square;
-                }
+                uniqueTwo = square;
             }
         }
     }
 
     public IEnumerator<char> GetEnumerator()
     {
-        for (int row = 0; row < Rows; row++)
+        for (var row = 0; row < Rows; row++)
         {
-            for (int column = 0; column < Columns; column++)
+            for (var column = 0; column < Columns; column++)
             {
                 yield return _key[row, column];
             }

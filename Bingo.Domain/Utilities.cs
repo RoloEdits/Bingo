@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Bingo.Domain.Errors;
 
 namespace Bingo.Domain;
 
@@ -27,8 +28,7 @@ public static class Utilities
     {
         if (span.Length != columns * rows)
         {
-            // TODO: create new Invalid2DArrayConversionException
-            throw new Exception("The total elements from input is not the same as the desired output size.");
+            throw new Invalid2DArrayConversionException("The total elements from input is not the same as the desired output size.");
         }
 
         var array = new T[rows, columns];
@@ -46,12 +46,11 @@ public static class Utilities
         return array;
     }
 
-    public static T[,] ListTo2DArray<T>(this IList<T> list, byte rows, byte columns)
+    public static T[,] ListTo2DArray<T>(this IList<T> list, int rows, int columns)
     {
         if (list.Count != columns * rows)
         {
-            // TODO: create new Invalid2DArrayConversionException
-            throw new Exception("The total elements from input is not the same as the desired output size.");
+            throw new Invalid2DArrayConversionException("The total elements from input is not the same as the desired output size.");
         }
 
         var array = new T[rows, columns];
@@ -71,6 +70,6 @@ public static class Utilities
 
     public static char CharToUpper(this char character)
     {
-        return character.ToString().ToUpperInvariant().ToCharArray()[0];
+        return character.ToString().ToUpperInvariant()[0];
     }
 }

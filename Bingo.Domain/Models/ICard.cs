@@ -4,14 +4,14 @@ using Bingo.Domain;
 
 public interface ICard
 {
-    public byte Columns { get; }
-    public byte Rows { get; }
-    public byte TotalSquares { get; }
-    public byte BaseSquareValue { get; }
-    public int RowValueOffset { get; }
-    public byte BonusColumns { get; }
-    public byte BonusMultiplier { get; }
-    public char BonusSkipChar { get; }
-    public char[] RowLabels { get; }
-    public Square[,] SquareLabels { get; }
+	public int Columns { get; }
+	public int Rows { get; }
+	public int TotalSquares { get; }
+	public int BaseSquareValue { get; }
+	public int RowValueOffset { get; }
+	public int BonusColumns { get; }
+	public int BonusMultiplier { get; }
+	public char BonusSkipChar { get; }
+	public char[] RowLabels { get; }
+	public Square[,] SquareLabels { get; }
 }

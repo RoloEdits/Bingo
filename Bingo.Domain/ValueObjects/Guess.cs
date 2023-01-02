@@ -48,15 +48,7 @@ public sealed record Guess : IEnumerable<char>
 
     private static bool CheckIsAllSame(string guess)
     {
-        foreach (var square in guess)
-        {
-            if (guess[0] != square)
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return guess.All(square => guess[0] == square);
     }
 
     private static void GuessIsValidAmount(string guess, byte rows, byte columns)
@@ -75,37 +67,28 @@ public sealed record Guess : IEnumerable<char>
 
         for (var square = 1; square < guess.Length; square++)
         {
-            if (uniqueThree is not null)
+            if (uniqueThree is not null && guess[square] != uniqueOne && guess[square] != uniqueTwo && guess[square] != uniqueThree)
             {
-                if (guess[square] != uniqueOne && guess[square] != uniqueTwo && guess[square] != uniqueThree)
-                {
-                    throw new InvalidUniqueCharAmountException();
-                }
+                throw new InvalidUniqueCharAmountException();
             }
 
-            if (uniqueTwo is not null && uniqueThree is null)
+            if (uniqueTwo is not null && uniqueThree is null && guess[square] != uniqueOne && guess[square] != uniqueTwo)
             {
-                if (guess[square] != uniqueOne && guess[square] != uniqueTwo)
-                {
-                    uniqueThree = guess[square];
-                }
+                uniqueThree = guess[square];
             }
 
-            if (uniqueTwo is null)
+            if (uniqueTwo is null && guess[square] != uniqueOne)
             {
-                if (guess[square] != uniqueOne)
-                {
-                    uniqueTwo = guess[square];
-                }
+                uniqueTwo = guess[square];
             }
         }
     }
 
     public IEnumerator<char> GetEnumerator()
     {
-        for (int row = 0; row < Rows; row++)
+        for (var row = 0; row < Rows; row++)
         {
-            for (int column = 0; column < Columns; column++)
+            for (var column = 0; column < Columns; column++)
             {
                 yield return _guess[row, column];
             }
