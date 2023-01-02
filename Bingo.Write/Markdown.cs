@@ -1,17 +1,15 @@
 ﻿using System.Text;
 using Bingo.Core;
 using Bingo.Domain;
-using Bingo.Domain.Models;
-using DocumentFormat.OpenXml.Drawing;
 using Path = System.IO.Path;
 
-namespace Bingo.Markdown;
+namespace Bingo.Write;
 
-public static class FileWrite
+public sealed class Markdown : IBingoFileWriter
 {
-    public static void WriteToFile(Game game, string path)
+    public static void Write(Game game, string path)
     {
-        var fileName = GetFileName(path);
+        var fileName = Path.ChangeExtension(path, "md");
 
         using TextWriter writer = new StreamWriter(fileName);
         var playersOrdered = game.Players
@@ -23,18 +21,13 @@ public static class FileWrite
         writer.WriteLine(table.Create<char>("Key", game.Key));
 
         var percentages = game.Stats.CorrectGuessesPercentage;
-        writer.WriteLine(table.Create("Stats", percentages.ListTo2DArray(game.Card.Rows, game.Card.Columns)));
+        writer.WriteLine(table.Create("Stats", percentages));
 
         writer.WriteLine(BuildScoreTable(playersOrdered));
 
     }
 
-    private static string GetFileName(string filepath)
-    {
-        return Path.ChangeExtension(filepath, "md");
-    }
-
-    private static string BuildScoreTable(List<IPlayer> players)
+    private static string BuildScoreTable(List<Player> players)
     {
         var builder = new StringBuilder();
 

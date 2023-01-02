@@ -1,4 +1,5 @@
 using Bingo.Domain;
+using Bingo.Write;
 
 namespace Bingo.Markdown.Tests;
 

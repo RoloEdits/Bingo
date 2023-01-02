@@ -1,28 +1,28 @@
 ﻿using System.Text;
 using Bingo.Domain.Models;
 
-namespace Bingo.Markdown;
+namespace Bingo.Write;
 
 public sealed class Table
 {
-    private byte Columns { get; }
-    private byte Rows { get; }
-    private byte TotalSquares { get; }
-    private byte BonusColumns { get; }
+    private int Columns { get; }
+    private int Rows { get; }
+    private int TotalSquares { get; }
+    private int BonusColumns { get; }
 
-    public Table(byte columns, byte rows, byte bonus)
+    public Table(int columns, int rows, int bonus)
     {
         Columns = columns;
         Rows = rows;
-        TotalSquares = (byte)(Columns * Rows);
-        BonusColumns = (byte)(Columns - bonus);
+        TotalSquares = Columns * Rows;
+        BonusColumns = Columns - bonus;
     }
 
-    public string Create<T>(string corner, T[,] data)
+    public string Create<T>(string cornerLabel, T[,] data)
     {
         var builder = new StringBuilder();
 
-        BuildHeader(builder, corner);
+        BuildHeader(builder, cornerLabel);
         BuildDivider(builder);
         BuildRows(builder, data);
 
