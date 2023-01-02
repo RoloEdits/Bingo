@@ -19,41 +19,41 @@ internal static class Program
         }
 
         var (card, path, key, settings) = Prompt.Input();
-        var game = new Game(key, card, settings);
 
-        var players = new HashSet<SpreadsheetData>();
         try
         {
-            players = Parser.Parse(path);
+            var players = Parser.Parse(path);
+
+            var game = new GameBuilder()
+                .AddKey(key)
+                .AddCard(card)
+                .AddSettings(settings)
+                .AddPlayers(players)
+                .Build();
+
+            game.Play();
+
+            Markdown.Write(game, path);
+            Json.Write(game, path);
+
+            Prompt.End(game);
         }
-        catch (Exception exception)
+        catch (InvalidGuessersException invalidGuessers)
         {
-            switch (exception)
-            {
-                case CannotOpenFileException:
-                    Prompt.CannotOpenFile(exception);
-                    break;
-                case NoPlayersException:
-                    Prompt.NoPlayers(exception);
-                    break;
-                case GuessedMoreThanOnceException:
-                    Prompt.MultipleGuessesOfSamePlayer(exception);
-                    break;
-            }
+            if (invalidGuessers?.InvalidGuessers != null)
+                Prompt.InvalidGuessers(invalidGuessers.InvalidGuessers, card.TotalSquares);
         }
-
-        var badGuessers = game.AddPlayers(players!);
-
-        if (badGuessers.Count > 0)
+        catch (CannotOpenFileException ex)
         {
-            Prompt.InvalidGuessers(badGuessers, game);
+            Prompt.CannotOpenFile(ex);
         }
-
-        game.Play();
-
-        Markdown.Write(game, path);
-        Json.Write(game, path);
-
-        Prompt.End(game);
+        catch (NoPlayersException ex)
+        {
+            Prompt.NoPlayers(ex);
+        }
+        catch (GuessedMoreThanOnceException ex)
+        {
+            Prompt.MultipleGuessesOfSamePlayer(ex);
+        }
     }
 }

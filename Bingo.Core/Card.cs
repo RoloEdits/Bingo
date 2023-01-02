@@ -15,7 +15,7 @@ public sealed record Card
 	public char[] RowLabels { get; }
 	public Square[,] SquareLabels { get; }
 
-	public Card(int columns, int rows, int baseSquareValue, int rowOffsetValue, int bonusColumns, int bonusMultiplier = 1, char bonusSkipChar = 'P')
+	internal Card(int columns, int rows, int baseSquareValue, int rowOffsetValue, int bonusColumns, int bonusMultiplier, char bonusSkipChar)
 	{
 		Columns = columns;
 		Rows = rows;

@@ -6,15 +6,28 @@ public sealed class StatsTest
     public void MaxScoreShouldBe450()
     {
         // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
+
         game.Play();
 
         // Assert
@@ -24,38 +37,58 @@ public sealed class StatsTest
     [Fact]
     public void PlayerCountShouldBeOne()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         Assert.Equal(1, game.Stats.PlayerCount);
     }
 
     [Fact]
     public void PlayerScores_ShouldEqual_1Count_450Score()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         Assert.Equal(450, game.Stats.PlayerScores[0]);
         Assert.Single(game.Stats.PlayerScores);
     }
@@ -63,19 +96,29 @@ public sealed class StatsTest
     [Fact]
     public void PlayerScoreFreq_ShouldEqual_1CountOf450Score()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         Assert.Equal(1L, game.Stats.PlayerScoreFrequency[450]);
     }
 
@@ -83,19 +126,30 @@ public sealed class StatsTest
     public void PercentageShouldBe100Percent()
     {
         // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key) };
 
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        var game = new Game(input, card, settings);
-
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
+
         foreach (var percentage in game.Stats.CorrectGuessesPercentage)
         {
             Assert.Equal(1.0, percentage);
@@ -106,19 +160,29 @@ public sealed class StatsTest
     [Fact]
     public void PercentageShouldBe0Percent()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         foreach (var percentage in game.Stats.CorrectGuessesPercentage)
         {
             Assert.Equal(0.0, percentage);
@@ -129,16 +193,28 @@ public sealed class StatsTest
     [Fact]
     public void PercentageShouldBe50Percent()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 1, 2);
+
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(1)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ), new SpreadsheetData(2, "Jon", input) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ), new SpreadsheetData(2, "Jon", key) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
         // Assert
@@ -152,19 +228,29 @@ public sealed class StatsTest
     [Fact]
     public void ShouldBeAllSkips()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 4, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(4)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "PPPPPPPPPPPP" ) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "PPPPPPPPPPPP" ) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         foreach (var data in game.Stats.Skipped)
         {
             var skipped = data.Value.Count;
@@ -176,19 +262,29 @@ public sealed class StatsTest
     [Fact]
     public void ShouldBeAllWrong()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 4, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(4)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", "NNNNNNNNNNNN" ) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         foreach (var data in game.Stats.IncorrectGuesses)
         {
             var wrong = data.Value.Count;
@@ -200,19 +296,29 @@ public sealed class StatsTest
     [Fact]
     public void ShouldBeAllRight()
     {
-        // Arrange
-        const string input = "YYYYYYYYYYYY";
-        var card = new Card(4, 3, 10, 20, 4, 2);
+        const string key = "YYYYYYYYYYYY";
+
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(4)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(20)
+            .AddBonusColumns(4)
+            .AddBonusMultiplier(2)
+            .Build();
+
         var settings = new Settings(true, false);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input ) };
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", key ) };
 
-        var game = new Game(input, card, settings);
+        var game = new GameBuilder()
+            .AddKey(key)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
-        // Act
-        game.AddPlayers(player);
         game.Play();
 
-        // Assert
         foreach (var data in game.Stats.CorrectGuesses)
         {
             var right = data.Value.Count;

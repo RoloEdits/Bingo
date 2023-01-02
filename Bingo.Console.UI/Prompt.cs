@@ -42,11 +42,21 @@ internal static class Prompt
         {
             case 0:
                 AnsiConsole.MarkupLineInterpolated($"[Red]Loaded Default Tower of God Configuration....[/]");
-                card = new Card(4, 3, 10, 20, 1, 2);
+
+                card = new CardBuilder()
+                    .AddRows(3)
+                    .AddColumns(4)
+                    .AddBaseSquareValue(10)
+                    .AddRowOffset(20)
+                    .AddBonusColumns(1)
+                    .AddBonusMultiplier(2)
+                    .Build();
+
+                settings = new Settings(allSame, false);
+
                 path = GetFilePath();
                 allSame = WillTrackAllSameGuessesInStats();
                 key = GetKey(card.TotalSquares);
-                settings = new Settings(allSame, false);
 
                 return (card, path, key, settings);
             case 1:
@@ -69,8 +79,19 @@ internal static class Prompt
                 var skipCharacter = GetSkipCharacter();
 
                 allSame = WillTrackAllSameGuessesInStats();
+
                 settings = new Settings(allSame, noBonusSkipping);
-                card = new Card(columns, rows, baseSquareValue, rowValueOffset, bonusColumns, bonusMultiplier, skipCharacter);
+
+                card = new CardBuilder()
+                    .AddRows(rows)
+                    .AddColumns(columns)
+                    .AddBaseSquareValue(baseSquareValue)
+                    .AddRowOffset(rowValueOffset)
+                    .AddBonusColumns(bonusColumns)
+                    .AddBonusMultiplier(bonusMultiplier)
+                    .AddBonusSkipChar(skipCharacter)
+                    .Build();
+
                 key = GetKey(card.TotalSquares);
 
                 return (card, path, key, settings);
@@ -281,7 +302,7 @@ internal static class Prompt
                 }));
     }
 
-    private static char GetSkipCharacter()
+    private static string GetSkipCharacter()
     {
         var rule = new Rule("[white]Single Characters Only[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
@@ -294,7 +315,7 @@ internal static class Prompt
             holder = AnsiConsole.Ask<string>("[Red]Please Enter Designated Skip Character:[/]").StringFormat();
         }
 
-        return holder.ToUpper()[0];
+        return holder;
     }
 
     private static string GetKey(int squares)
@@ -342,13 +363,13 @@ internal static class Prompt
         return true;
     }
 
-    public static void InvalidGuessers(List<InvalidGuesser> invalidGuessers, Game game)
+    public static void InvalidGuessers(List<InvalidGuesser> invalidGuessers, int squares)
     {
         System.Console.Clear();
         Ascii.Title();
         AnsiConsole.MarkupLineInterpolated($"Detected: Players with incorrect amount of guesses!");
         AnsiConsole.MarkupLineInterpolated(
-            $"Make sure each player has guessed for {game.Card.TotalSquares.ToString()} squares.");
+            $"Make sure each player has guessed for {squares.ToString()} squares.");
         foreach (var incorrectGuesser in invalidGuessers)
         {
             AnsiConsole.MarkupLineInterpolated(

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using Bingo.Core
 @using System.Text
+@using Bingo.Domain.Errors
 @using Bingo.Spreadsheet
 
 @inject GameStateSaveService GameStateSaveService
@@ -20,16 +21,16 @@
                 <MudNumericField @bind-Value="Columns" Margin="Margin.Dense" Label="Columns" Variant="Variant.Outlined" Step="1" Min="3" Max="7" Required="true" Immediate="true" Style="border-radius: 18px"/>
             </MudStack>
             <MudStack Row="true">
-                <MudNumericField @bind-Value="Bonus" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" Style="border-radius: 18px"/>
+                <MudNumericField @bind-Value="BonusColumns" Margin="Margin.Dense" Label="Bonus" Variant="Variant.Outlined" Step="1" Min="0" Max="@Columns" Required="true" Immediate="true" Style="border-radius: 18px"/>
                 <MudNumericField @bind-Value="BonusMultiplier" Margin="Margin.Dense" Label="Bonus Multiplier" Variant="Variant.Outlined" Step="1" Min="1" Max="10" Required="true" Immediate="true" Style="border-radius: 18px"/>
             </MudStack>
             <MudStack Row="true">
-                <MudNumericField @bind-Value="SquareValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Required="true" Immediate="true" Style="border-radius: 18px"/>
+                <MudNumericField @bind-Value="BaseSquareValue" Margin="Margin.Dense" Label="Square Value" Variant="Variant.Outlined" Step="1" Min="1" Required="true" Immediate="true" Style="border-radius: 18px"/>
                 <MudNumericField @bind-Value="RowOffset" Margin="Margin.Dense" Label="Row Offset" Variant="Variant.Outlined" Step="1" Min="0" Required="true" Immediate="true" Style="border-radius: 18px"/>
             </MudStack>
             <MudStack Row="true">
                 <MudTextField @bind-Value="Key" Mask="@Mask" HelperText="Key" Variant="Variant.Outlined" Margin="Margin.Dense" Counter="@(Columns * Rows)" Immediate="true" MaxLength="@(Columns * Rows)" Style="width: 535px"></MudTextField>
-                <MudTextField @bind-Value="SkipChar" HelperText="Skip" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1" Style="border-radius: 18px"></MudTextField>
+                <MudTextField @bind-Value="BonusSkipChar" HelperText="Skip" Variant="Variant.Outlined" Margin="Margin.Dense" Immediate="true" MaxLength="1" Style="border-radius: 18px"></MudTextField>
             </MudStack>
         </MudItem>
     </MudItem>
@@ -42,7 +43,7 @@
                 @for (var column = 0; column < Columns; column++)
                 {
                     var _column = column;
-                    var isBonus = (column + Bonus) >= Columns;
+                    var isBonus = (column + BonusColumns) >= Columns;
 
                     <MudStack Class="py-2" Justify="Justify.Center">
                         <MudPaper Class="mud-width-full" Style="@(isBonus ? "background : #B5179E" : $"background : #{rowColors[_row]}")" Width="38px" Height="38px"></MudPaper>
@@ -57,13 +58,13 @@
 
     private int Rows { get; set; }
     private int Columns { get; set; }
-    private int Bonus { get; set; }
+    private int BonusColumns { get; set; }
     private int BonusMultiplier { get; set; }
-    private int SquareValue { get; set; }
+    private int BaseSquareValue { get; set; }
     private int RowOffset { get; set; }
 
     private string Key { get; set; } = "";
-    private string SkipChar { get; set; } = "";
+    private string BonusSkipChar { get; set; } = "";
 
     private bool WillLogAllSameGuessers { get; set; }
     private bool AllowSkippingWhenNoBonus { get; set; }
@@ -74,47 +75,63 @@
     {
         Rows = 3;
         Columns = 4;
-        Bonus = 1;
+        BonusColumns = 1;
         BonusMultiplier = 2;
-        SquareValue = 10;
+        BaseSquareValue = 10;
         RowOffset = 20;
 
         Key = "YYYYYYYYYYYY";
-        SkipChar = "P";
+        BonusSkipChar = "P";
 
         PlayGame();
     }
 
+    // TEMP
     private HashSet<SpreadsheetData> _players { get; set; } = new HashSet<SpreadsheetData>()
     {
         new SpreadsheetData(1, "Rolo", "YYNYNNNYNNNY"),
         new SpreadsheetData(2, "Baron", "YYYYYYYYYYYY")
     };
 
+    // Will be tied to a button to play game.
+    // The actual try-catch will happen in the HTML button press logic and toasts will be prompted with the errors
     private void PlayGame()
     {
-        var card = new Card(Columns, Rows, SquareValue, RowOffset, Bonus, BonusMultiplier, SkipChar[0]);
+        var card = new CardBuilder()
+            .AddRows(Rows)
+            .AddColumns(Columns)
+            .AddBaseSquareValue(BaseSquareValue)
+            .AddRowOffset(RowOffset)
+            .AddBonusColumns(BonusColumns)
+            .AddBonusMultiplier(BonusMultiplier)
+            .AddBonusSkipChar(BonusSkipChar)
+            .Build();
+
         var settings = new Settings(WillLogAllSameGuessers, AllowSkippingWhenNoBonus);
 
-        var game = new Game(Key, card, settings);
+        // TODO: Implement proper file parse method
+        var players = _players;
 
-        var invalidGuessers = game.AddPlayers(_players);
-
-        if (invalidGuessers.Count > 0)
+        try
         {
-            foreach (var guesser in invalidGuessers)
-            {
-                Console.WriteLine(guesser);
-            }
+            var game = new GameBuilder()
+                .AddKey(Key)
+                .AddCard(card)
+                .AddSettings(settings)
+                .AddPlayers(players)
+                .Build();
 
+            game.Play();
+
+            GameStateSaveService.SaveGameState(game);
+
+            var gameJSON = game.ToJson();
+            Console.WriteLine(gameJSON);
         }
-
-        game.Play();
-
-        GameStateSaveService.SaveGameState(game);
-
-        var gameJSON = game.ToJson();
-        Console.WriteLine(gameJSON);
+        catch (InvalidGuessersException ex)
+        {
+            Console.WriteLine(ex.InvalidGuessers);
+        }
     }
 
     private static HashSet<SpreadsheetData> ParseFileStream()

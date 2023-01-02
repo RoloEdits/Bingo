@@ -12,11 +12,26 @@ public class GameBenchmark
     public void CalculateScoreBenchmarkFor3X3()
     {
         const string input = "YYYYYYYYY";
-        var card = new Card(3, 3, 10, 0, 0, 1);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings(true, false));
 
-        game.AddPlayers(player);
+        var card = new CardBuilder()
+            .AddRows(3)
+            .AddColumns(3)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(0)
+            .AddBonusColumns(0)
+            .Build();
+
+        var settings = new Settings(true, false);
+
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+
+        var game = new GameBuilder()
+            .AddKey(input)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
+
         game.Play();
     }
 
@@ -24,11 +39,26 @@ public class GameBenchmark
     public void CalculateScoreBenchmarkFor5X5()
     {
         const string input = "YYYYYYYYYYYYYYYYYYYYYYYYY";
-        var card = new Card(5, 5, 10, 0, 0, 1);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings(true, false));
 
-        game.AddPlayers(player);
+        var card = new CardBuilder()
+            .AddRows(5)
+            .AddColumns(5)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(0)
+            .AddBonusColumns(0)
+            .Build();
+
+        var settings = new Settings(true, false);
+
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+
+        var game = new GameBuilder()
+            .AddKey(input)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
+
         game.Play();
     }
 
@@ -36,11 +66,26 @@ public class GameBenchmark
     public void CalculateScoreBenchmarkFor7X7()
     {
         const string input = "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
-        var card = new Card(7, 7, 10, 0, 0, 1);
-        var player = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
-        var game = new Game(input, card, new Settings(true, false));
 
-        game.AddPlayers(player);
+        var card = new CardBuilder()
+            .AddRows(7)
+            .AddColumns(7)
+            .AddBaseSquareValue(10)
+            .AddRowOffset(0)
+            .AddBonusColumns(0)
+            .Build();
+
+        var settings = new Settings(true, false);
+
+        var players = new HashSet<SpreadsheetData>() { new SpreadsheetData(1, "Rolo", input) };
+
+        var game = new GameBuilder()
+            .AddKey(input)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
+
         game.Play();
     }
 }

@@ -85,7 +85,7 @@
 	private int BaseSquareValue { get; set; }
 	private int RowValueOffset { get; set; }
 	private int BonusMultiplier { get; set; }
-	private char BonusSkipChar { get; set; }
+	private string BonusSkipChar { get; set; }
 	private bool LogAllSameGuesses { get; set; }
 	private bool AllowSkippingWhenBonusColumnsAreZero { get; set; }
 
@@ -100,7 +100,7 @@
         Columns = 3;
         BonusColumns = 0;
         BonusMultiplier = 1;
-        BonusSkipChar = 'P';
+        BonusSkipChar = "P";
         LogAllSameGuesses = false;
         AllowSkippingWhenBonusColumnsAreZero = false;
         GameKey = string.Empty;
@@ -108,12 +108,29 @@
 
     private void PlayGame()
     {
-        var card = new Card((byte)Columns, (byte)Rows, (byte)BaseSquareValue,RowValueOffset,(byte)BonusColumns,(byte)BonusMultiplier,BonusSkipChar.CharToUpper());
-        var settings = new Settings(AllowSkippingWhenBonusColumnsAreZero, LogAllSameGuesses);
-        var game = new Game(GameKey.StringFormat(), card, settings);
+        var card = new CardBuilder()
+            .AddRows(Rows)
+            .AddColumns(Columns)
+            .AddBaseSquareValue(BaseSquareValue)
+            .AddRowOffset(RowValueOffset)
+            .AddBonusColumns(BonusColumns)
+            .AddBonusMultiplier(BonusMultiplier)
+            .AddBonusSkipChar(BonusSkipChar)
+            .Build();
+
+        var settings = new Settings(
+            AllowSkippingWhenBonusColumnsAreZero,
+            LogAllSameGuesses
+            );
 
         var players = ParseFileStream();
-        game.AddPlayers(players);
+
+        var game = new GameBuilder()
+            .AddKey(GameKey)
+            .AddCard(card)
+            .AddSettings(settings)
+            .AddPlayers(players)
+            .Build();
 
         game.Play();
 

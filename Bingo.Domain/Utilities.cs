@@ -68,7 +68,7 @@ public static class Utilities
         return array;
     }
 
-    public static char CharToUpper(this char character)
+    public static char ToUpper(this char character)
     {
         return character.ToString().ToUpperInvariant()[0];
     }

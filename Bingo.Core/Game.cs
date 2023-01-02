@@ -1,4 +1,5 @@
-﻿using Bingo.Domain.Errors;
+﻿using Bingo.Domain;
+using Bingo.Domain.Errors;
 using Bingo.Domain.Models;
 using Bingo.Domain.ValueObjects;
 using Bingo.Spreadsheet;
@@ -11,10 +12,10 @@ public sealed class Game
 	public List<Player> Players { get; private set; }
 	public Card Card { get; }
 	public Key Key { get; }
-	private Settings Settings { get; }
+	public Settings Settings { get; }
 	public Stats Stats { get; }
 
-	public Game(string key, Card card, Settings settings)
+	internal Game(string key, Card card, Settings settings, HashSet<SpreadsheetData> players)
 	{
 		Card = card;
 		Settings = settings;
@@ -23,14 +24,8 @@ public sealed class Game
 			MaxScorePossible = Stats.GetMaxScore(Card)
 		};
 
-		Key = new Key(key, (byte)Card.Rows, (byte)Card.Columns);
-	}
-
-	public List<InvalidGuesser> AddPlayers(in HashSet<SpreadsheetData> players)
-	{
-		Stats.PlayerCount = players.Count;
-
 		Players = new List<Player>(players.Count);
+		Stats.PlayerCount = players.Count;
 
 		var invalidGuessers = new List<InvalidGuesser>();
 		foreach (var player in players)
@@ -45,7 +40,12 @@ public sealed class Game
 			}
 		}
 
-		return invalidGuessers;
+		if (invalidGuessers.Count > 0)
+		{
+			throw new InvalidGuessersException(invalidGuessers);
+		}
+
+		Key = new Key(key.StringFormat(), (byte)Card.Rows, (byte)Card.Columns);
 	}
 
 	public void Play()
