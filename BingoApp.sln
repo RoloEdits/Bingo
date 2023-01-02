@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Console.UI", "Bingo.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Core", "Bingo.Core\Bingo.Core.csproj", "{26D6B837-34D8-4E38-8927-E28005C00B41}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Markdown", "Bingo.Markdown\Bingo.Markdown.csproj", "{22F4FE1D-0226-47E5-91BE-80BA3B70C72E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bingo.Write", "Bingo.Write\Bingo.Write.csproj", "{22F4FE1D-0226-47E5-91BE-80BA3B70C72E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4F6329B8-9F00-4FA4-A7E5-0DBA3D47953A}"
 EndProject

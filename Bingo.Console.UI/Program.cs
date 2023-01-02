@@ -2,7 +2,7 @@
 using Bingo.Core;
 using System.Runtime.InteropServices;
 using Bingo.Domain.Errors;
-using Bingo.Markdown;
+using Bingo.Write;
 using Bingo.Spreadsheet;
 
 namespace Bingo.Console.UI;
@@ -51,7 +51,8 @@ internal static class Program
 
         game.Play();
 
-        FileWrite.WriteToFile(game, path);
+        Markdown.Write(game, path);
+        Json.Write(game, path);
 
         Prompt.End(game);
     }

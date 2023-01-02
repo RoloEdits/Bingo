@@ -2,13 +2,14 @@
 using Bingo.Domain;
 using Bingo.Domain.Models;
 using Bingo.Core;
+using Bingo.Domain.Errors;
 using Spectre.Console;
 
 namespace Bingo.Console.UI;
 
 internal static class Prompt
 {
-    public static (Card, string, string, ISettings) Input()
+    public static (Card, string, string, Settings) Input()
     {
         Ascii.Title();
 
@@ -75,12 +76,12 @@ internal static class Prompt
                 return (card, path, key, settings);
         }
 
-        throw new Exception("Unmanageable error handling prompts.");
+        throw new UnhandledException("Unmanageable error handling prompts.");
     }
 
     private static string GetFilePath()
     {
-        var rule = new Rule("[white]Eg. home/user/spreadsheet.xlsx[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Eg. home/user/spreadsheet.xlsx[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path:[/]").Trim();
@@ -103,7 +104,7 @@ internal static class Prompt
 
     private static byte GetColumnAmount()
     {
-        var rule = new Rule("[white]Columns[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Columns[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
         var selection = AnsiConsole.Prompt(
             new SelectionPrompt<string>()
@@ -136,7 +137,7 @@ internal static class Prompt
 
     private static byte GetRowAmount()
     {
-        var rule = new Rule("[white]Rows[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Rows[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         var selection = AnsiConsole.Prompt(
@@ -170,7 +171,7 @@ internal static class Prompt
 
     private static byte GetBaseSquareValue()
     {
-        var rule = new Rule("[white]1 to 255[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]1 to 255[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         return (byte)AnsiConsole.Prompt(
@@ -190,7 +191,7 @@ internal static class Prompt
 
     private static int GetRowValueOffset()
     {
-        var rule = new Rule("[white]-100 to 100[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]-100 to 100[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
         return AnsiConsole.Prompt(
             new TextPrompt<int>("[red]How much will each row be offset by?[/]")
@@ -209,7 +210,7 @@ internal static class Prompt
 
     private static byte GetBonusColumnAmount(byte columns)
     {
-        var rule = new Rule("[white]Bonus Column Amount[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Bonus Column Amount[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         var allChoices = new[]
@@ -263,7 +264,7 @@ internal static class Prompt
 
     private static byte GetBonusMultiplier()
     {
-        var rule = new Rule("[white]1 to 100. 2 is 2x, etc.[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]1 to 100. 2 is 2x, etc.[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
         return (byte)AnsiConsole.Prompt(
             new TextPrompt<int>("[red]How much will the bonus multiplier be?[/]")
@@ -282,7 +283,7 @@ internal static class Prompt
 
     private static char GetSkipCharacter()
     {
-        var rule = new Rule("[white]Single Characters Only[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Single Characters Only[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         var holder = AnsiConsole.Ask<string>("[Red]Please Enter Designated Skip Character:[/]").StringFormat();
@@ -300,7 +301,7 @@ internal static class Prompt
     {
         // TODO - See about prompting per row and have them be entered individually
         // TODO: Try to set up validation here so prompts can happen without exiting and entering input all over again
-        var rule = new Rule("[white]Read Top to Bottom, Left to Right[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Read Top to Bottom, Left to Right[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         var key = AnsiConsole.Ask<string>("[Red]Please Enter Key:[/]").StringFormat();
@@ -317,7 +318,7 @@ internal static class Prompt
 
     private static bool WillTrackAllSameGuessesInStats()
     {
-        var rule = new Rule("[white]Stat Tracking[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Stat Tracking[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         if (!AnsiConsole.Confirm("[red]Include those that guessed for all the same answer on each square?[/]"))
@@ -330,7 +331,7 @@ internal static class Prompt
 
     private static bool AllowSkippingWhenThereIsNoBonus()
     {
-        var rule = new Rule("[white]Allow Skips[/]").RuleStyle("red").LeftAligned();
+        var rule = new Rule("[white]Allow Skips[/]").RuleStyle("red").LeftJustified();
         AnsiConsole.Write(rule);
 
         if (!AnsiConsole.Confirm("[red]Allow the option of skipping when any squares even when there is no Bonus?[/]"))
