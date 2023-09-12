@@ -35,6 +35,7 @@ internal static class Program
 
             Markdown.Write(game, path);
             Json.Write(game, path);
+            Html.Write(game, path);
 
             Prompt.End(game);
         }
