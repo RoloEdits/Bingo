@@ -32,7 +32,7 @@ public sealed class Game
 		{
 			try
 			{
-				Players.Add(new Player(player.Name, new Guess(player.Guess, (byte)Card.Rows, (byte)Card.Columns)));
+				Players.Add(new Player(player.Name, player.Color, new Guess(player.Guess, (byte)Card.Rows, (byte)Card.Columns)));
 			}
 			catch (InvalidSquareAmountException)
 			{

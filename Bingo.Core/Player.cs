@@ -6,13 +6,15 @@ namespace Bingo.Core;
 public sealed class Player : IPlayer
 {
     public string Name { get; }
+    public string Color { get; }
     public Guess Guess { get; }
     public long Score { get; set; }
     public Dictionary<string, Result> ResultPerSquare { get; }
 
-    public Player(string name, Guess guess)
+    public Player(string name, string color, Guess guess)
     {
         Name = name;
+        Color = color;
         Guess = guess;
         ResultPerSquare = new Dictionary<string, Result>(guess.Length);
     }
