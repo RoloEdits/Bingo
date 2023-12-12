@@ -1,6 +1,7 @@
 ﻿using Bingo.Domain;
 using Bingo.Domain.Errors;
 using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Bingo.Spreadsheet;
 
@@ -8,17 +9,20 @@ public static class Parser
 {
 	public static HashSet<SpreadsheetData> Parse(string path)
 	{
+		IXLWorksheet worksheet;
+
 		try
 		{
-			using var wb = new XLWorkbook(path);
+			using var workbook = new XLWorkbook(path);
+			worksheet = workbook.Worksheet(1);
 		}
 		catch (Exception)
 		{
 			throw new CannotOpenFileException("Couldn't open file! Make sure it's not open by another program.");
 		}
 
-		using var workbook = new XLWorkbook(path);
-		var worksheet = workbook.Worksheet(1);
+
+
 
 		var count = 0;
 		var row = 1;
@@ -34,6 +38,7 @@ public static class Parser
 		}
 
 		var players = new HashSet<SpreadsheetData>(count);
+		var multiGuessers = new List<String>();
 
 		ushort currentRow = 1;
 		while (currentRow != row)
@@ -43,7 +48,7 @@ public static class Parser
 
 			string color;
 
-			// If color is from a built in theme from OnlyOffice, this can fail for some reason.
+			// If text color is from a theme, this can fail as ClosedXML handles "Theme" and "Color" as different.
 			// Currently the only moment that this issue can pop-up is when manually changing the color.
 			try
 			{
@@ -60,10 +65,15 @@ public static class Parser
 
 			if (!players.Add(new SpreadsheetData(currentRow, name, color, guess)))
 			{
-				throw new GuessedMoreThanOnceException($"{name} on row {currentRow} was input more than once, please check to make sure the correct guess is used.");
+				multiGuessers.Add(name);
 			}
 
 			currentRow++;
+		}
+
+		if (multiGuessers.Count > 0)
+		{
+			throw new GuessedMoreThanOnceException(multiGuessers);
 		}
 
 		return players;

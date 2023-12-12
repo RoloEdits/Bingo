@@ -1,22 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net7.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-        <LangVersion>11</LangVersion>
-    </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<LangVersion>12</LangVersion>
+	</PropertyGroup>
 
-    <ItemGroup>
-        <Compile Remove="Models\**" />
-        <Compile Include="Models\Label.cs" />
-        <Compile Include="Models\Result.cs" />
-        <Compile Include="Models\Square.cs" />
-        <EmbeddedResource Remove="Models\**" />
-        <Compile Include="Models\ICard.cs" />
-        <Compile Include="Models\InvalidGuesser.cs" />
-        <Compile Include="Models\IPlayer.cs" />
-        <Compile Include="Models\ISettings.cs" />
-    </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="Models\**" />
+		<Compile Include="Models\Label.cs" />
+		<Compile Include="Models\Result.cs" />
+		<Compile Include="Models\Square.cs" />
+		<EmbeddedResource Remove="Models\**" />
+		<Compile Include="Models\ICard.cs" />
+		<Compile Include="Models\InvalidGuesser.cs" />
+		<Compile Include="Models\IPlayer.cs" />
+		<Compile Include="Models\ISettings.cs" />
+	</ItemGroup>
 
 </Project>
