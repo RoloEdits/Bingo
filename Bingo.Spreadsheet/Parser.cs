@@ -1,7 +1,6 @@
 ﻿using Bingo.Domain;
 using Bingo.Domain.Errors;
 using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace Bingo.Spreadsheet;
 
@@ -9,20 +8,18 @@ public static class Parser
 {
 	public static HashSet<SpreadsheetData> Parse(string path)
 	{
-		IXLWorksheet worksheet;
-
 		try
 		{
-			using var workbook = new XLWorkbook(path);
-			worksheet = workbook.Worksheet(1);
+			// TODO: because of `using` the workbook, and therefore the worksheet, gets closed after leaving the `try` block
+			using var wb = new XLWorkbook(path);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			throw new CannotOpenFileException("Couldn't open file! Make sure it's not open by another program.");
+			throw new CannotOpenFileException($"Couldn't open file! Make sure it's not open by another program: {ex.Message}");
 		}
 
-
-
+		using var workbook = new XLWorkbook(path);
+		var worksheet = workbook.Worksheet(1);
 
 		var count = 0;
 		var row = 1;
