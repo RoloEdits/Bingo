@@ -105,7 +105,7 @@ internal static class Prompt
 		var rule = new Rule("[white]Eg. home/user/spreadsheet.xlsx[/]").RuleStyle("red").LeftJustified();
 		AnsiConsole.Write(rule);
 
-		var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path:[/]").Trim();
+		var path = AnsiConsole.Ask<string>("[Red]Please Enter File Path:[/]").Trim().Trim('"');
 
 		while (!File.Exists(path) || System.IO.Path.GetExtension(path) != ".xlsx")
 		{
